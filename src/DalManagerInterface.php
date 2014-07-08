@@ -1,0 +1,66 @@
+<?php
+/*
+ * This file is part of Graze DAL
+ *
+ * Copyright (c) 2014 Nature Delivered Ltd. <http://graze.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @see  http://github.com/graze/dal/blob/master/LICENSE
+ */
+namespace Graze\Dal;
+
+use Doctrine\Common\Persistence\ObjectRepository;
+use Graze\Dal\Adapter\AdapterInterface;
+use Graze\Dal\Exception\UndefinedAdapterException;
+use Graze\Dal\Exception\UndefinedRepositoryException;
+
+interface DalManagerInterface
+{
+    /**
+     * @param string $name
+     * @return AdapterInterface
+     * @throws UndefinedAdapterInterface If the adapter is not registered with name
+     */
+    public function get($name);
+
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    public function has($name);
+
+    /**
+     * @param AdapterInterface $adapter
+     */
+    public function set($name, AdapterInterface $adapter);
+
+    /**
+     * @param string $name
+     * @return ObjectRepository
+     * @throws UndefinedRepositoryException If the repository is not found for name
+     */
+    public function getRepository($name);
+
+    /**
+     * @param object $object
+     */
+    public function flush($object = null);
+
+    /**
+     * @param object $object
+     */
+    public function persist($object);
+
+    /**
+     * @param object $object
+     */
+    public function refresh($object);
+
+    /**
+     * @param string $name
+     * @param callable $fn
+     */
+    public function transaction($name, callable $fn);
+}
