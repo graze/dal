@@ -1,0 +1,56 @@
+{
+    "name": "graze/dal",
+    "description": "Data Access Layer for PHP",
+    "keywords": [
+        "abstraction",
+        "access",
+        "active record",
+        "activerecord",
+        "connection",
+        "data",
+        "data mapper",
+        "database",
+        "datamapper",
+        "dal",
+        "dao",
+        "db",
+        "dbal",
+        "mapper",
+        "orm",
+        "persist",
+        "persistance",
+        "record"
+    ],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Public contributors",
+            "homepage": "https://github.com/graze/dal/graphs/contributors",
+            "role": "Community"
+        },
+        {
+            "name": "Andrew Lawson",
+            "homepage": "http://adlawson.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/graze/dal/issues"
+    },
+    "autoload": {
+        "psr-4": {
+            "Graze\\Dal\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "doctrine/common": "~2.4",
+        "ocramius/generated-hydrator": "~1.0"
+    },
+    "require-dev": {
+        "adlawson/timezone": "~1.0",
+        "mockery/mockery": "~0.9",
+        "phpunit/phpunit": "~4.0"
+    }
+}
