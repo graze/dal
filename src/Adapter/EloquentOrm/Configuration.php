@@ -12,11 +12,11 @@
 namespace Graze\Dal\Adapter\EloquentOrm;
 
 use Graze\Dal\Adapter\ActiveRecord\AbstractConfiguration;
+use Graze\Dal\Adapter\ActiveRecord\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use Graze\Dal\Adapter\EloquentOrm\EntityMapper;
 use Graze\Dal\Adapter\EloquentOrm\EntityPersister;
 use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
-use Graze\Dal\Exception\InvalidMappingException;
 
 class Configuration extends AbstractConfiguration
 {
@@ -25,31 +25,17 @@ class Configuration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    public function buildMapper($name)
+    protected function buildDefaultMapper($entityName, $recordName)
     {
-        $mapping = $this->getMapping($name);
-
-        if (!isset($mapping['record'])) {
-            $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
-            throw new InvalidMappingException($message, __METHOD__);
-        }
-
-        return new EntityMapper($name, $mapping['record'], $this->getHydratorFactory());
+        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildPersister($name, MapperInterface $mapper, UnitOfWork $uow)
+    protected function buildDefaultPersister($entityName, $recordName, MapperInterface $mapper, UnitOfWork $uow)
     {
-        $mapping = $this->getMapping($name);
-
-        if (!isset($mapping['record'])) {
-            $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
-            throw new InvalidMappingException($message, __METHOD__);
-        }
-
-        return new EntityPersister($name, $mapping['record'], $mapper, $uow);
+        return new EntityPersister($entityName, $recordName, $mapper, $uow);
     }
 
     /**

@@ -33,6 +33,52 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
+     * @param string $entityName
+     * @param string $recordName
+     * @return MapperInterface
+     */
+    abstract protected function buildDefaultMapper($entityName, $recordName);
+
+    /**
+     * @param string $entityName
+     * @param string $recordName
+     * @param MapperInterface $mapper
+     * @param UnitOfWork $uow
+     * @return PersisterInterface
+     */
+    abstract protected function buildDefaultPersister($entityName, $recordName, MapperInterface $mapper, UnitOfWork $uow);
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildMapper($name)
+    {
+        $mapping = $this->getMapping($name);
+
+        if (!isset($mapping['record'])) {
+            $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
+            throw new InvalidMappingException($message, __METHOD__);
+        }
+
+        return $this->buildDefaultMapper($name, $mapping['record'], $this->getHydratorFactory());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildPersister($name, MapperInterface $mapper, UnitOfWork $uow)
+    {
+        $mapping = $this->getMapping($name);
+
+        if (!isset($mapping['record'])) {
+            $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
+            throw new InvalidMappingException($message, __METHOD__);
+        }
+
+        return $this->buildDefaultPersister($name, $mapping['record'], $mapper, $uow);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function buildRepository($name, ActiveRecordAdapter $adapter)
