@@ -50,18 +50,21 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "doctrine/common": "~2.4",
-        "ocramius/generated-hydrator": "~1.0"
+        "doctrine/common": "~2.4"
     },
     "require-dev": {
         "adlawson/timezone": "~1.0",
         "mockery/mockery": "~0.9",
         "phpunit/phpunit": "~4.0",
         "doctrine/orm": "~2.4",
-        "illuminate/database": "~4.2"
+        "illuminate/database": "~4.2",
+        "ocramius/generated-hydrator": "~1.0",
+        "zendframework/zend-stdlib": "~2.3"
     },
     "suggest": {
         "doctrine/orm": "Required when using the DoctrineOrmAdapter",
-        "illuminate/database": "Required when using the EloquentOrmAdapter"
+        "illuminate/database": "Required when using the EloquentOrmAdapter",
+        "ocramius/generated-hydrator": "Required when using EloquentOrmAdapter",
+        "zendframework/zend-stdlib": "Required when using the EloquentOrmAdapter"
     }
 }
