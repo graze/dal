@@ -43,10 +43,52 @@ This documentation will need *a lot* of work done to make it complete. For now,
 though, this really simple example will have to do.
 ```php
 <?php
+use Graze\Dal\Adapter\AdapterInterface;
+use Graze\Dal\DalManager;
 
-$dm = new DalManager([new MyAdapter(/*config*/) /*[,...]*/]);
+$dm = new DalManager([/*[AdapterInterface, ...]*/]);
+```
 
-$repo = $dm->getRepository('Profile');
+## Adapters
+### Doctrine ORM
+The [Doctrine ORM][doctrine-orm] adapter doesn't do all that much. The interface
+is very similar to using Doctrine right out the box, but the `DalManager` offers
+support for many EntityManagers under a single interface.
+```php
+<?php
+use Doctrine\ORM\EntityManager;
+use Graze\Dal\Adapter\DoctrineOrmAdapter;
+use Graze\Dal\DalManager;
+
+$em = new EntityManager(/*@see Doctrine's documentation*/);
+$dm = new DalManager(['main' => new DoctrineOrmAdapter($em)]);
+
+$repo = $dm->getRepository('Entity\Profile');
+$profile = $repo->findByEmail('andrew.lawson@graze.com');
+
+$profile->setEmail('jake@graze.com');
+
+$dm->flush();
+```
+
+### Eloquent ORM
+Laravel's [Eloquent ORM][eloquent-orm] adapter sets up the mapping of entities
+to Eloquent models. Once setup is done, you get data mapper style interface to
+your model layer.
+```php
+<?php
+use Graze\Dal\Adapter\EloquentOrmAdapter;
+use Graze\Dal\Adapter\EloquentOrm\Configuration;
+use Graze\Dal\DalManager;
+
+$dm = new DalManager(['main' => new EloquentOrmAdapter(new Configuration([
+    'Entity\Profile' => [
+        'record' => 'Model\Profile',
+        'repository' => 'Entity\Repo\ProfileRepo'
+    ]
+]))]);
+
+$repo = $dm->getRepository('Entity\Profile');
 $profile = $repo->findByEmail('andrew.lawson@graze.com');
 
 $profile->setEmail('jake@graze.com');
@@ -81,6 +123,8 @@ The content of this library is released under the **MIT License** by
 <!-- References -->
 [data-mapper]: http://en.wikipedia.org/wiki/Data_mapper_pattern
 [active-record]: http://en.wikipedia.org/wiki/Active_record_pattern
+[doctrine-orm]: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/
+[eloquent-orm]: http://laravel.com/docs/eloquent
 
 <!-- Files -->
 [license]: /LICENSE
