@@ -27,10 +27,9 @@ interface PersisterInterface
      * @param array $criteria
      * @param object $entity
      * @param array $orderBy
-     * @param integer $limit
      * @return object
      */
-    public function load(array $criteria, $entity = null, array $orderBy = null, $limit = null);
+    public function load(array $criteria, $entity = null, array $orderBy = null);
 
     /**
      * @param array $criteria
