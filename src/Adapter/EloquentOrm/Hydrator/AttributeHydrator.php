@@ -15,14 +15,14 @@ use Graze\Dal\Exception\InvalidEntityException;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\ArraySerializable;
 
-class PropertyHydrator extends ArraySerializable
+class AttributeHydrator extends ArraySerializable
 {
     /**
      * {@inheritdoc}
      */
     public function extract($object)
     {
-        if (!is_callable(array($object, 'toArray'))) {
+        if (!is_callable(array($object, 'attributesToArray'))) {
             throw new InvalidEntityException($object, __METHOD__);
         }
 
@@ -34,12 +34,14 @@ class PropertyHydrator extends ArraySerializable
                 unset($data[$name]);
                 continue;
             }
+
             $extractedName = $this->extractName($name, $object);
-            // replace the original key with extracted, if differ
+
             if ($extractedName !== $name) {
                 unset($data[$name]);
                 $name = $extractedName;
             }
+
             $data[$name] = $this->extractValue($name, $value, $object);
         }
 

@@ -34,6 +34,6 @@ class HydratorFactory
      */
     public function buildRecordHydrator($recordName)
     {
-        return new PropertyHydrator();
+        return new AttributeHydrator();
     }
 }
