@@ -17,6 +17,12 @@ use Graze\Dal\Exception\UndefinedRepositoryException;
 interface AdapterInterface
 {
     /**
+     * @param object $entity
+     * @return string
+     */
+    public function getEntityName($entity);
+
+    /**
      * @param string $class
      * @return ObjectRepository
      * @throws UndefinedRepositoryException If the repository is not found for name

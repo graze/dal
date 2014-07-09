@@ -76,13 +76,13 @@ class DalManager implements DalManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function flush($object = null)
+    public function flush($entity = null)
     {
-        $objectAdapter = $object ? $this->findAdapterByEntity($object) : null;
+        $entityAdapter = $entity ? $this->findAdapterByEntity($entity) : null;
 
         foreach ($this->adapters as $adapter) {
-            if ($adapter === $objectAdapter) {
-                $adapter->flush($object);
+            if ($adapter === $entityAdapter) {
+                $adapter->flush($entity);
             } else {
                 $adapter->flush();
             }
@@ -92,19 +92,19 @@ class DalManager implements DalManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function persist($object)
+    public function persist($entity)
     {
-        $adapter = $this->findAdapterByEntity($object);
-        $adapter->persist($object);
+        $adapter = $this->findAdapterByEntity($entity);
+        $adapter->persist($entity);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function refresh($object)
+    public function refresh($entity)
     {
-        $adapter = $this->findAdapterByEntity($object);
-        $adapter->refresh($object);
+        $adapter = $this->findAdapterByEntity($entity);
+        $adapter->refresh($entity);
     }
 
     /**
@@ -129,12 +129,18 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * @param object $object
+     * @param object $entity
      * @return AdapterInterface
      */
-    protected function findAdapterByEntity($object)
+    protected function findAdapterByEntity($entity)
     {
-        return $this->findAdapterByEntityName(get_class($object));
+        foreach ($this->adapters as $adapter) {
+            $name = $adapter->getEntityName($entity);
+
+            if ($adapter->hasRepository($name)) {
+                return $adapter;
+            }
+        }
     }
 
     /**

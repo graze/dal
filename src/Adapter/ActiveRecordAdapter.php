@@ -32,6 +32,15 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     }
 
     /**
+     * @param object $entity
+     * @return string
+     */
+    public function getEntityName($entity)
+    {
+        return get_class($entity);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getRepository($name)

@@ -44,19 +44,19 @@ interface DalManagerInterface
     public function getRepository($name);
 
     /**
-     * @param object $object
+     * @param object $entity
      */
-    public function flush($object = null);
+    public function flush($entity = null);
 
     /**
-     * @param object $object
+     * @param object $entity
      */
-    public function persist($object);
+    public function persist($entity);
 
     /**
-     * @param object $object
+     * @param object $entity
      */
-    public function refresh($object);
+    public function refresh($entity);
 
     /**
      * @param string $name
