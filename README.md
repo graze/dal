@@ -52,7 +52,7 @@ though, this really simple example will have to do.
 use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\DalManager;
 
-$dm = new DalManager([/*[AdapterInterface, ...]*/]);
+$dm = new DalManager([/*[$name => AdapterInterface, ...]*/]);
 ```
 
 ## Adapters
@@ -87,7 +87,8 @@ use Graze\Dal\Adapter\EloquentOrmAdapter;
 use Graze\Dal\Adapter\EloquentOrm\Configuration;
 use Graze\Dal\DalManager;
 
-$dm = new DalManager(['main' => new EloquentOrmAdapter(new Configuration([
+$conn = $connectionResolver->connection('foo');
+$dm = new DalManager(['main' => new EloquentOrmAdapter($conn, new Configuration([
     'Entity\Profile' => [
         'record' => 'Model\Profile',
         'repository' => 'Entity\Repo\ProfileRepo'
