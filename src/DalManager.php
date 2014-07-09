@@ -64,10 +64,10 @@ class DalManager implements DalManagerInterface
      */
     public function getRepository($name)
     {
-        $adapter = $this->findAdapterByEntityName($name);
-
-        if (!$adapter) {
-            throw new UndefinedRepositoryException($name, __METHOD__);
+        try {
+            $adapter = $this->findAdapterByEntityName($name);
+        } catch (UndefinedAdapterException $e) {
+            throw new UndefinedRepositoryException($name, __METHOD__, $e);
         }
 
         return $adapter->getRepository($name);
@@ -83,7 +83,7 @@ class DalManager implements DalManagerInterface
         foreach ($this->adapters as $adapter) {
             if ($adapter === $entityAdapter) {
                 $adapter->flush($entity);
-            } else {
+            } elseif (!$entityAdapter) {
                 $adapter->flush();
             }
         }
@@ -131,6 +131,7 @@ class DalManager implements DalManagerInterface
     /**
      * @param object $entity
      * @return AdapterInterface
+     * @throws UndefinedAdapterException If the adapter is not registered with entity
      */
     protected function findAdapterByEntity($entity)
     {
@@ -141,11 +142,14 @@ class DalManager implements DalManagerInterface
                 return $adapter;
             }
         }
+
+        throw new UndefinedAdapterException(get_class($entity), __METHOD__);
     }
 
     /**
      * @param string $name
      * @return AdapterInterface
+     * @throws UndefinedAdapterException If the adapter is not registered with name
      */
     protected function findAdapterByEntityName($name)
     {
@@ -154,5 +158,7 @@ class DalManager implements DalManagerInterface
                 return $adapter;
             }
         }
+
+        throw new UndefinedAdapterException($name, __METHOD__);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Graze\Dal;
 
+use Exception;
 use Graze\Dal\Test\UnitTestCase;
 use Mockery;
 
@@ -22,6 +23,21 @@ class DalManagerTest extends UnitTestCase
             [false, false, true],
             [false, false, false]
         ];
+    }
+
+    public function dataFlushWithEntity()
+    {
+        return $this->dataGetRepository();
+    }
+
+    public function dataPersist()
+    {
+        return $this->dataGetRepository();
+    }
+
+    public function dataRefresh()
+    {
+        return $this->dataGetRepository();
     }
 
     public function testInterface()
@@ -92,6 +108,135 @@ class DalManagerTest extends UnitTestCase
             $manager->getRepository($name);
         } else {
             $this->assertSame($repo, $manager->getRepository($name));
+        }
+    }
+
+    public function testFlush()
+    {
+        $manager = new DalManager($this->adapters);
+
+        $this->adapterA->shouldReceive('flush')->once()->withNoArgs();
+        $this->adapterB->shouldReceive('flush')->once()->withNoArgs();
+        $this->adapterC->shouldReceive('flush')->once()->withNoArgs();
+
+        $this->assertNull($manager->flush());
+    }
+
+    /**
+     * @dataProvider dataFlushWithEntity
+     */
+    public function testFlushWithEntity($hasA, $hasB, $hasC)
+    {
+        $name = 'entityName';
+        $entity = new \stdClass();
+        $manager = new DalManager($this->adapters);
+
+        $this->adapterA->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        $this->adapterA->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasA);
+        if ($hasA) $this->adapterA->shouldReceive('flush')->once()->with($entity);
+
+        if (!$hasA) $this->adapterB->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        if (!$hasA) $this->adapterB->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasB);
+        if (!$hasA && $hasB) $this->adapterB->shouldReceive('flush')->once()->with($entity);
+
+        if (!$hasA && !$hasB) $this->adapterC->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        if (!$hasA && !$hasB) $this->adapterC->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasC);
+        if (!$hasA && !$hasB && $hasC) $this->adapterC->shouldReceive('flush')->once()->with($entity);
+
+        if (!$hasA && !$hasB && !$hasC) {
+            $this->setExpectedException('Graze\Dal\Exception\UndefinedAdapterException');
+            $manager->flush($entity);
+        } else {
+            $this->assertNull($manager->flush($entity));
+        }
+    }
+
+    /**
+     * @dataProvider dataPersist
+     */
+    public function testPersist($hasA, $hasB, $hasC)
+    {
+        $name = 'entityName';
+        $entity = new \stdClass();
+        $manager = new DalManager($this->adapters);
+
+        $this->adapterA->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        $this->adapterA->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasA);
+        if ($hasA) $this->adapterA->shouldReceive('persist')->once()->with($entity);
+
+        if (!$hasA) $this->adapterB->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        if (!$hasA) $this->adapterB->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasB);
+        if (!$hasA && $hasB) $this->adapterB->shouldReceive('persist')->once()->with($entity);
+
+        if (!$hasA && !$hasB) $this->adapterC->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        if (!$hasA && !$hasB) $this->adapterC->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasC);
+        if (!$hasA && !$hasB && $hasC) $this->adapterC->shouldReceive('persist')->once()->with($entity);
+
+        if (!$hasA && !$hasB && !$hasC) {
+            $this->setExpectedException('Graze\Dal\Exception\UndefinedAdapterException');
+            $manager->persist($entity);
+        } else {
+            $this->assertNull($manager->persist($entity));
+        }
+    }
+
+    /**
+     * @dataProvider dataRefresh
+     */
+    public function testRefresh($hasA, $hasB, $hasC)
+    {
+        $name = 'entityName';
+        $entity = new \stdClass();
+        $manager = new DalManager($this->adapters);
+
+        $this->adapterA->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        $this->adapterA->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasA);
+        if ($hasA) $this->adapterA->shouldReceive('refresh')->once()->with($entity);
+
+        if (!$hasA) $this->adapterB->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        if (!$hasA) $this->adapterB->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasB);
+        if (!$hasA && $hasB) $this->adapterB->shouldReceive('refresh')->once()->with($entity);
+
+        if (!$hasA && !$hasB) $this->adapterC->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        if (!$hasA && !$hasB) $this->adapterC->shouldReceive('hasRepository')->once()->with($name)->andReturn($hasC);
+        if (!$hasA && !$hasB && $hasC) $this->adapterC->shouldReceive('refresh')->once()->with($entity);
+
+        if (!$hasA && !$hasB && !$hasC) {
+            $this->setExpectedException('Graze\Dal\Exception\UndefinedAdapterException');
+            $manager->refresh($entity);
+        } else {
+            $this->assertNull($manager->refresh($entity));
+        }
+    }
+
+    public function testTransactionCommit()
+    {
+        $manager = new DalManager($this->adapters);
+
+        $this->adapterB->shouldReceive('beginTransaction')->once()->withNoArgs();
+        $this->adapterB->shouldReceive('commit')->once()->withNoArgs();
+
+        $manager->transaction('bar', function ($adapter) {
+            $this->assertSame($this->adapterB, $adapter);
+        });
+    }
+
+    public function testTransactionRollback()
+    {
+        $manager = new DalManager($this->adapters);
+        $exception = new Exception('Transaction failed');
+
+        $this->adapterB->shouldReceive('beginTransaction')->once()->withNoArgs();
+        $this->adapterB->shouldReceive('rollback')->once()->withNoArgs();
+
+        try {
+            $manager->transaction('bar', function ($adapter) use ($exception) {
+                $this->assertSame($this->adapterB, $adapter);
+
+                throw $exception;
+            });
+        } catch (Exception $e) {
+            $this->assertSame($exception, $e);
         }
     }
 }
