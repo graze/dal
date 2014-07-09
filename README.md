@@ -22,6 +22,12 @@ our interface into persistence across our PHP applications for the foreseeable
 future. Wel will continue to use our active record implementation underneith DAL
 until we decide to remove it completely, at which point DAL will stay put.
 
+The main interface of DAL mimics the API of Doctrine ORM, with similarly named
+`getRepository()`, `persist()` and `flush()` methods. The repositories exposed
+through the `getRepository()` method even implement Doctrine's
+`ObjectRepository`, all with the aim of having a common ground with one of the
+most feature-complete data mapper libraries for PHP.
+
 It can be installed in whichever way you prefer, but we recommend
 [Composer][packagist].
 ```json
