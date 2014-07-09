@@ -64,24 +64,28 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     /**
      * @{inheritdoc}
      */
-    public function flush($object = null)
+    public function flush($entity = null)
     {
-        $this->unitOfWork->commit($object);
+        if (null !== $entity) {
+            $this->unitOfWork->commit($entity);
+        } else {
+            $this->unitOfWork->commit();
+        }
     }
 
     /**
      * @{inheritdoc}
      */
-    public function persist($object)
+    public function persist($entity)
     {
-        $this->unitOfWork->persist($object);
+        $this->unitOfWork->persist($entity);
     }
 
     /**
      * @{inheritdoc}
      */
-    public function refresh($object)
+    public function refresh($entity)
     {
-        $this->unitOfWork->refresh($object);
+        $this->unitOfWork->refresh($entity);
     }
 }

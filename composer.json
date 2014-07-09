@@ -43,6 +43,11 @@
             "Graze\\Dal\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Graze\\Dal\\Test\\": "test/src/"
+        }
+    },
     "require": {
         "php": ">=5.4.0",
         "doctrine/common": "~2.4",

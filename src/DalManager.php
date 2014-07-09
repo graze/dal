@@ -37,7 +37,7 @@ class DalManager implements DalManagerInterface
     public function get($name)
     {
         if (!$this->has($name)) {
-            throw new UndefinedAdapterInterface($name, __METHOD__);
+            throw new UndefinedAdapterException($name, __METHOD__);
         }
 
         return $this->adapters[$name];
