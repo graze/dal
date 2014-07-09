@@ -1,15 +1,5 @@
 <?php
-/*
- * This file is part of Graze DAL
- *
- * Copyright (c) 2014 Nature Delivered Ltd. <http://graze.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @see  http://github.com/graze/dal/blob/master/LICENSE
- */
-namespace Graze\Dal\Adapter\EloquentOrm\Hydrator;
+namespace Graze\Dal\Adapter\ActiveRecord\Hydrator;
 
 use Graze\Dal\Exception\InvalidEntityException;
 use ReflectionClass;
@@ -17,12 +7,27 @@ use Zend\Stdlib\Hydrator\ArraySerializable;
 
 class AttributeHydrator extends ArraySerializable
 {
+    protected $fromData;
+    protected $toData;
+
+    /**
+     * @param string $toData
+     * @param string $fromData
+     */
+    public function __construct($toData, $fromData)
+    {
+        $this->toData = $toData;
+        $this->fromData = $fromData;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
     public function extract($object)
     {
-        if (!is_callable(array($object, 'attributesToArray'))) {
+        if (!is_callable(array($object, $this->toData))) {
             throw new InvalidEntityException($object, __METHOD__);
         }
 
@@ -61,11 +66,12 @@ class AttributeHydrator extends ArraySerializable
 
         $object->loadArray($replacement);
 
-        if (is_callable(array($object, 'fill'))) {
+        if (is_callable(array($object, $this->fromData))) {
             $object->loadArray($replacement);
         } else {
             throw new InvalidEntityException($object, __METHOD__);
         }
+
         return $object;
     }
 }

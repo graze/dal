@@ -12,6 +12,7 @@
 namespace Graze\Dal\Adapter\EloquentOrm\Hydrator;
 
 use GeneratedHydrator\Configuration;
+use Graze\Dal\Adapter\ActiveRecord\Hydrator\AttributeHydrator;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class HydratorFactory
@@ -34,6 +35,6 @@ class HydratorFactory
      */
     public function buildRecordHydrator($recordName)
     {
-        return new AttributeHydrator();
+        return new AttributeHydrator('attributesToArray', 'fill');
     }
 }
