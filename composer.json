@@ -57,9 +57,11 @@
         "adlawson/timezone": "~1.0",
         "mockery/mockery": "~0.9",
         "phpunit/phpunit": "~4.0",
-        "doctrine/orm": "~2.4"
+        "doctrine/orm": "~2.4",
+        "illuminate/database": "~4.2"
     },
     "suggest": {
-        "doctrine/orm": "Required when using the DoctrineOrmAdapter"
+        "doctrine/orm": "Required when using the DoctrineOrmAdapter",
+        "illuminate/database": "Required when using the EloquentOrmAdapter"
     }
 }
