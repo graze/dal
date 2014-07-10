@@ -42,11 +42,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param MapperInterface $mapper
      * @param UnitOfWork $uow
      * @return PersisterInterface
      */
-    abstract protected function buildDefaultPersister($entityName, $recordName, MapperInterface $mapper, UnitOfWork $uow);
+    abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $uow);
 
     /**
      * {@inheritdoc}
@@ -66,7 +65,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function buildPersister($name, MapperInterface $mapper, UnitOfWork $uow)
+    public function buildPersister($name, UnitOfWork $uow)
     {
         $mapping = $this->getMapping($name);
 
@@ -75,7 +74,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
             throw new InvalidMappingException($message, __METHOD__);
         }
 
-        return $this->buildDefaultPersister($name, $mapping['record'], $mapper, $uow);
+        return $this->buildDefaultPersister($name, $mapping['record'], $uow);
     }
 
     /**

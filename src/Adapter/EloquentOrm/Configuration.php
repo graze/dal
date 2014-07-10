@@ -12,10 +12,7 @@
 namespace Graze\Dal\Adapter\EloquentOrm;
 
 use Graze\Dal\Adapter\ActiveRecord\AbstractConfiguration;
-use Graze\Dal\Adapter\ActiveRecord\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
-use Graze\Dal\Adapter\EloquentOrm\EntityMapper;
-use Graze\Dal\Adapter\EloquentOrm\EntityPersister;
 use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 
 class Configuration extends AbstractConfiguration
@@ -33,9 +30,9 @@ class Configuration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    protected function buildDefaultPersister($entityName, $recordName, MapperInterface $mapper, UnitOfWork $uow)
+    protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $uow)
     {
-        return new EntityPersister($entityName, $recordName, $mapper, $uow);
+        return new EntityPersister($entityName, $recordName, $uow);
     }
 
     /**

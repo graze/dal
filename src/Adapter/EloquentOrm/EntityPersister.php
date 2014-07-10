@@ -11,7 +11,6 @@
  */
 namespace Graze\Dal\Adapter\EloquentOrm;
 
-use Graze\Dal\Adapter\ActiveRecord\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 
@@ -19,20 +18,17 @@ class EntityPersister implements PersisterInterface
 {
     protected $entityName;
     protected $recordName;
-    protected $mapper;
     protected $unitOfWork;
 
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param MapperInterface $mapper
      * @param UnitOfWork $unitOfWork
      */
-    public function __construct($entityName, $recordName, MapperInterface $mapper, UnitOfWork $unitOfWork)
+    public function __construct($entityName, $recordName, UnitOfWork $unitOfWork)
     {
         $this->entityName = $entityName;
         $this->recordName = $recordName;
-        $this->mapper = $mapper;
         $this->unitOfWork = $unitOfWork;
     }
 
@@ -68,7 +64,10 @@ class EntityPersister implements PersisterInterface
             $query->orderBy($field, $direction);
         }
 
-        return $record ? $this->persistImplicit($this->mapper->toEntity($query->first(), $entity)) : null;
+        $record = $query->first();
+        $mapper = $this->unitOfWork->getMapper($this->entityName);
+
+        return $record ? $this->persistImplicit($mapper->toEntity($record, $entity)) : null;
     }
 
     /**
@@ -90,8 +89,10 @@ class EntityPersister implements PersisterInterface
             $query->orderBy($field, $direction);
         }
 
-        return array_map(function ($record) {
-            return $this->persistImplicit($this->mapper->toEntity($record));
+        $mapper = $this->unitOfWork->getMapper($this->entityName);
+
+        return array_map(function ($record) use ($mapper) {
+            return $this->persistImplicit($mapper->toEntity($record));
         }, $query->get());
     }
 
@@ -100,10 +101,11 @@ class EntityPersister implements PersisterInterface
      */
     public function loadById($id, $entity = null)
     {
-        $class = $this->recordName;
+        $class  = $this->recordName;
         $record = $class::find($id);
+        $mapper = $this->unitOfWork->getMapper($this->entityName);
 
-        return $record ? $this->persistImplicit($this->mapper->toEntity($record, $entity)) : null;
+        return $record ? $this->persistImplicit($mapper->toEntity($record, $entity)) : null;
     }
 
     /**
@@ -111,7 +113,8 @@ class EntityPersister implements PersisterInterface
      */
     public function save($entity)
     {
-        $record = $this->mapper->fromEntity($entity);
+        $mapper = $this->unitOfWork->getMapper($this->entityName);
+        $record = $mapper->fromEntity($entity);
 
         $record->save();
     }

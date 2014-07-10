@@ -21,6 +21,7 @@ class UnitOfWork
 
     protected $adapter;
     protected $config;
+    protected $mappers = [];
     protected $persisted;
     protected $persisters = [];
     protected $trackingPolicy;
@@ -86,12 +87,24 @@ class UnitOfWork
     }
 
     /**
+     * @return MapperInterface
+     */
+    public function getMapper($name)
+    {
+        if (!isset($this->mappers[$name])) {
+            $this->mappers[$name] = $this->config->buildMapper($name);
+        }
+
+        return $this->mappers[$name];
+    }
+
+    /**
      * @return PersisterInterface
      */
     public function getPersister($name)
     {
         if (!isset($this->persisters[$name])) {
-            $mapper = $this->config->buildMapper($name);
+            $mapper = $this->getMapper($name);
             $this->persisters[$name] = $this->config->buildPersister($name, $mapper, $this);
         }
 

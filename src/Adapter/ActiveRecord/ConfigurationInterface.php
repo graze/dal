@@ -24,11 +24,10 @@ interface ConfigurationInterface
 
     /**
      * @param string $name
-     * @param MapperInterface $mapper
      * @param UnitOfWork $uow
      * @return PersisterInterface
      */
-    public function buildPersister($name, MapperInterface $mapper, UnitOfWork $uow);
+    public function buildPersister($name, UnitOfWork $uow);
 
     /**
      * @param string $name
