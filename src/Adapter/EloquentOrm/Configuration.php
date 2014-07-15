@@ -14,6 +14,8 @@ namespace Graze\Dal\Adapter\EloquentOrm;
 use Graze\Dal\Adapter\ActiveRecord\AbstractConfiguration;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
+use Graze\Dal\Adapter\EloquentOrm\Mapper\EntityMapper;
+use Graze\Dal\Adapter\EloquentOrm\Persister\EntityPersister;
 
 class Configuration extends AbstractConfiguration
 {

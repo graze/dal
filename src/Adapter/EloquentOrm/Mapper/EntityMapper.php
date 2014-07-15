@@ -9,17 +9,15 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\EloquentOrm;
+namespace Graze\Dal\Adapter\EloquentOrm\Mapper;
 
-use Graze\Dal\Adapter\ActiveRecord\MapperInterface;
+use Graze\Dal\Adapter\ActiveRecord\Mapper\AbstractMapper;
 use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use ReflectionClass;
 
-class EntityMapper implements MapperInterface
+class EntityMapper extends AbstractMapper
 {
     protected $factory;
-    protected $entityName;
-    protected $recordName;
     protected $entityHydrator;
     protected $recordHydrator;
     protected $entityReflectionClass;
@@ -33,24 +31,8 @@ class EntityMapper implements MapperInterface
     public function __construct($entityName, $recordName, HydratorFactory $factory)
     {
         $this->factory = $factory;
-        $this->entityName = $entityName;
-        $this->recordName = $recordName;
-    }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEntityData($entity)
-    {
-        return $this->getEntityHydrator()->extract($entity);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRecordData($record)
-    {
-        return $this->getRecordHydrator()->extract($record);
+        parent::__construct($entityName, $recordName);
     }
 
     /**

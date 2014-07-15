@@ -9,45 +9,14 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\EloquentOrm;
+namespace Graze\Dal\Adapter\EloquentOrm\Persister;
 
-use Graze\Dal\Adapter\ActiveRecord\PersisterInterface;
+use Graze\Dal\Adapter\ActiveRecord\Persister\AbstractPersister;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
+use LogicException;
 
-class EntityPersister implements PersisterInterface
+class EntityPersister extends AbstractPersister
 {
-    protected $entityName;
-    protected $recordName;
-    protected $unitOfWork;
-
-    /**
-     * @param string $entityName
-     * @param string $recordName
-     * @param UnitOfWork $unitOfWork
-     */
-    public function __construct($entityName, $recordName, UnitOfWork $unitOfWork)
-    {
-        $this->entityName = $entityName;
-        $this->recordName = $recordName;
-        $this->unitOfWork = $unitOfWork;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEntityName()
-    {
-        return $this->entityName;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRecordName()
-    {
-        return $this->recordName;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -122,7 +91,7 @@ class EntityPersister implements PersisterInterface
      */
     public function refresh($entity)
     {
-        throw new \LogicException('Entity refresh is not implemented');
+        throw new LogicException('Entity refresh is not implemented');
     }
 
     /**

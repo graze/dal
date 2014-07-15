@@ -4,7 +4,7 @@ namespace Graze\Dal\Adapter\ActiveRecord\Proxy;
 use Closure;
 use Doctrine\Common\Collections\Collection;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
-use Graze\Dal\Adapter\ActiveRecord\MapperInterface;
+use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
