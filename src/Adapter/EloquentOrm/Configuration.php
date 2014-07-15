@@ -18,30 +18,53 @@ use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 class Configuration extends AbstractConfiguration
 {
     protected $hydratorFactory;
+    protected $proxyConfiguration;
 
     /**
      * {@inheritdoc}
      */
-    protected function buildDefaultMapper($entityName, $recordName)
+    public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
-        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory());
+        $this->proxyConfiguration = $this->buildProxyConfiguration();
+
+        parent::__construct($mapping, $trackingPolicy);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $uow)
+    public function getEntityName($entity)
     {
-        return new EntityPersister($entityName, $recordName, $uow);
+        $inflector = $this->proxyConfiguration->getClassNameInflector();
+
+        return $inflector->getUserClassName(get_class($entity));
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
+    {
+        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
+    {
+        return new EntityPersister($entityName, $recordName, $unitOfWork);
+    }
+
+    /**
+     * @param UnitOfWork $unitOfWork
      * @return HydratorFactory
      */
-    protected function getHydratorFactory()
+    protected function getHydratorFactory(UnitOfWork $unitOfWork)
     {
         if (!$this->hydratorFactory) {
-            $this->hydratorFactory = new HydratorFactory();
+            $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);
+            $this->hydratorFactory = new HydratorFactory($this, $proxyFactory);
         }
 
         return $this->hydratorFactory;

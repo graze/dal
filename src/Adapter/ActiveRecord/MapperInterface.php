@@ -15,6 +15,18 @@ interface MapperInterface
 {
     /**
      * @param object $entity
+     * @return array
+     */
+    public function getEntityData($entity);
+
+    /**
+     * @param object $record
+     * @return array
+     */
+    public function getRecordData($record);
+
+    /**
+     * @param object $entity
      * @param object $record
      * @return object
      */

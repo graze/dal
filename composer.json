@@ -40,7 +40,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Graze\\Dal\\": "src/"
+            "Graze\\Dal\\": "src/",
+            "Graze\\Lib\\Dal\\": "lib/"
         }
     },
     "autoload-dev": {
@@ -50,8 +51,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "doctrine/common": "~2.4",
-        "zendframework/zend-stdlib": "~2.3"
+        "doctrine/common": "~2.4"
     },
     "require-dev": {
         "adlawson/timezone": "~1.0",
@@ -60,10 +60,14 @@
         "doctrine/orm": "~2.4",
         "illuminate/database": "~4.2",
         "ocramius/generated-hydrator": "~1.0",
+        "ocramius/proxy-manager": "~0.5",
+        "zendframework/zend-stdlib": "~2.3"
     },
     "suggest": {
         "doctrine/orm": "Required when using the DoctrineOrmAdapter",
         "illuminate/database": "Required when using the EloquentOrmAdapter",
-        "ocramius/generated-hydrator": "Required when using EloquentOrmAdapter"
+        "ocramius/generated-hydrator": "Required when using ActiveRecordAdapter (EloquentOrm)",
+        "ocramius/proxy-manager": "Required when using ActiveRecordAdapter (EloquentOrm)",
+        "zendframework/zend-stdlib": "Required when using ActiveRecordAdapter (EloquentOrm)"
     }
 }

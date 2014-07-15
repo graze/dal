@@ -67,7 +67,10 @@ class EntityPersister implements PersisterInterface
         $record = $query->first();
         $mapper = $this->unitOfWork->getMapper($this->entityName);
 
-        return $record ? $this->persistImplicit($mapper->toEntity($record, $entity)) : null;
+        $entity = $mapper->toEntity($record, $entity);
+        $this->unitOfWork->setEntityRecord($entity, $record);
+
+        return $record ? $this->persistImplicit($entity) : null;
     }
 
     /**
@@ -92,7 +95,10 @@ class EntityPersister implements PersisterInterface
         $mapper = $this->unitOfWork->getMapper($this->entityName);
 
         return array_map(function ($record) use ($mapper) {
-            return $this->persistImplicit($mapper->toEntity($record));
+            $mapper->toEntity($record);
+            $this->unitOfWork->setEntityRecord($entity, $record);
+
+            return $this->persistImplicit($entity);
         }, $query->get());
     }
 
@@ -105,7 +111,18 @@ class EntityPersister implements PersisterInterface
         $record = $class::find($id);
         $mapper = $this->unitOfWork->getMapper($this->entityName);
 
-        return $record ? $this->persistImplicit($mapper->toEntity($record, $entity)) : null;
+        $entity = $mapper->toEntity($record, $entity);
+        $this->unitOfWork->setEntityRecord($entity, $record);
+
+        return $record ? $this->persistImplicit($entity) : null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function refresh($entity)
+    {
+        throw new \LogicException('Entity refresh is not implemented');
     }
 
     /**
@@ -114,7 +131,10 @@ class EntityPersister implements PersisterInterface
     public function save($entity)
     {
         $mapper = $this->unitOfWork->getMapper($this->entityName);
+        $record = $this->unitOfWork->getEntityRecord($entity);
         $record = $mapper->fromEntity($entity);
+
+        $this->unitOfWork->setEntityRecord($entity, $record);
 
         $record->save();
     }

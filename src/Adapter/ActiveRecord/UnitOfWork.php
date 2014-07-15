@@ -24,6 +24,7 @@ class UnitOfWork
     protected $mappers = [];
     protected $persisted;
     protected $persisters = [];
+    protected $records = [];
     protected $trackingPolicy;
 
     /**
@@ -51,7 +52,7 @@ class UnitOfWork
         foreach ($this->persisted as $persisted) {
             if (!$entity || $entity === $persisted) {
                 $this->getPersisterByEntity($persisted)->save($persisted);
-                $this->persisted->detatch($persisted);
+                $this->persisted->detach($persisted);
 
                 if ($entity) {
                     break;
@@ -73,7 +74,7 @@ class UnitOfWork
      */
     public function refresh($entity)
     {
-        throw new \LogicException('Refresh isn\'t implemented yet!');
+        $this->getPersisterByEntity($entity)->refresh($entity);
     }
 
     /**
@@ -87,12 +88,29 @@ class UnitOfWork
     }
 
     /**
+     * @param object $entity
+     */
+    public function getEntityRecord($entity)
+    {
+        return isset($this->records[spl_object_hash($entity)]) ? $this->records[spl_object_hash($entity)] : null;
+    }
+
+    /**
+     * @param object $entity
+     * @param object $record
+     */
+    public function setEntityRecord($entity, $record)
+    {
+        $this->records[spl_object_hash($entity)] = $record;
+    }
+
+    /**
      * @return MapperInterface
      */
     public function getMapper($name)
     {
         if (!isset($this->mappers[$name])) {
-            $this->mappers[$name] = $this->config->buildMapper($name);
+            $this->mappers[$name] = $this->config->buildMapper($name, $this);
         }
 
         return $this->mappers[$name];
@@ -104,8 +122,7 @@ class UnitOfWork
     public function getPersister($name)
     {
         if (!isset($this->persisters[$name])) {
-            $mapper = $this->getMapper($name);
-            $this->persisters[$name] = $this->config->buildPersister($name, $mapper, $this);
+            $this->persisters[$name] = $this->config->buildPersister($name, $this);
         }
 
         return $this->persisters[$name];

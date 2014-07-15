@@ -14,7 +14,7 @@ class AttributeHydrator extends ArraySerializable
      * @param string $toData
      * @param string $fromData
      */
-    public function __construct($toData, $fromData)
+    public function __construct($toData = 'toArray', $fromData = 'fromArray')
     {
         $this->toData = $toData;
         $this->fromData = $fromData;

@@ -18,16 +18,17 @@ interface ConfigurationInterface
 {
     /**
      * @param string $name
+     * @param UnitOfWork $unitOfWork
      * @return MapperInterface
      */
-    public function buildMapper($name);
+    public function buildMapper($name, UnitOfWork $unitOfWork);
 
     /**
      * @param string $name
-     * @param UnitOfWork $uow
+     * @param UnitOfWork $unitOfWork
      * @return PersisterInterface
      */
-    public function buildPersister($name, UnitOfWork $uow);
+    public function buildPersister($name, UnitOfWork $unitOfWork);
 
     /**
      * @param string $name
@@ -47,6 +48,12 @@ interface ConfigurationInterface
      * @return string
      */
     public function getEntityName($entity);
+
+    /**
+     * @param object $record
+     * @return string
+     */
+    public function getEntityNameFromRecord($record);
 
     /**
      * @param string $name

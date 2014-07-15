@@ -12,11 +12,27 @@
 namespace Graze\Dal\Adapter\EloquentOrm\Hydrator;
 
 use GeneratedHydrator\Configuration;
+use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Hydrator\AttributeHydrator;
+use Graze\Dal\Adapter\ActiveRecord\Hydrator\MethodProxyHydrator;
+use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class HydratorFactory
 {
+    protected $config;
+    protected $proxyFactory;
+
+    /**
+     * @param ConfigurationInterface $config
+     * @param ProxyFactory $proxyFactory
+     */
+    public function __construct(ConfigurationInterface $config, ProxyFactory $proxyFactory)
+    {
+        $this->config = $config;
+        $this->proxyFactory = $proxyFactory;
+    }
+
     /**
      * @param string $entityName
      * @return HydratorInterface
@@ -35,6 +51,10 @@ class HydratorFactory
      */
     public function buildRecordHydrator($recordName)
     {
-        return new AttributeHydrator('attributesToArray', 'fill');
+        return new MethodProxyHydrator(
+            $this->config,
+            $this->proxyFactory,
+            new AttributeHydrator('attributesToArray', 'fill')
+        );
     }
 }

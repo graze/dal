@@ -37,7 +37,7 @@ abstract class ActiveRecordAdapter implements AdapterInterface
      */
     public function getEntityName($entity)
     {
-        return get_class($entity);
+        return $this->config->getEntityName($entity);
     }
 
     /**

@@ -40,6 +40,22 @@ class EntityMapper implements MapperInterface
     /**
      * {@inheritdoc}
      */
+    public function getEntityData($entity)
+    {
+        return $this->getEntityHydrator()->extract($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecordData($record)
+    {
+        return $this->getRecordHydrator()->extract($record);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function fromEntity($entity, $record = null)
     {
         $data = $this->getEntityHydrator()->extract($record);

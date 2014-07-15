@@ -14,11 +14,17 @@ namespace Graze\Dal\Adapter\ActiveRecord;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
+use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
+use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
+use ProxyManager\Configuration as ProxyConfiguration;
+use ProxyManager\Factory\LazyLoadingGhostFactory;
 
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
+    const PROXY_NAMESPACE = 'Graze\Dal';
+
     protected $mapping;
     protected $trackingPolicy;
 
@@ -35,22 +41,23 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param string $entityName
      * @param string $recordName
+     * @param UnitOfWork $unitOfWork
      * @return MapperInterface
      */
-    abstract protected function buildDefaultMapper($entityName, $recordName);
+    abstract protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork);
 
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param UnitOfWork $uow
+     * @param UnitOfWork $unitOfWork
      * @return PersisterInterface
      */
-    abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $uow);
+    abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork);
 
     /**
      * {@inheritdoc}
      */
-    public function buildMapper($name)
+    public function buildMapper($name, UnitOfWork $unitOfWork)
     {
         $mapping = $this->getMapping($name);
 
@@ -59,13 +66,13 @@ abstract class AbstractConfiguration implements ConfigurationInterface
             throw new InvalidMappingException($message, __METHOD__);
         }
 
-        return $this->buildDefaultMapper($name, $mapping['record'], $this->getHydratorFactory());
+        return $this->buildDefaultMapper($name, $mapping['record'], $unitOfWork);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildPersister($name, UnitOfWork $uow)
+    public function buildPersister($name, UnitOfWork $unitOfWork)
     {
         $mapping = $this->getMapping($name);
 
@@ -74,7 +81,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
             throw new InvalidMappingException($message, __METHOD__);
         }
 
-        return $this->buildDefaultPersister($name, $mapping['record'], $uow);
+        return $this->buildDefaultPersister($name, $mapping['record'], $unitOfWork);
     }
 
     /**
@@ -115,6 +122,21 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
+     * @param object $record
+     * @return string
+     */
+    public function getEntityNameFromRecord($record)
+    {
+        $class = get_class($record);
+
+        foreach ($this->mapping as $name => $mapping) {
+            if (isset($mapping['record']) && $class === $mapping['record']) {
+                return $name;
+            }
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getMapping($name)
@@ -130,5 +152,27 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected function buildDefaultRepository($name, ActiveRecordAdapter $adapter)
     {
         return new EntityRepository($name, $adapter);
+    }
+
+    /**
+     * @param string $namespace
+     * @return ProxyConfiguration
+     */
+    protected function buildProxyConfiguration($namespace = self::PROXY_NAMESPACE)
+    {
+        $config = new ProxyConfiguration();
+        $config->setProxiesNamespace($namespace);
+
+        return $config;
+    }
+
+    /**
+     * @param ProxyConfiguration $config
+     * @param UnitOfWork $unitOfWork
+     * @return ProxyFactory
+     */
+    protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
+    {
+        return new ProxyFactory($this, $unitOfWork, new LazyLoadingGhostFactory($config));
     }
 }

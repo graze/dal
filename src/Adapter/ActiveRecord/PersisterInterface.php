@@ -50,5 +50,10 @@ interface PersisterInterface
     /**
      * @param object $entity
      */
+    public function refresh($entity);
+
+    /**
+     * @param object $entity
+     */
     public function save($entity);
 }
