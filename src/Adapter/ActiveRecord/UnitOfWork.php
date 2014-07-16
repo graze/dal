@@ -80,6 +80,14 @@ class UnitOfWork
     /**
      * @param object $entity
      */
+    public function remove($entity)
+    {
+        $this->getPersisterByEntity($entity)->delete($entity);
+    }
+
+    /**
+     * @param object $entity
+     */
     public function persistByTrackingPolicy($entity)
     {
         if (self::POLICY_IMPLICIT === $this->trackingPolicy) {

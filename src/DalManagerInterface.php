@@ -59,6 +59,11 @@ interface DalManagerInterface
     public function refresh($entity);
 
     /**
+     * @param object $entity
+     */
+    public function remove($entity);
+
+    /**
      * @param string $name
      * @param callable $fn
      */

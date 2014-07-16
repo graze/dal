@@ -51,6 +51,11 @@ interface AdapterInterface
     public function refresh($entity);
 
     /**
+     * @param object $entity
+     */
+    public function remove($entity);
+
+    /**
      */
     public function beginTransaction();
 

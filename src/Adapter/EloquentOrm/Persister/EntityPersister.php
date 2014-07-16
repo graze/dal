@@ -89,6 +89,20 @@ class EntityPersister extends AbstractPersister
     /**
      * {@inheritdoc}
      */
+    public function delete($entity)
+    {
+        $mapper = $this->unitOfWork->getMapper($this->entityName);
+        $record = $this->unitOfWork->getEntityRecord($entity);
+        $record = $mapper->fromEntity($entity, $record);
+
+        $this->unitOfWork->setEntityRecord($entity, null);
+
+        $record->delete();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function refresh($entity)
     {
         throw new LogicException('Entity refresh is not implemented');

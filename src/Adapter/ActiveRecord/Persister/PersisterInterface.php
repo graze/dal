@@ -50,6 +50,11 @@ interface PersisterInterface
     /**
      * @param object $entity
      */
+    public function delete($entity);
+
+    /**
+     * @param object $entity
+     */
     public function refresh($entity);
 
     /**

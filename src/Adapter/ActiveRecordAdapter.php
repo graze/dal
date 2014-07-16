@@ -97,4 +97,12 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     {
         $this->unitOfWork->refresh($entity);
     }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function remove($entity)
+    {
+        $this->unitOfWork->remove($entity);
+    }
 }

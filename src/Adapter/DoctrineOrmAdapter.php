@@ -94,6 +94,14 @@ class DoctrineOrmAdapter implements AdapterInterface
     /**
      * @{inheritdoc}
      */
+    public function remove($entity)
+    {
+        $this->em->remove($entity);
+    }
+
+    /**
+     * @{inheritdoc}
+     */
     public function beginTransaction()
     {
         $this->em->getConnection()->beginTransaction();

@@ -110,6 +110,15 @@ class DalManager implements DalManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function remove($entity)
+    {
+        $adapter = $this->findAdapterByEntity($entity);
+        $adapter->remove($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function transaction($adapterName, callable $fn)
     {
         $adapter = $this->get($adapterName);
