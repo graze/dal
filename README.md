@@ -77,32 +77,6 @@ $profile->setEmail('jake@graze.com');
 $dm->flush();
 ```
 
-### Eloquent ORM
-Laravel's [Eloquent ORM][eloquent-orm] adapter sets up the mapping of entities
-to Eloquent models. Once setup is done, you get data mapper style interface to
-your model layer.
-```php
-<?php
-use Graze\Dal\Adapter\EloquentOrmAdapter;
-use Graze\Dal\Adapter\EloquentOrm\Configuration;
-use Graze\Dal\DalManager;
-
-$conn = $connectionResolver->connection('foo');
-$dm = new DalManager(['main' => new EloquentOrmAdapter($conn, new Configuration([
-    'Entity\Profile' => [
-        'record' => 'Model\Profile',
-        'repository' => 'Entity\Repo\ProfileRepo'
-    ]
-]))]);
-
-$repo = $dm->getRepository('Entity\Profile');
-$profile = $repo->findByEmail('andrew.lawson@graze.com');
-
-$profile->setEmail('jake@graze.com');
-
-$dm->flush();
-```
-
 ## Contributing
 Contributions are accepted via Pull Request, but passing unit tests must be
 included before it will be considered for merge.
@@ -131,7 +105,6 @@ The content of this library is released under the **MIT License** by
 [data-mapper]: http://en.wikipedia.org/wiki/Data_mapper_pattern
 [active-record]: http://en.wikipedia.org/wiki/Active_record_pattern
 [doctrine-orm]: http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/
-[eloquent-orm]: http://laravel.com/docs/eloquent
 
 <!-- Files -->
 [license]: /LICENSE
