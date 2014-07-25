@@ -44,7 +44,7 @@ abstract class AbstractMapper implements MapperInterface
      */
     public function getEntityData($entity)
     {
-        return $this->getEntityHydrator()->extract($record);
+        return $this->getEntityHydrator()->extract($entity);
     }
 
     /**
