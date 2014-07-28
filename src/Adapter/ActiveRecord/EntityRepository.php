@@ -64,7 +64,7 @@ class EntityRepository implements ObjectRepository
     {
         $unitOfWork = $this->adapter->getUnitOfWork();
 
-        return $unitOfWork->getPersister($this->entityName)->load($criteria, null, $orderBy, 1);
+        return $unitOfWork->getPersister($this->entityName)->load($criteria, null, $orderBy);
     }
 
     /**
