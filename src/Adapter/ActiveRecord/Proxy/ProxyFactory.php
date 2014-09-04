@@ -29,12 +29,15 @@ class ProxyFactory
     /**
      * @param string $class
      * @param callable $fn
+     * @param string $collectionClass
      * @param array $args
      * @return GhostObjectInterface
      */
-    public function buildCollectionProxy($class, callable $fn, array $args = [])
+    public function buildCollectionProxy($class, callable $fn, $collectionClass = null, array $args = [])
     {
-        return $this->factory->createProxy($this->collectionClass, function (Collection $proxy) use ($args, $class, $fn) {
+        $collectionClassName = is_string($collectionClass) ? $collectionClass : $this->collectionClass;
+
+        return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($args, $class, $fn) {
             $proxy->setProxyInitializer(null);
             $records = call_user_func_array($fn, $args);
 
