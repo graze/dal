@@ -42,7 +42,8 @@ class MethodProxyHydrator implements HydratorInterface
             $callable = [$object, $map['method']];
 
             if ($map['collection']) {
-                return $this->proxyFactory->buildCollectionProxy($entity, $callable, $args);
+                $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
+                return $this->proxyFactory->buildCollectionProxy($entity, $callable, $collectionClass, $args);
             } else {
                 return $this->proxyFactory->buildEntityProxy($entity, $callable, $args);
             }
@@ -82,7 +83,7 @@ class MethodProxyHydrator implements HydratorInterface
                 'args' => isset($map['args']) ? $map['args'] : [],
                 'entity' => isset($map['entity']) ? $map['entity'] : null,
                 'method' => isset($map['method']) ? $map['method'] : null,
-                'collection' => isset($map['collection']) ? (boolean) $map['collection'] : false,
+                'collection' => isset($map['collection']) ? $map['collection'] : false,
             ];
 
             if (!$out['entity'] || !$out['method']) {
