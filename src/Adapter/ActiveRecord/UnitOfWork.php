@@ -100,7 +100,9 @@ class UnitOfWork
      */
     public function getEntityRecord($entity)
     {
-        return isset($this->records[spl_object_hash($entity)]) ? $this->records[spl_object_hash($entity)] : null;
+        $hash = $this->config->getIdentityGenerator()->generate($entity);
+
+        return isset($this->records[$hash]) ? $this->records[$hash] : null;
     }
 
     /**
@@ -109,7 +111,9 @@ class UnitOfWork
      */
     public function setEntityRecord($entity, $record)
     {
-        $this->records[spl_object_hash($entity)] = $record;
+        $hash = $this->config->getIdentityGenerator()->generate($entity);
+
+        $this->records[$hash] = $record;
     }
 
     /**
