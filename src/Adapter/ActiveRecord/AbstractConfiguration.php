@@ -14,6 +14,8 @@ namespace Graze\Dal\Adapter\ActiveRecord;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
+use Graze\Dal\Adapter\ActiveRecord\Identity\GeneratorInterface;
+use Graze\Dal\Adapter\ActiveRecord\Identity\ObjectHashGenerator;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use Graze\Dal\Exception\InvalidMappingException;
@@ -25,6 +27,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 {
     const PROXY_NAMESPACE = 'Graze\Dal';
 
+    protected $identityGenerator;
     protected $mapping;
     protected $trackingPolicy;
 
@@ -36,6 +39,8 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     {
         $this->mapping = $mapping;
         $this->trackingPolicy = $trackingPolicy;
+
+        $this->identityGenerator = $this->buildDefaultIdentityGenerator();
     }
 
     /**
@@ -137,11 +142,27 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
+     * @return GeneratorInterface
+     */
+    public function getIdentityGenerator()
+    {
+        return $this->identityGenerator;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getMapping($name)
     {
         return isset($this->mapping[$name]) ? $this->mapping[$name] : null;
+    }
+
+    /**
+     * @return GeneratorInterface
+     */
+    protected function buildDefaultIdentityGenerator()
+    {
+        return new ObjectHashGenerator();
     }
 
     /**
