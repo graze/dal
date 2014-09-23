@@ -52,13 +52,15 @@ class UnitOfWork
         foreach ($this->persisted as $persisted) {
             if (!$entity || $entity === $persisted) {
                 $this->getPersisterByEntity($persisted)->save($persisted);
-                $this->persisted->detach($persisted);
 
                 if ($entity) {
-                    break;
+                    $this->persisted->detach($persisted);
+                    return;
                 }
             }
         }
+        
+        $this->persisted->removeAll($this->persisted);
     }
 
     /**
