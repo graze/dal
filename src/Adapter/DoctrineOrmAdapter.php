@@ -11,6 +11,7 @@
  */
 namespace Graze\Dal\Adapter;
 
+use Closure;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
@@ -121,5 +122,25 @@ class DoctrineOrmAdapter implements AdapterInterface
     public function rollback()
     {
         $this->em->getConnection()->rollback();
+    }
+    
+    /**
+     * @{inheritdoc}
+     */
+    public function transaction(callable $fn)
+    {
+        if (!$fn instanceof Closure) {
+            $fn = function ($adapter) use ($fn) { call_user_func($fn, $adapter); };
+        }
+
+        $this->beginTransaction();
+
+        try {
+            $fn($this);
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            throw $e;
+        }
     }
 }
