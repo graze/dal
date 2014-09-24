@@ -66,4 +66,9 @@ interface AdapterInterface
     /**
      */
     public function rollback();
+    
+    /**
+     * @param callable $fn
+     */
+     public function transaction(callable $fn);
 }
