@@ -11,7 +11,6 @@
  */
 namespace Graze\Dal;
 
-use Closure;
 use Exception;
 use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Exception\UndefinedAdapterException;
