@@ -11,6 +11,7 @@
  */
 namespace Graze\Dal\Adapter;
 
+use Closure;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
@@ -104,5 +105,25 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     public function remove($entity)
     {
         $this->unitOfWork->remove($entity);
+    }
+    
+    /**
+     * @{inheritdoc}
+     */
+    public function transaction(callable $fn)
+    {
+        if (!$fn instanceof Closure) {
+            $fn = function ($adapter) use ($fn) { call_user_func($fn, $adapter); };
+        }
+
+        $this->beginTransaction();
+
+        try {
+            $fn($this);
+            $this->commit();
+        } catch (Exception $e) {
+            $this->rollback();
+            throw $e;
+        }
     }
 }

@@ -11,7 +11,6 @@
  */
 namespace Graze\Dal;
 
-use Closure;
 use Exception;
 use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Exception\UndefinedAdapterException;
@@ -122,19 +121,7 @@ class DalManager implements DalManagerInterface
     public function transaction($adapterName, callable $fn)
     {
         $adapter = $this->get($adapterName);
-        $adapter->beginTransaction();
-
-        if (!$fn instanceof Closure) {
-            $fn = function ($adapter) use ($fn) { call_user_func($fn, $adapter); };
-        }
-
-        try {
-            $fn($adapter);
-            $adapter->commit();
-        } catch (Exception $e) {
-            $adapter->rollback();
-            throw $e;
-        }
+        $adapter->transaction($fn);
     }
 
     /**
