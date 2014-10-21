@@ -64,10 +64,8 @@ class AttributeHydrator extends ArraySerializable
             $replacement[$name] = $this->hydrateValue($name, $value, $data);
         }
 
-        call_user_func([$object, $this->fromData], $replacement);
-
         if (is_callable(array($object, $this->fromData))) {
-            $object->loadArray($replacement);
+            call_user_func([$object, $this->fromData], $replacement);
         } else {
             throw new InvalidEntityException($object, __METHOD__);
         }
