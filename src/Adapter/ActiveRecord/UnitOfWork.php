@@ -59,7 +59,7 @@ class UnitOfWork
                 }
             }
         }
-        
+
         $this->persisted->removeAll($this->persisted);
     }
 
