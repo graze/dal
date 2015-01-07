@@ -119,6 +119,19 @@ class UnitOfWork
     }
 
     /**
+     * @param object $entity
+     * @param object $record
+     */
+    public function removeEntityRecord($entity, $record)
+    {
+        $hash = $this->config->getIdentityGenerator()->generate($entity);
+
+        if (isset($this->records[$hash])) {
+            unset($this->records[$hash]);
+        }
+    }
+
+    /**
      * @return MapperInterface
      */
     public function getMapper($name)
