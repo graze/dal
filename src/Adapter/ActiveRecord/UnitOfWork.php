@@ -59,7 +59,7 @@ class UnitOfWork
                 }
             }
         }
-        
+
         $this->persisted->removeAll($this->persisted);
     }
 
@@ -116,6 +116,15 @@ class UnitOfWork
         $hash = $this->config->getIdentityGenerator()->generate($entity);
 
         $this->records[$hash] = $record;
+    }
+
+    /**
+     * @param object $entity
+     */
+    public function removeEntityRecord($entity)
+    {
+        $hash = $this->config->getIdentityGenerator()->generate($entity);
+        unset($this->records[$hash]);
     }
 
     /**
