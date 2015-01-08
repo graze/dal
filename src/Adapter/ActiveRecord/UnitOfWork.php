@@ -125,10 +125,7 @@ class UnitOfWork
     public function removeEntityRecord($entity)
     {
         $hash = $this->config->getIdentityGenerator()->generate($entity);
-
-        if (isset($this->records[$hash])) {
-            unset($this->records[$hash]);
-        }
+        unset($this->records[$hash]);
     }
 
     /**
