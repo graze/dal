@@ -120,7 +120,6 @@ class UnitOfWork
 
     /**
      * @param object $entity
-     * @param object $record
      */
     public function removeEntityRecord($entity)
     {
