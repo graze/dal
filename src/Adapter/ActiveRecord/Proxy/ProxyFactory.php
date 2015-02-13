@@ -97,6 +97,8 @@ class ProxyFactory
      */
     protected function mapRecords(array $records, Collection $collection, MapperInterface $mapper)
     {
+        $collection->clear();
+
         foreach ($records as $record) {
             $entity = $mapper->toEntity($record);
             $this->unitOfWork->persistByTrackingPolicy($entity);
