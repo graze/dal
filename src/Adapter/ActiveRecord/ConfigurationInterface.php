@@ -15,7 +15,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
-use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
+use Graze\Dal\NamingStrategy\NamingStrategyInterface;
 
 interface ConfigurationInterface
 {
