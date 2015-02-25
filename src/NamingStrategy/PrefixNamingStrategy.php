@@ -2,8 +2,6 @@
 
 namespace Graze\Dal\NamingStrategy;
 
-use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
-
 /**
  * Naming Strategy used when hydrating/exteracting fields.
  * This will add the prefix when dealing with the model
@@ -49,5 +47,15 @@ class PrefixNamingStrategy implements NamingStrategyInterface
             $newname = $name;
         }
         return $newname;
+    }
+
+    /**
+     * @param object $record
+     *
+     * @return bool
+     */
+    public function supports($record)
+    {
+        return is_subclass_of($record, 'Graze\Dal\NamingStrategy\ColumnPrefixInterface');
     }
 }
