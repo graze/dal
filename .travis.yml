@@ -1,5 +1,7 @@
 language: php
 
+sudo: false
+
 php:
   - 5.4
   - 5.5
@@ -7,8 +9,8 @@ php:
   - hhvm
   - hhvm-nightly
 
-before_script:
-  - ./.travis.install.sh
+install:
+  - travis_retry composer install --no-interaction
 
 script:
   - ./vendor/bin/phpunit
