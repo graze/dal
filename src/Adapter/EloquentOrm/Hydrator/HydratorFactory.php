@@ -45,7 +45,13 @@ class HydratorFactory
         $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
         $class = $config->createFactory()->getHydratorClass();
 
-        return new $class();
+        $hydrator = new $class();
+
+        if ($hydrator instanceof NamingStrategyEnabledInterface) {
+            $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($recordName));
+        }
+
+        return $hydrator;
     }
 
     /**
@@ -57,7 +63,7 @@ class HydratorFactory
         $attributeHydrator = new AttributeHydrator('attributesToArray', 'fill');
 
         if ($attributeHydrator instanceof NamingStrategyEnabledInterface) {
-            $attributeHydrator->setNamingStrategy($this->config->buildNamingStrategy($recordName));
+            $attributeHydrator->setNamingStrategy($this->config->buildRecordNamingStrategy($recordName));
         }
 
         return new MethodProxyHydrator(
