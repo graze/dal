@@ -11,6 +11,7 @@
  */
 namespace Graze\Dal\Adapter\EloquentOrm\Hydrator;
 
+use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Hydrator\AttributeHydrator;
@@ -25,7 +26,7 @@ class HydratorFactory
 
     /**
      * @param ConfigurationInterface $config
-     * @param ProxyFactory $proxyFactory
+     * @param ProxyFactory           $proxyFactory
      */
     public function __construct(ConfigurationInterface $config, ProxyFactory $proxyFactory)
     {
@@ -40,7 +41,8 @@ class HydratorFactory
     public function buildEntityHydrator($entityName)
     {
         $config = new Configuration($entityName);
-        $class  = $config->createFactory()->getHydratorClass();
+        $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
+        $class = $config->createFactory()->getHydratorClass();
 
         return new $class();
     }

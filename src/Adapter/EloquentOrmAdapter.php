@@ -12,7 +12,7 @@
 namespace Graze\Dal\Adapter;
 
 use Graze\Dal\Adapter\EloquentOrm\Configuration;
-use Graze\Dal\Exception\UndefinedRepositoryException;
+use Graze\Dal\Adapter\ActiveRecordAdapter;
 use Illuminate\Database\ConnectionInterface;
 
 class EloquentOrmAdapter extends ActiveRecordAdapter

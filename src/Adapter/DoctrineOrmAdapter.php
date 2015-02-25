@@ -22,7 +22,7 @@ class DoctrineOrmAdapter implements AdapterInterface
     protected $em;
 
     /**
-     * @param EntityManagerInterface
+     * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $em)
     {
