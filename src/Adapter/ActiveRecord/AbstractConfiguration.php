@@ -209,10 +209,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @param string $recordName
+     * @param string $entityName
+     *
      * @return NamingStrategyInterface
      */
-    public function buildEntityNamingStrategy($recordName)
+    public function buildEntityNamingStrategy($entityName)
     {
         return new CombinedNamingStrategy(); // just an empty strategy by default
     }

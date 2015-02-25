@@ -40,11 +40,11 @@ class CamelCaseNamingStrategy implements NamingStrategyInterface
     }
 
     /**
-     * @param object $record
+     * @param string|object $object
      *
      * @return bool
      */
-    public function supports($record)
+    public function supports($object)
     {
         return true;
     }

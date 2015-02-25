@@ -50,12 +50,12 @@ class PrefixNamingStrategy implements NamingStrategyInterface
     }
 
     /**
-     * @param object $record
+     * @param string|object $object
      *
      * @return bool
      */
-    public function supports($record)
+    public function supports($object)
     {
-        return is_subclass_of($record, 'Graze\Dal\NamingStrategy\ColumnPrefixInterface');
+        return is_subclass_of($object, 'Graze\Dal\NamingStrategy\ColumnPrefixInterface');
     }
 }

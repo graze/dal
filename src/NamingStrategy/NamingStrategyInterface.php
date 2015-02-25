@@ -5,8 +5,8 @@ namespace Graze\Dal\NamingStrategy;
 interface NamingStrategyInterface extends \Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface
 {
     /**
-     * @param object $record
+     * @param string|object $object
      * @return bool
      */
-    public function supports($record);
+    public function supports($object);
 }

@@ -48,7 +48,7 @@ class HydratorFactory
         $hydrator = new $class();
 
         if ($hydrator instanceof NamingStrategyEnabledInterface) {
-            $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($recordName));
+            $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($entityName));
         }
 
         return $hydrator;
