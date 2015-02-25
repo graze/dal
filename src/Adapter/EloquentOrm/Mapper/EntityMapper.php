@@ -14,6 +14,7 @@ namespace Graze\Dal\Adapter\EloquentOrm\Mapper;
 use Graze\Dal\Adapter\ActiveRecord\Mapper\AbstractMapper;
 use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use ReflectionClass;
+use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class EntityMapper extends AbstractMapper
 {
@@ -40,7 +41,7 @@ class EntityMapper extends AbstractMapper
      */
     public function fromEntity($entity, $record = null)
     {
-        $data = $this->getEntityHydrator()->extract($record);
+        $data = $this->getEntityHydrator()->extract($entity);
         $record = is_object($record) ? $record : $this->instantiateRecord();
 
         $this->getRecordHydrator()->hydrate($data, $record);

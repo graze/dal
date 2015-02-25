@@ -12,8 +12,6 @@
 namespace Graze\Dal\Adapter\EloquentOrm\Persister;
 
 use Graze\Dal\Adapter\ActiveRecord\Persister\AbstractPersister;
-use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
-use LogicException;
 
 class EntityPersister extends AbstractPersister
 {
@@ -27,6 +25,10 @@ class EntityPersister extends AbstractPersister
 
         foreach ($criteria as $field => $value) {
             $query->where($field, '=', $value);
+        }
+
+        if (is_null($orderBy)) {
+            $orderBy = [];
         }
 
         foreach ($orderBy as $field => $direction) {
@@ -51,10 +53,16 @@ class EntityPersister extends AbstractPersister
         $query = $class::query();
 
         $query->limit($limit);
-        $query->offset($limit);
+        if (!is_null($limit)) {
+            $query->offset($offset);
+        }
 
         foreach ($criteria as $field => $value) {
             $query->where($field, '=', $value);
+        }
+
+        if (is_null($orderBy)) {
+            $orderBy = [];
         }
 
         foreach ($orderBy as $field => $direction) {
@@ -64,11 +72,11 @@ class EntityPersister extends AbstractPersister
         $mapper = $this->unitOfWork->getMapper($this->entityName);
 
         return array_map(function ($record) use ($mapper) {
-            $mapper->toEntity($record);
+            $entity = $mapper->toEntity($record);
             $this->unitOfWork->setEntityRecord($entity, $record);
 
             return $this->persistImplicit($entity);
-        }, $query->get());
+        }, $query->get()->all());
     }
 
     /**
@@ -78,6 +86,11 @@ class EntityPersister extends AbstractPersister
     {
         $class  = $this->recordName;
         $record = $class::find($id);
+
+        if (is_null($record)) {
+            return null;
+        }
+
         $mapper = $this->unitOfWork->getMapper($this->entityName);
 
         $entity = $mapper->toEntity($record, $entity);
@@ -105,7 +118,15 @@ class EntityPersister extends AbstractPersister
      */
     public function refresh($entity)
     {
-        throw new LogicException('Entity refresh is not implemented');
+        $mapper = $this->unitOfWork->getMapper($this->entityName);
+        $data = $mapper->getEntityData($entity);
+
+        if (isset($data['id'])) {
+            $this->loadById($data['id'], $entity);
+        } else {
+            $record = $this->unitOfWork->getEntityRecord($entity);
+            $mapper->toEntity($record, $entity);
+        }
     }
 
     /**
@@ -115,11 +136,18 @@ class EntityPersister extends AbstractPersister
     {
         $mapper = $this->unitOfWork->getMapper($this->entityName);
         $record = $this->unitOfWork->getEntityRecord($entity);
-        $record = $mapper->fromEntity($entity);
+        $record = $mapper->fromEntity($entity, $record);
 
         $this->unitOfWork->setEntityRecord($entity, $record);
 
         $record->save();
+
+        $this->unitOfWork->removeEntityRecord($entity);
+
+        $mapper->toEntity($record, $entity);
+
+        // set the entity record again after it's saved
+        $this->unitOfWork->setEntityRecord($entity, $record);
     }
 
     /**
