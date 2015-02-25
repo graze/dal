@@ -20,7 +20,7 @@ class EntityPersister extends AbstractPersister
      */
     public function load(array $criteria, $entity = null, array $orderBy = null)
     {
-        $criteria = $this->prepareCriteria($criteria);
+        $criteria = $this->applyNamingStrategy($criteria);
         $class = $this->recordName;
         $query = $class::query();
 
@@ -32,6 +32,7 @@ class EntityPersister extends AbstractPersister
             $orderBy = [];
         }
 
+        $orderBy = $this->applyNamingStrategy($orderBy);
         foreach ($orderBy as $field => $direction) {
             $query->orderBy($field, $direction);
         }
@@ -50,7 +51,7 @@ class EntityPersister extends AbstractPersister
      */
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $criteria = $this->prepareCriteria($criteria);
+        $criteria = $this->applyNamingStrategy($criteria);
         $class = $this->recordName;
         $query = $class::query();
 
@@ -67,6 +68,7 @@ class EntityPersister extends AbstractPersister
             $orderBy = [];
         }
 
+        $orderBy = $this->applyNamingStrategy($orderBy);
         foreach ($orderBy as $field => $direction) {
             $query->orderBy($field, $direction);
         }
@@ -164,15 +166,15 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $criteria
+     * @param array $fieldsAndValues
      * @return array
      */
-    protected function prepareCriteria(array $criteria)
+    protected function applyNamingStrategy(array $fieldsAndValues)
     {
         $prepared = [];
         $strategy = $this->unitOfWork->getRecordNamingStrategy($this->getRecordName());
 
-        foreach ($criteria as $field => $value) {
+        foreach ($fieldsAndValues as $field => $value) {
             $prepared[$strategy->hydrate($field)] = $value;
         }
 
