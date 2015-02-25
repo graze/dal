@@ -2,8 +2,6 @@
 
 namespace Graze\Dal\NamingStrategy;
 
-use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
-
 class CombinedNamingStrategy implements NamingStrategyInterface
 {
     /**
@@ -112,5 +110,15 @@ class CombinedNamingStrategy implements NamingStrategyInterface
             $extractedName = $strategy['strategy']->extract($extractedName, $data);
         }
         return $extractedName;
+    }
+
+    /**
+     * @param string|object $object
+     *
+     * @return bool
+     */
+    public function supports($object)
+    {
+        return true;
     }
 }

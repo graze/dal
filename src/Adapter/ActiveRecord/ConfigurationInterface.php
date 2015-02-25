@@ -12,7 +12,10 @@
 namespace Graze\Dal\Adapter\ActiveRecord;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
+use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
+use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
 
 interface ConfigurationInterface
 {
@@ -32,7 +35,7 @@ interface ConfigurationInterface
 
     /**
      * @param string $name
-     * @param PersisterInterface $persister
+     * @param ActiveRecordAdapter $adapter
      * @return ObjectRepository
      */
     public function buildRepository($name, ActiveRecordAdapter $adapter);
@@ -60,4 +63,17 @@ interface ConfigurationInterface
      * @return array
      */
     public function getMapping($name);
+
+    /**
+     * @param string $recordName
+     * @return NamingStrategyInterface
+     */
+    public function buildRecordNamingStrategy($recordName);
+
+    /**
+     * @param string $entityName
+     *
+     * @return NamingStrategyInterface
+     */
+    public function buildEntityNamingStrategy($entityName);
 }

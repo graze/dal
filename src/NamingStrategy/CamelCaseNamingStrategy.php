@@ -2,8 +2,6 @@
 
 namespace Graze\Dal\NamingStrategy;
 
-use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
-
 /**
  * Naming Strategy use to replace underscore_case in Models with camelCase in Entities.
  */
@@ -39,5 +37,15 @@ class CamelCaseNamingStrategy implements NamingStrategyInterface
     public function extract($name, $data = null)
     {
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $name))));
+    }
+
+    /**
+     * @param string|object $object
+     *
+     * @return bool
+     */
+    public function supports($object)
+    {
+        return true;
     }
 }
