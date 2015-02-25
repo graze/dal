@@ -213,8 +213,9 @@ class DalManagerTest extends UnitTestCase
     {
         $manager = new DalManager($this->adapters);
 
-        $this->adapterB->shouldReceive('beginTransaction')->once()->withNoArgs();
-        $this->adapterB->shouldReceive('commit')->once()->withNoArgs();
+//        $this->adapterB->shouldReceive('beginTransaction')->once()->withNoArgs();
+//        $this->adapterB->shouldReceive('commit')->once()->withNoArgs();
+        $this->adapterB->shouldReceive('transaction')->once();
 
         $manager->transaction('bar', function ($adapter) {
             $this->assertSame($this->adapterB, $adapter);
@@ -226,8 +227,9 @@ class DalManagerTest extends UnitTestCase
         $manager = new DalManager($this->adapters);
         $exception = new Exception('Transaction failed');
 
-        $this->adapterB->shouldReceive('beginTransaction')->once()->withNoArgs();
-        $this->adapterB->shouldReceive('rollback')->once()->withNoArgs();
+//        $this->adapterB->shouldReceive('beginTransaction')->once()->withNoArgs();
+//        $this->adapterB->shouldReceive('rollback')->once()->withNoArgs();
+        $this->adapterB->shouldReceive('transaction')->once();
 
         try {
             $manager->transaction('bar', function ($adapter) use ($exception) {
