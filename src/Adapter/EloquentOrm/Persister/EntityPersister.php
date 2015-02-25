@@ -20,6 +20,7 @@ class EntityPersister extends AbstractPersister
      */
     public function load(array $criteria, $entity = null, array $orderBy = null)
     {
+        $criteria = $this->prepareCriteria($criteria);
         $class = $this->recordName;
         $query = $class::query();
 
@@ -49,6 +50,7 @@ class EntityPersister extends AbstractPersister
      */
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
+        $criteria = $this->prepareCriteria($criteria);
         $class = $this->recordName;
         $query = $class::query();
 
@@ -159,5 +161,21 @@ class EntityPersister extends AbstractPersister
         $this->unitOfWork->persistByTrackingPolicy($entity);
 
         return $entity;
+    }
+
+    /**
+     * @param array $criteria
+     * @return array
+     */
+    protected function prepareCriteria(array $criteria)
+    {
+        $prepared = [];
+        $strategy = $this->unitOfWork->getRecordNamingStrategy($this->getRecordName());
+
+        foreach ($criteria as $field => $value) {
+            $prepared[$strategy->hydrate($field)] = $value;
+        }
+
+        return $prepared;
     }
 }

@@ -152,6 +152,26 @@ class UnitOfWork
     }
 
     /**
+     * @param $entityName
+     *
+     * @return \Graze\Dal\NamingStrategy\NamingStrategyInterface
+     */
+    public function getEntityNamingStrategy($entityName)
+    {
+        return $this->config->buildEntityNamingStrategy($entityName);
+    }
+
+    /**
+     * @param $recordName
+     *
+     * @return \Graze\Dal\NamingStrategy\NamingStrategyInterface
+     */
+    public function getRecordNamingStrategy($recordName)
+    {
+        return $this->config->buildRecordNamingStrategy($recordName);
+    }
+
+    /**
      * @param object $entity
      * @return PersisterInterface
      */
