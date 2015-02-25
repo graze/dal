@@ -12,16 +12,18 @@
 namespace Graze\Dal\Adapter\ActiveRecord;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
+use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
-use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Identity\GeneratorInterface;
 use Graze\Dal\Adapter\ActiveRecord\Identity\ObjectHashGenerator;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
-use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
+use Graze\Dal\NamingStrategy\CombinedNamingStrategy;
 use ProxyManager\Configuration as ProxyConfiguration;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
+use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
 
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
@@ -195,5 +197,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
     {
         return new ProxyFactory($this, $unitOfWork, new LazyLoadingGhostFactory($config));
+    }
+
+    /**
+     * @param string $recordName
+     * @return NamingStrategyInterface
+     */
+    public function buildNamingStrategy($recordName)
+    {
+        return new CombinedNamingStrategy(); // just an empty strategy by default
     }
 }
