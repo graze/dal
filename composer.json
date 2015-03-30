@@ -61,7 +61,7 @@
         "doctrine/orm": "~2.4",
         "illuminate/database": "~4.2",
         "ocramius/generated-hydrator": "~1.0",
-        "ocramius/proxy-manager": "~0.5"
+        "ocramius/proxy-manager": "~1.0"
     },
     "suggest": {
         "doctrine/orm": "Required when using the DoctrineOrmAdapter",
