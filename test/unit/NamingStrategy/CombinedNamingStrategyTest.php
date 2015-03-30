@@ -20,7 +20,7 @@ class CombinedNamingStrategyTest extends TestCase
 
     public function testAddStrategy()
     {
-        $strategy = m::mock('Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface');
+        $strategy = m::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface');
 
         $this->namingStrategy->addNamingStrategy($strategy, 1);
 
@@ -35,7 +35,7 @@ class CombinedNamingStrategyTest extends TestCase
 
     public function testRemoveStrategy()
     {
-        $strategy = m::mock('Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface');
+        $strategy = m::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface');
 
         $this->assertFalse($this->namingStrategy->removeNamingStrategy($strategy));
 
@@ -48,8 +48,8 @@ class CombinedNamingStrategyTest extends TestCase
 
     public function testAddingMultipleStrategies()
     {
-        $strategy1 = m::mock('Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface');
-        $strategy2 = m::mock('Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface');
+        $strategy1 = m::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface');
+        $strategy2 = m::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface');
 
         $strategy1->shouldReceive('hydrate')->with('first', null)->andReturn('second');
         $strategy2->shouldReceive('hydrate')->with('second', null)->andReturn('third');
@@ -66,8 +66,8 @@ class CombinedNamingStrategyTest extends TestCase
     public function testAddingMultipleStrategiesInDifferentOrderUsesPriority()
     {
 
-        $strategy1 = m::mock('Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface');
-        $strategy2 = m::mock('Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface');
+        $strategy1 = m::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface');
+        $strategy2 = m::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface');
 
         $strategy1->shouldReceive('hydrate')->with('first', null)->andReturn('second');
         $strategy2->shouldReceive('hydrate')->with('second', null)->andReturn('third');
