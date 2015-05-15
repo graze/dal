@@ -12,7 +12,6 @@
 namespace Graze\Dal\Adapter;
 
 use Graze\Dal\Adapter\EloquentOrm\Configuration;
-use Graze\Dal\Adapter\ActiveRecordAdapter;
 use Illuminate\Database\ConnectionInterface;
 
 class EloquentOrmAdapter extends ActiveRecordAdapter
@@ -50,5 +49,27 @@ class EloquentOrmAdapter extends ActiveRecordAdapter
     public function rollback()
     {
         $this->conn->rollBack();
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return mixed
+     */
+    public function fetch($sql, array $bindings = [])
+    {
+        return $this->conn->select($sql, $bindings);
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return mixed
+     */
+    public function fetchOne($sql, array $bindings = [])
+    {
+        return $this->conn->selectOne($sql, $bindings);
     }
 }
