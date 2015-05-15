@@ -23,14 +23,14 @@ interface AdapterInterface
     public function getEntityName($entity);
 
     /**
-     * @param string $class
+     * @param string $name
      * @return ObjectRepository
      * @throws UndefinedRepositoryException If the repository is not found for name
      */
     public function getRepository($name);
 
     /**
-     * @param string $class
+     * @param string $name
      * @return boolean
      */
     public function hasRepository($name);
