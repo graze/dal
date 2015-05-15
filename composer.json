@@ -46,7 +46,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Graze\\Dal\\Test\\": "test/src/"
+            "Graze\\Dal\\Test\\": "tests/src/"
         }
     },
     "require": {
