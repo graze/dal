@@ -12,9 +12,8 @@
 namespace Graze\Dal\Adapter;
 
 use Closure;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\MappingException;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
+use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 
 abstract class ActiveRecordAdapter implements AdapterInterface
@@ -24,7 +23,7 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     protected $unitOfWork;
 
     /**
-     * @param Configuration $config
+     * @param ConfigurationInterface $config
      */
     public function __construct(ConfigurationInterface $config)
     {
@@ -72,7 +71,7 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function flush($entity = null)
     {
@@ -84,7 +83,7 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function persist($entity)
     {
@@ -92,7 +91,7 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function refresh($entity)
     {
@@ -100,15 +99,15 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function remove($entity)
     {
         $this->unitOfWork->remove($entity);
     }
-    
+
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function transaction(callable $fn)
     {
@@ -121,7 +120,7 @@ abstract class ActiveRecordAdapter implements AdapterInterface
         try {
             $fn($this);
             $this->commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->rollback();
             throw $e;
         }

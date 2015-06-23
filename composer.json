@@ -46,7 +46,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Graze\\Dal\\Test\\": "test/src/"
+            "Graze\\Dal\\Test\\": "tests/src/"
         }
     },
     "require": {
@@ -61,7 +61,8 @@
         "doctrine/orm": "~2.4",
         "illuminate/database": "5.0",
         "ocramius/generated-hydrator": "~1.0",
-        "ocramius/proxy-manager": "~1.0"
+        "ocramius/proxy-manager": "~1.0",
+        "symfony/var-dumper": "^2.6"
     },
     "suggest": {
         "doctrine/orm": "Required when using the DoctrineOrmAdapter",

@@ -16,6 +16,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Graze\Dal\Exception\UndefinedRepositoryException;
+use PDO;
 
 class DoctrineOrmAdapter implements AdapterInterface
 {
@@ -123,7 +124,7 @@ class DoctrineOrmAdapter implements AdapterInterface
     {
         $this->em->getConnection()->rollback();
     }
-    
+
     /**
      * @{inheritdoc}
      */
@@ -142,5 +143,33 @@ class DoctrineOrmAdapter implements AdapterInterface
             $this->rollback();
             throw $e;
         }
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return mixed
+     */
+    public function fetch($sql, array $bindings = [])
+    {
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->execute($bindings);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return array
+     */
+    public function fetchOne($sql, array $bindings = [])
+    {
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->execute($bindings);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
