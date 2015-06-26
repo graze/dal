@@ -2,7 +2,7 @@
 
 <img src="diagram.png" alt="Graze.com" align="right" width=240/>
 
-**Master build:** `Unknown`<br/>
+**Master build:** [![Build status](https://badge.buildkite.com/c2664f326d7f300e426b4a3b36406fee1bf9594ad274ed5bb3.svg)](https://buildkite.com/graze/dal)<br/>
 **Requires:** `PHP >= 5.4 || HHVM >= 3.0`
 
 **DAL** is a data access layer for PHP, built to add an additional layer of
