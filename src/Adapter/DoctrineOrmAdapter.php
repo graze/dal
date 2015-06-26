@@ -15,6 +15,7 @@ use Closure;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
+use Exception;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 use PDO;
 
