@@ -19,7 +19,8 @@
         "orm",
         "persist",
         "persistance",
-        "record"
+        "record",
+        "graze"
     ],
     "license": "MIT",
     "type": "library",
@@ -33,6 +34,17 @@
             "name": "Andrew Lawson",
             "homepage": "http://adlawson.com",
             "role": "Developer"
+        },
+        {
+            "name": "Will Pillar",
+            "email": "will.pillar@graze.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Graze Developers",
+            "email": "developers@graze.com",
+            "homepage": "https://www.graze.com",
+            "role": "Development Team"
         }
     ],
     "support": {
@@ -45,7 +57,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Graze\\Dal\\Test\\": "tests/src/"
+            "Graze\\Dal\\Test\\": "tests/src/",
+            "Graze\\Dal\\Test\\Unit\\": "tests/src/unit"
         }
     },
     "require": {
