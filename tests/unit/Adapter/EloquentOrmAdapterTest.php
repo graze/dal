@@ -1,11 +1,11 @@
 <?php
 
-namespace Graze\Dal\Adapter;
+namespace Graze\Dal\Test\Unit\Adapter;
 
+use Graze\Dal\Adapter\EloquentOrmAdapter;
 use Graze\Dal\Test\Entity;
 use Mockery;
 use Mockery\Mock;
-use PDO;
 
 class EloquentOrmAdapterTest extends \PHPUnit_Framework_TestCase
 {
