@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Test\Dal\NamingStrategy;
+namespace Graze\Dal\Test\Unit\NamingStrategy;
 
 use Graze\Dal\NamingStrategy\CamelCaseNamingStrategy;
 use PHPUnit_Framework_TestCase as TestCase;

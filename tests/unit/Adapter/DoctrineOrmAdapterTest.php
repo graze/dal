@@ -1,7 +1,8 @@
 <?php
-namespace Graze\Dal\Adapter;
+namespace Graze\Dal\Test\Unit\Adapter;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Graze\Dal\Adapter\DoctrineOrmAdapter;
 use Graze\Dal\Test\Entity;
 use Graze\Dal\Test\UnitTestCase;
 use Mockery;

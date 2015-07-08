@@ -1,7 +1,9 @@
 <?php
-namespace Graze\Dal;
+
+namespace Graze\Dal\Test\Unit;
 
 use Exception;
+use Graze\Dal\DalManager;
 use Graze\Dal\Test\UnitTestCase;
 use Mockery;
 
