@@ -52,7 +52,7 @@ class MethodProxyHydrator implements HydratorInterface
             $args = $map['args'];
             $entity = $map['entity'];
             $callable = function () use ($object, $map) {
-                return (int) $object->{$map['foreignId']};
+                return (int) $object->{$map['localKey']};
             };
             $callable = \Closure::bind($callable, null, $object);
 
@@ -87,12 +87,13 @@ class MethodProxyHydrator implements HydratorInterface
             $out = [
                 'args' => isset($map['args']) ? $map['args'] : [],
                 'entity' => isset($map['entity']) ? $map['entity'] : null,
+                'type' => isset($map['type']) ? $map['type'] : null,
                 'collection' => isset($map['collection']) ? $map['collection'] : false,
-                'foreignId' => isset($map['foreignId']) ? $map['foreignId'] : null,
+                'localKey' => isset($map['localKey']) ? $map['localKey'] : null,
             ];
 
-            if (!$out['entity'] || !$out['foreignId']) {
-                $message = 'Relationship mapping must contain "entity" and "method" values';
+            if (!$out['entity'] || !$out['type']) {
+                $message = 'Relationship mapping must contain "entity" and "type" values';
                 throw new InvalidMappingException($message, __METHOD__);
             }
 
