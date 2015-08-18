@@ -11,7 +11,6 @@
  */
 namespace Graze\Dal;
 
-use Exception;
 use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Exception\UndefinedAdapterException;
 use Graze\Dal\Exception\UndefinedRepositoryException;
@@ -147,7 +146,7 @@ class DalManager implements DalManagerInterface
      * @return AdapterInterface
      * @throws UndefinedAdapterException If the adapter is not registered with name
      */
-    protected function findAdapterByEntityName($name)
+    public function findAdapterByEntityName($name)
     {
         foreach ($this->adapters as $adapter) {
             if ($adapter->hasRepository($name)) {

@@ -18,6 +18,7 @@ use Graze\Dal\Adapter\ActiveRecordAdapter;
 use Graze\Dal\Adapter\ActiveRecord\Identity\GeneratorInterface;
 use Graze\Dal\Adapter\ActiveRecord\Identity\ObjectHashGenerator;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
+use Graze\Dal\DalManager;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
 use Graze\Dal\NamingStrategy\CombinedNamingStrategy;
@@ -34,13 +35,15 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected $trackingPolicy;
 
     /**
+     * @param DalManager $dalManager
      * @param array $mapping
-     * @param integer $trackingPolicy
+     * @param int $trackingPolicy
      */
-    public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+    public function __construct(DalManager $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         $this->mapping = $mapping;
         $this->trackingPolicy = $trackingPolicy;
+        $this->dalManager = $dalManager;
 
         $this->identityGenerator = $this->buildDefaultIdentityGenerator();
     }
@@ -196,14 +199,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
     {
-        return new ProxyFactory($this, $unitOfWork, new LazyLoadingGhostFactory($config));
+        return new ProxyFactory($this->dalManager, new LazyLoadingGhostFactory($config));
     }
 
     /**
      * @param string $recordName
      * @return NamingStrategyInterface
      */
-    public function buildRecordNamingStrategy($recordName)
+    public function buildRecordNamingStrategy($record)
     {
         return new CombinedNamingStrategy(); // just an empty strategy by default
     }
@@ -213,7 +216,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      *
      * @return NamingStrategyInterface
      */
-    public function buildEntityNamingStrategy($entityName)
+    public function buildEntityNamingStrategy($entity)
     {
         return new CombinedNamingStrategy(); // just an empty strategy by default
     }

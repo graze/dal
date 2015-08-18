@@ -39,16 +39,16 @@ class HydratorFactory
      * @param string $entityName
      * @return HydratorInterface
      */
-    public function buildEntityHydrator($entityName)
+    public function buildEntityHydrator($entity)
     {
-        $config = new Configuration($entityName);
+        $config = new Configuration($this->config->getEntityName($entity));
         $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
         $class = $config->createFactory()->getHydratorClass();
 
         $hydrator = new $class();
 
         if ($hydrator instanceof NamingStrategyEnabledInterface) {
-            $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($entityName));
+            $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($entity));
         }
 
         return $hydrator;
@@ -58,12 +58,12 @@ class HydratorFactory
      * @param string $recordName
      * @return HydratorInterface
      */
-    public function buildRecordHydrator($recordName)
+    public function buildRecordHydrator($record)
     {
         $attributeHydrator = new AttributeHydrator('attributesToArray', 'fill');
 
         if ($attributeHydrator instanceof NamingStrategyEnabledInterface) {
-            $attributeHydrator->setNamingStrategy($this->config->buildRecordNamingStrategy($recordName));
+            $attributeHydrator->setNamingStrategy($this->config->buildRecordNamingStrategy($record));
         }
 
         return new MethodProxyHydrator(

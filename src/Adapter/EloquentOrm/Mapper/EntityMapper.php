@@ -41,10 +41,10 @@ class EntityMapper extends AbstractMapper
      */
     public function fromEntity($entity, $record = null)
     {
-        $data = $this->getEntityHydrator()->extract($entity);
+        $data = $this->getEntityHydrator($entity)->extract($entity);
         $record = is_object($record) ? $record : $this->instantiateRecord();
 
-        $this->getRecordHydrator()->hydrate($data, $record);
+        $this->getRecordHydrator($record)->hydrate($data, $record);
 
         return $record;
     }
@@ -54,10 +54,10 @@ class EntityMapper extends AbstractMapper
      */
     public function toEntity($record, $entity = null)
     {
-        $data = $this->getRecordHydrator()->extract($record);
+        $data = $this->getRecordHydrator($record)->extract($record);
         $entity = is_object($entity) ? $entity : $this->instantiateEntity();
 
-        $this->getEntityHydrator()->hydrate($data, $entity);
+        $this->getEntityHydrator($entity)->hydrate($data, $entity);
 
         return $entity;
     }
@@ -65,10 +65,10 @@ class EntityMapper extends AbstractMapper
     /**
      * @return HydratorInterface
      */
-    protected function getEntityHydrator()
+    protected function getEntityHydrator($entity)
     {
         if (!$this->entityHydrator) {
-            $this->entityHydrator = $this->factory->buildEntityHydrator($this->entityName);
+            $this->entityHydrator = $this->factory->buildEntityHydrator($entity);
         }
 
         return $this->entityHydrator;
@@ -77,10 +77,10 @@ class EntityMapper extends AbstractMapper
     /**
      * @return HydratorInterface
      */
-    protected function getRecordHydrator()
+    protected function getRecordHydrator($record)
     {
         if (!$this->recordHydrator) {
-            $this->recordHydrator = $this->factory->buildRecordHydrator($this->recordName);
+            $this->recordHydrator = $this->factory->buildRecordHydrator($record);
         }
 
         return $this->recordHydrator;

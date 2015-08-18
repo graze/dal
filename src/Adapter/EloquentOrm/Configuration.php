@@ -16,6 +16,10 @@ use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\EloquentOrm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\EloquentOrm\Persister\EntityPersister;
+use Graze\Dal\DalManager;
+use Graze\Dal\NamingStrategy\CamelCaseNamingStrategy;
+use Graze\Dal\NamingStrategy\CombinedNamingStrategy;
+use Graze\Dal\NamingStrategy\PrefixNamingStrategy;
 
 class Configuration extends AbstractConfiguration
 {
@@ -25,11 +29,11 @@ class Configuration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+    public function __construct(DalManager $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         $this->proxyConfiguration = $this->buildProxyConfiguration();
 
-        parent::__construct($mapping, $trackingPolicy);
+        parent::__construct($dalManager, $mapping, $trackingPolicy);
     }
 
     /**
@@ -70,5 +74,21 @@ class Configuration extends AbstractConfiguration
         }
 
         return $this->hydratorFactory;
+    }
+
+    public function buildRecordNamingStrategy($record)
+    {
+        $strategy = new CombinedNamingStrategy();
+        $strategy->addNamingStrategy(new PrefixNamingStrategy($record->getColumnPrefix()));
+        $strategy->addNamingStrategy(new CamelCaseNamingStrategy());
+        return $strategy;
+    }
+
+    public function buildEntityNamingStrategy($entity)
+    {
+        $strategy = new CombinedNamingStrategy();
+        $strategy->addNamingStrategy(new PrefixNamingStrategy('us_'));
+        $strategy->addNamingStrategy(new CamelCaseNamingStrategy());
+        return $strategy;
     }
 }
