@@ -40,6 +40,9 @@ class MethodProxyHydrator implements HydratorInterface
             $args = $map['args'];
             $entity = $map['entity'];
             $callable = [$object, $map['method']];
+            $callable = function () use ($object, $map) {
+                return (int) $object->{$map['property']};
+            };
 
             if ($map['collection']) {
                 $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
@@ -84,6 +87,7 @@ class MethodProxyHydrator implements HydratorInterface
                 'entity' => isset($map['entity']) ? $map['entity'] : null,
                 'method' => isset($map['method']) ? $map['method'] : null,
                 'collection' => isset($map['collection']) ? $map['collection'] : false,
+                'property' => isset($map['property']) ? $map['property'] : null,
             ];
 
             if (!$out['entity'] || !$out['method']) {

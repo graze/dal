@@ -68,12 +68,12 @@ interface ConfigurationInterface
      * @param string $recordName
      * @return NamingStrategyInterface
      */
-    public function buildRecordNamingStrategy($recordName);
+    public function buildRecordNamingStrategy($record);
 
     /**
      * @param string $entityName
      *
      * @return NamingStrategyInterface
      */
-    public function buildEntityNamingStrategy($entityName);
+    public function buildEntityNamingStrategy($entity);
 }

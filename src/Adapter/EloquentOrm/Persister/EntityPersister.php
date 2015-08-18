@@ -38,11 +38,11 @@ class EntityPersister extends AbstractPersister
         }
 
         $record = $query->first();
-        
+
         if (! $record) {
             return null;
         }
-        
+
         $mapper = $this->unitOfWork->getMapper($this->entityName);
 
         $entity = $mapper->toEntity($record, $entity);

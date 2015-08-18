@@ -31,12 +31,12 @@ abstract class AbstractMapper implements MapperInterface
     /**
      * @return HydratorInterface
      */
-    abstract protected function getEntityHydrator();
+    abstract protected function getEntityHydrator($entity);
 
     /**
      * @return HydratorInterface
      */
-    abstract protected function getRecordHydrator();
+    abstract protected function getRecordHydrator($record);
 
     /**
      * @param object $entity
@@ -44,7 +44,7 @@ abstract class AbstractMapper implements MapperInterface
      */
     public function getEntityData($entity)
     {
-        return $this->getEntityHydrator()->extract($entity);
+        return $this->getEntityHydrator($entity)->extract($entity);
     }
 
     /**
@@ -53,6 +53,6 @@ abstract class AbstractMapper implements MapperInterface
      */
     public function getRecordData($record)
     {
-        return $this->getRecordHydrator()->extract($record);
+        return $this->getRecordHydrator($record)->extract($record);
     }
 }
