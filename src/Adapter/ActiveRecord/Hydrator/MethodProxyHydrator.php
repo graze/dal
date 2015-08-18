@@ -4,7 +4,6 @@ namespace Graze\Dal\Adapter\ActiveRecord\Hydrator;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
-use LogicException;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class MethodProxyHydrator implements HydratorInterface
@@ -33,25 +32,7 @@ class MethodProxyHydrator implements HydratorInterface
      */
     public function extract($object)
     {
-        $entityName = $this->config->getEntityNameFromRecord($object);
-        $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
-
-        $out = array_map(function ($map) use ($object) {
-            $args = $map['args'];
-            $entity = $map['entity'];
-            $callable = [$object, $map['method']];
-            $callable = function () use ($object, $map) {
-                return (int) $object->{$map['property']};
-            };
-
-            if ($map['collection']) {
-                $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
-                return $this->proxyFactory->buildCollectionProxy($entity, $callable, $collectionClass, $args);
-            } else {
-                return $this->proxyFactory->buildEntityProxy($entity, $callable, $args);
-            }
-        }, $mapping);
-
+        $out = [];
         if ($this->next) {
             $out += $this->next->extract($object);
         }
@@ -64,6 +45,27 @@ class MethodProxyHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
+        $entityName = $this->config->getEntityName($object);
+        $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
+
+        $out = array_map(function ($map) use ($object) {
+            $args = $map['args'];
+            $entity = $map['entity'];
+            $callable = function () use ($object, $map) {
+                return (int) $object->{$map['foreignId']};
+            };
+            $callable = \Closure::bind($callable, null, $object);
+
+            if ($map['collection']) {
+                $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
+                return $this->proxyFactory->buildCollectionProxy($entity, $callable, $collectionClass, $args);
+            } else {
+                return $this->proxyFactory->buildEntityProxy($entity, $callable, $args);
+            }
+        }, $mapping);
+
+        $data += $out;
+
         if ($this->next) {
             $this->next->hydrate($data, $object);
         }
@@ -85,12 +87,11 @@ class MethodProxyHydrator implements HydratorInterface
             $out = [
                 'args' => isset($map['args']) ? $map['args'] : [],
                 'entity' => isset($map['entity']) ? $map['entity'] : null,
-                'method' => isset($map['method']) ? $map['method'] : null,
                 'collection' => isset($map['collection']) ? $map['collection'] : false,
-                'property' => isset($map['property']) ? $map['property'] : null,
+                'foreignId' => isset($map['foreignId']) ? $map['foreignId'] : null,
             ];
 
-            if (!$out['entity'] || !$out['method']) {
+            if (!$out['entity'] || !$out['foreignId']) {
                 $message = 'Relationship mapping must contain "entity" and "method" values';
                 throw new InvalidMappingException($message, __METHOD__);
             }

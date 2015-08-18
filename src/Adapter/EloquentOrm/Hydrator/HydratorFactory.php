@@ -36,7 +36,8 @@ class HydratorFactory
     }
 
     /**
-     * @param string $entityName
+     * @param object $entity
+     *
      * @return HydratorInterface
      */
     public function buildEntityHydrator($entity)
@@ -51,11 +52,16 @@ class HydratorFactory
             $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($entity));
         }
 
-        return $hydrator;
+        return new MethodProxyHydrator(
+            $this->config,
+            $this->proxyFactory,
+            $hydrator
+        );
     }
 
     /**
-     * @param string $recordName
+     * @param object $record
+     *
      * @return HydratorInterface
      */
     public function buildRecordHydrator($record)
@@ -66,10 +72,6 @@ class HydratorFactory
             $attributeHydrator->setNamingStrategy($this->config->buildRecordNamingStrategy($record));
         }
 
-        return new MethodProxyHydrator(
-            $this->config,
-            $this->proxyFactory,
-            $attributeHydrator
-        );
+        return $attributeHydrator;
     }
 }
