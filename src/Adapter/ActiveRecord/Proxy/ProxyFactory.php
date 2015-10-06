@@ -65,7 +65,6 @@ class ProxyFactory
     {
         return $this->factory->createProxy($class, function ($proxy) use ($args, $class, $fn) {
             $proxy->setProxyInitializer(null);
-//            $record = call_user_func_array($fn, $args);
             $adapter = $this->dalManager->findAdapterByEntityName($class);
             $repository = $adapter->getRepository($class);
             $entity = $repository->find($fn());
@@ -79,13 +78,6 @@ class ProxyFactory
                 $adapter->getUnitOfWork()->persistByTrackingPolicy($proxy);
                 return true;
             }
-
-//            if ($record) {
-//                $mapper = $this->unitOfWork->getMapper($class);
-//                $this->mapRecord($record, $proxy, $mapper);
-//
-//                return true;
-//            }
 
             return false;
         });
