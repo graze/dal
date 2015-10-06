@@ -171,11 +171,6 @@ class UnitOfWork
         return $this->config->buildRecordNamingStrategy($recordName);
     }
 
-    public function getAdapter()
-    {
-        return $this->adapter;
-    }
-
     /**
      * @param object $entity
      * @return PersisterInterface
