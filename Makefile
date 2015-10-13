@@ -23,3 +23,7 @@ docs:
 
 install:
 	@composer install
+
+.PHONY: db
+db:
+	@mysql -uroot -ppassword
