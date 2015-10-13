@@ -27,3 +27,9 @@ install:
 .PHONY: db
 db:
 	@mysql -uroot -ppassword
+
+.PHONYL: db-install
+db-install:
+	@MYSQL_PWD=password mysql -uroot -e "DROP DATABASE IF EXISTS dal"
+	@MYSQL_PWD=password mysql -uroot -e "CREATE DATABASE dal"
+	@cat dev/sql/*.sql | MYSQL_PWD=password mysql -uroot dal
