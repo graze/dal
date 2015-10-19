@@ -58,7 +58,8 @@
     "autoload-dev": {
         "psr-4": {
             "Graze\\Dal\\Test\\": "tests/src/",
-            "Graze\\Dal\\Test\\Unit\\": "tests/src/unit"
+            "Graze\\Dal\\Test\\Unit\\": "tests/src/unit",
+            "Graze\\Dal\\Dev\\": "dev/src/"
         }
     },
     "require": {

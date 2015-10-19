@@ -1,0 +1,16 @@
+---
+Graze\Dal\Dev\Customer:
+    type: entity
+    table: customer
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        firstName:
+            type: string
+            column: first_name
+        lastName:
+            type: string
+            column: last_name
