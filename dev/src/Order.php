@@ -2,7 +2,9 @@
 
 namespace Graze\Dal\Dev;
 
-class Order
+use Graze\Dal\Entity\EntityInterface;
+
+class Order implements EntityInterface
 {
 	private $id;
 	private $customer;

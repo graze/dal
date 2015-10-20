@@ -1,6 +1,7 @@
 <?php
 namespace Graze\Dal\Adapter\ActiveRecord\Hydrator;
 
+use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
@@ -37,6 +38,16 @@ class MethodProxyHydrator implements HydratorInterface
             $out += $this->next->extract($object);
         }
 
+	    $mapping = $this->formatMapping($this->config->getMapping($this->config->getEntityName($object)));
+
+	    foreach ($out as $field => $value) {
+		    if (is_object($value) && $value instanceof EntityInterface) {
+			    $map = $mapping[$field];
+			    unset($out[$field]);
+			    $out[$map['localKey']] = $value->getId();
+		    }
+	    }
+
         return $out;
     }
 
@@ -48,13 +59,12 @@ class MethodProxyHydrator implements HydratorInterface
         $entityName = $this->config->getEntityName($object);
         $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
 
-        $out = array_map(function ($map) use ($object) {
+        $out = array_map(function ($map) use ($data) {
             $args = $map['args'];
             $entity = $map['entity'];
-            $callable = function () use ($object, $map) {
-                return (int) $object->{$map['localKey']};
+            $callable = function () use ($data, $map) {
+                return (int) $data[$map['localKey']];
             };
-            $callable = \Closure::bind($callable, null, $object);
 
             if ($map['collection']) {
                 $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
