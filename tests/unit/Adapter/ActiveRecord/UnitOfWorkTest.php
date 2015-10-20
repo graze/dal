@@ -202,34 +202,4 @@ class UnitOfWorkTest extends \PHPUnit_Framework_TestCase
             $unitOfWork->getPersister('foo')
         );
     }
-
-    public function testCanGetEntityNamingStrategy()
-    {
-        $adapter = Mockery::mock('Graze\Dal\Adapter\ActiveRecordAdapter');
-
-        $config = Mockery::mock('Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface');
-        $config->shouldReceive('buildEntityNamingStrategy')
-            ->with('Graze\Dal\Test\Entity')
-            ->andReturn(Mockery::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface'));
-
-        $unitOfWork = new UnitOfWork($adapter, $config);
-        $namingStrategy = $unitOfWork->getEntityNamingStrategy('Graze\Dal\Test\Entity');
-
-        static::assertInstanceOf('Graze\Dal\NamingStrategy\NamingStrategyInterface', $namingStrategy);
-    }
-
-    public function testCanGetRecordNamingStrategy()
-    {
-        $adapter = Mockery::mock('Graze\Dal\Adapter\ActiveRecordAdapter');
-
-        $config = Mockery::mock('Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface');
-        $config->shouldReceive('buildRecordNamingStrategy')
-            ->with('Graze\Dal\Test\Record')
-            ->andReturn(Mockery::mock('Graze\Dal\NamingStrategy\NamingStrategyInterface'));
-
-        $unitOfWork = new UnitOfWork($adapter, $config);
-        $namingStrategy = $unitOfWork->getRecordNamingStrategy('Graze\Dal\Test\Record');
-
-        static::assertInstanceOf('Graze\Dal\NamingStrategy\NamingStrategyInterface', $namingStrategy);
-    }
 }

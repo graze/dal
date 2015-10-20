@@ -21,10 +21,8 @@ use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use Graze\Dal\DalManager;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
-use Graze\Dal\NamingStrategy\CombinedNamingStrategy;
 use ProxyManager\Configuration as ProxyConfiguration;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
-use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
 
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
@@ -200,24 +198,5 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
     {
         return new ProxyFactory($this->dalManager, new LazyLoadingGhostFactory($config));
-    }
-
-    /**
-     * @param string $recordName
-     * @return NamingStrategyInterface
-     */
-    public function buildRecordNamingStrategy($record)
-    {
-        return new CombinedNamingStrategy(); // just an empty strategy by default
-    }
-
-    /**
-     * @param string $entityName
-     *
-     * @return NamingStrategyInterface
-     */
-    public function buildEntityNamingStrategy($entity)
-    {
-        return new CombinedNamingStrategy(); // just an empty strategy by default
     }
 }

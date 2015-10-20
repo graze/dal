@@ -5,6 +5,7 @@ namespace Graze\Dal\Adapter\DoctrineOrm\Hydrator;
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
+use Graze\Dal\Adapter\ActiveRecord\Hydrator\FieldMappingHydrator;
 use Graze\Dal\Adapter\ActiveRecord\Hydrator\MethodProxyHydrator;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 
@@ -20,9 +21,10 @@ class HydratorFactory
      */
     private $proxyFactory;
 
-    /**
-     * @param ConfigurationInterface $config
-     */
+	/**
+	 * @param ConfigurationInterface $config
+	 * @param ProxyFactory $proxyFactory
+	 */
     public function __construct(ConfigurationInterface $config, ProxyFactory $proxyFactory)
     {
         $this->config = $config;
@@ -42,7 +44,7 @@ class HydratorFactory
 
         $hydrator = new $class();
 
-        return new MethodProxyHydrator($this->config, $this->proxyFactory, $hydrator);
+        return new MethodProxyHydrator($this->config, $this->proxyFactory, new FieldMappingHydrator($this->config, $hydrator));
     }
 
     /**
@@ -58,6 +60,6 @@ class HydratorFactory
 
         $hydrator = new $class();
 
-        return $hydrator;
+        return new FieldMappingHydrator($this->config, $hydrator);
     }
 }
