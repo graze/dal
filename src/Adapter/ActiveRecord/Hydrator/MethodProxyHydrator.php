@@ -59,17 +59,20 @@ class MethodProxyHydrator implements HydratorInterface
         $entityName = $this->config->getEntityName($object);
         $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
 
-        $out = array_map(function ($map) use ($data) {
+        $out = array_map(function ($map) use ($data, $object) {
             $args = $map['args'];
             $entity = $map['entity'];
-            $callable = function () use ($data, $map) {
-                return (int) $data[$map['localKey']];
-            };
 
             if ($map['collection']) {
+	            $callable = function () use ($object, $map) {
+		            return [$map['foreignKey'] => $object->getId()];
+	            };
                 $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
                 return $this->proxyFactory->buildCollectionProxy($entity, $callable, $collectionClass, $args);
             } else {
+	            $callable = function () use ($data, $map) {
+		            return (int) $data[$map['localKey']];
+	            };
                 return $this->proxyFactory->buildEntityProxy($entity, $callable, $args);
             }
         }, $mapping);
@@ -100,6 +103,7 @@ class MethodProxyHydrator implements HydratorInterface
                 'type' => isset($map['type']) ? $map['type'] : null,
                 'collection' => isset($map['collection']) ? $map['collection'] : false,
                 'localKey' => isset($map['localKey']) ? $map['localKey'] : null,
+                'foreignKey' => isset($map['foreignKey']) ? $map['foreignKey'] : null,
             ];
 
             if (!$out['entity'] || !$out['type']) {
