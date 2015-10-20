@@ -2,6 +2,7 @@
 
 namespace Graze\Dal\Adapter\DoctrineOrm;
 
+use Doctrine\ORM\EntityManager;
 use Graze\Dal\Adapter\ActiveRecord\AbstractConfiguration;
 use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
@@ -23,15 +24,22 @@ class Configuration extends AbstractConfiguration
      */
     private $hydratorFactory;
 
-    /**
-     * @param DalManager $dalManager
-     * @param array $mapping
-     * @param int $trackingPolicy
-     */
-    public function __construct(DalManager $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+	/**
+	 * @var EntityManager
+	 */
+	private $em;
+
+	/**
+	 * @param DalManager $dalManager
+	 * @param array $mapping
+	 * @param int $trackingPolicy
+	 * @param EntityManager $em
+	 */
+    public function __construct(DalManager $dalManager, array $mapping, EntityManager $em, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         parent::__construct($dalManager, $mapping, $trackingPolicy);
         $this->proxyConfiguration = $this->buildProxyConfiguration();
+	    $this->em = $em;
     }
 
     /**
@@ -55,7 +63,7 @@ class Configuration extends AbstractConfiguration
      */
     protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
     {
-        return new EntityPersister($entityName, $recordName, $unitOfWork);
+        return new EntityPersister($entityName, $recordName, $unitOfWork, $this->em);
     }
 
     /**

@@ -24,9 +24,10 @@ class DoctrineOrmAdapter extends ActiveRecordAdapter
 {
     protected $em;
 
-    /**
-     * @param EntityManagerInterface $em
-     */
+	/**
+	 * @param ConfigurationInterface $config
+	 * @param EntityManagerInterface $em
+	 */
     public function __construct(ConfigurationInterface $config, EntityManagerInterface $em)
     {
         parent::__construct($config);
@@ -37,72 +38,72 @@ class DoctrineOrmAdapter extends ActiveRecordAdapter
      * @param object $entity
      * @return string
      */
-    public function getEntityName($entity)
-    {
-        return ClassUtils::getClass($entity);
-    }
+//    public function getEntityName($entity)
+//    {
+//        return ClassUtils::getClass($entity);
+//    }
 
     /**
      * {@inheritdoc}
      */
-    public function getRepository($name)
-    {
-        try {
-            return $this->em->getRepository($name);
-        } catch (MappingException $e) {
-            throw new UndefinedRepositoryException($name, __METHOD__, $e);
-        }
-    }
+//    public function getRepository($name)
+//    {
+//        try {
+//            return $this->em->getRepository($name);
+//        } catch (MappingException $e) {
+//            throw new UndefinedRepositoryException($name, __METHOD__, $e);
+//        }
+//    }
 
     /**
      * {@inheritdoc}
      */
-    public function hasRepository($name)
-    {
-        try {
-            $this->getRepository($name);
-        } catch (UndefinedRepositoryException $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function flush($entity = null)
-    {
-        if (null !== $entity) {
-            $this->em->flush($entity);
-        } else {
-            $this->em->flush();
-        }
-    }
+//    public function hasRepository($name)
+//    {
+//        try {
+//            $this->getRepository($name);
+//        } catch (UndefinedRepositoryException $e) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
     /**
      * @{inheritdoc}
      */
-    public function persist($entity)
-    {
-        $this->em->persist($entity);
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function refresh($entity)
-    {
-        $this->em->refresh($entity);
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function remove($entity)
-    {
-        $this->em->remove($entity);
-    }
+//    public function flush($entity = null)
+//    {
+//        if (null !== $entity) {
+//            $this->em->flush($entity);
+//        } else {
+//            $this->em->flush();
+//        }
+//    }
+//
+//    /**
+//     * @{inheritdoc}
+//     */
+//    public function persist($entity)
+//    {
+//        $this->em->persist($entity);
+//    }
+//
+//    /**
+//     * @{inheritdoc}
+//     */
+//    public function refresh($entity)
+//    {
+//        $this->em->refresh($entity);
+//    }
+//
+//    /**
+//     * @{inheritdoc}
+//     */
+//    public function remove($entity)
+//    {
+//        $this->em->remove($entity);
+//    }
 
     /**
      * @{inheritdoc}

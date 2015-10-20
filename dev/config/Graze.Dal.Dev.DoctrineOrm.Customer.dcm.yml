@@ -1,5 +1,5 @@
 ---
-Graze\Dal\Dev\Customer:
+Graze\Dal\Dev\DoctrineOrm\Customer:
     type: entity
     table: customer
     id:
