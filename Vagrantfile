@@ -30,5 +30,6 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell, :inline => "sudo apt-get install mysql-server-5.6 -y"
     config.vm.provision :shell, :inline => "sudo /etc/init.d/mysql start"
     config.vm.provision :shell, :inline => "cd /dal && make install && make db-install"
+    config.vm.provision :shell, :inline => "alias mysql='mysql -uroot -ppassword dal' >> ~/.profile"
 
 end
