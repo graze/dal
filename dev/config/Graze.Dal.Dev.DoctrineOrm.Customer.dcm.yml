@@ -8,7 +8,9 @@ Graze\Dal\Dev\DoctrineOrm\Customer:
             generator:
                 strategy: AUTO
     fields:
-        first_name:
+        firstName:
             type: string
-        last_name:
+            column: first_name
+        lastName:
             type: string
+            column: last_name

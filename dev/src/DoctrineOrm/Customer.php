@@ -5,8 +5,8 @@ namespace Graze\Dal\Dev\DoctrineOrm;
 class Customer
 {
     private $id;
-    private $first_name;
-    private $last_name;
+    private $firstName;
+    private $lastName;
 
     /**
      * @return mixed
@@ -21,7 +21,7 @@ class Customer
      */
     public function getFirstName()
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
     /**
@@ -29,7 +29,7 @@ class Customer
      */
     public function setFirstName($firstName)
     {
-        $this->first_name = $firstName;
+        $this->firstName = $firstName;
     }
 
     /**
@@ -37,7 +37,7 @@ class Customer
      */
     public function getLastName()
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
     /**
@@ -45,6 +45,6 @@ class Customer
      */
     public function setLastName($lastName)
     {
-        $this->last_name = $lastName;
+        $this->lastName = $lastName;
     }
 }

@@ -93,6 +93,10 @@ class FieldMappingHydrator implements HydratorInterface
 			return [];
 		}
 
+		if (! array_key_exists('fields', $mapping)) {
+			return [];
+		}
+
 		foreach ($mapping['fields'] as $field => $config) {
 			$mappings[$config['mapsTo']] = $field;
 		}
@@ -111,6 +115,10 @@ class FieldMappingHydrator implements HydratorInterface
 		$mappings = [];
 
 		if (! $mapping) {
+			return [];
+		}
+
+		if (! array_key_exists('fields', $mapping)) {
 			return [];
 		}
 
