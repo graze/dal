@@ -16,18 +16,20 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Exception;
+use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 use PDO;
 
-class DoctrineOrmAdapter implements AdapterInterface
+class DoctrineOrmAdapter extends ActiveRecordAdapter
 {
     protected $em;
 
     /**
      * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ConfigurationInterface $config, EntityManagerInterface $em)
     {
+        parent::__construct($config);
         $this->em = $em;
     }
 
