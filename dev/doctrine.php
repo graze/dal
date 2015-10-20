@@ -36,10 +36,10 @@ $dm->set('doctrine', new DoctrineOrmAdapter(new Configuration(
 					'mapsTo' => 'id'
 				],
 				'firstName' => [
-					'mapsTo' => 'first_name'
+					'mapsTo' => 'firstName'
 				],
 				'lastName' => [
-					'mapsTo' => 'last_name'
+					'mapsTo' => 'lastName'
 				]
 			],
 			'related' => [
@@ -74,10 +74,10 @@ $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), 
 		'Graze\Dal\Dev\Order' => [
 			'record' => 'Graze\Dal\Dev\EloquentOrm\Order',
 			'fields' => [
-				'orderId' => [
+				'id' => [
 					'mapsTo' => 'id'
 				],
-				'orderPrice' => [
+				'price' => [
 					'mapsTo' => 'price'
 				]
 			],

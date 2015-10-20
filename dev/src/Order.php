@@ -6,16 +6,16 @@ use Graze\Dal\Entity\EntityInterface;
 
 class Order implements EntityInterface
 {
-	private $orderId;
+	private $id;
 	private $customer;
-	private $orderPrice;
+	private $price;
 
 	/**
 	 * @return mixed
 	 */
 	public function getId()
 	{
-		return $this->orderId;
+		return $this->id;
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Order implements EntityInterface
 	 */
 	public function getPrice()
 	{
-		return $this->orderPrice;
+		return $this->price;
 	}
 
 	/**
@@ -47,6 +47,6 @@ class Order implements EntityInterface
 	 */
 	public function setPrice($price)
 	{
-		$this->orderPrice = $price;
+		$this->price = $price;
 	}
 }
