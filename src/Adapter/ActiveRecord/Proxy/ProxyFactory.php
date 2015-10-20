@@ -3,7 +3,6 @@ namespace Graze\Dal\Adapter\ActiveRecord\Proxy;
 
 use Doctrine\Common\Collections\Collection;
 use GeneratedHydrator\Configuration;
-use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
 use Graze\Dal\DalManager;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
@@ -42,14 +41,20 @@ class ProxyFactory
 
         return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($args, $class, $fn) {
             $proxy->setProxyInitializer(null);
-            $records = call_user_func_array($fn, $args);
 
-            if (is_array($records)) {
-                $mapper = $this->unitOfWork->getMapper($class);
-                $this->mapRecords($records, $proxy, $mapper);
+	        // find all the $class entities for criteria returned by $fn()
+	        $adapter = $this->dalManager->findAdapterByEntityName($class);
+	        $repository = $adapter->getRepository($class);
+	        $entities = $repository->findBy($fn());
 
-                return true;
-            }
+	        if ($entities) {
+		        $proxy->clear();
+		        foreach ($entities as $entity) {
+			        $adapter->getUnitOfWork()->persistByTrackingPolicy($entity);
+			        $proxy->add($entity);
+		        }
+		        return true;
+	        }
 
             return false;
         });
@@ -81,39 +86,5 @@ class ProxyFactory
 
             return false;
         });
-    }
-
-    /**
-     * @param object $record
-     * @param object $entity
-     * @param MapperInterface $mapper
-     * @return object
-     */
-    protected function mapRecord($record, $entity, MapperInterface $mapper)
-    {
-        $entity = $mapper->toEntity($record, $entity);
-        $this->unitOfWork->persistByTrackingPolicy($entity);
-
-        return $entity;
-    }
-
-    /**
-     * @param array $records
-     * @param Collection $collection
-     * @param MapperInterface $mapper
-     * @return Collection
-     */
-    protected function mapRecords(array $records, Collection $collection, MapperInterface $mapper)
-    {
-        $collection->clear();
-
-        foreach ($records as $record) {
-            $entity = $mapper->toEntity($record);
-            $this->unitOfWork->persistByTrackingPolicy($entity);
-
-            $collection->add($entity);
-        }
-
-        return $collection;
     }
 }

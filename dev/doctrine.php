@@ -35,7 +35,8 @@ $dm->set('doctrine', new DoctrineOrmAdapter(new Configuration(
 				'orders' => [
 					'type' => 'manyToOne',
 					'entity' => 'Graze\Dal\Dev\Order',
-					'foreignKey' => 'customer_id'
+					'foreignKey' => 'customer_id',
+					'collection' => true
 				]
 			]
 		]
@@ -72,6 +73,9 @@ $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), 
 	]
 )));
 
+$em->getConnection()->executeQuery('TRUNCATE `order`');
+$em->getConnection()->executeQuery('TRUNCATE `customer`');
+
 $customer = new \Graze\Dal\Dev\Customer();
 $customer->setFirstName('Will');
 $customer->setLastName('Pillar');
@@ -84,10 +88,19 @@ $order->setCustomer($customer);
 $order->setPrice(5.99);
 
 $dm->persist($order);
+
+$order = new \Graze\Dal\Dev\Order();
+$order->setCustomer($customer);
+$order->setPrice(10.99);
+
+$dm->persist($order);
 $dm->flush();
 
-dump($order);
-dump($order->getCustomer()->getFirstName());
+$customer = $dm->getRepository('Graze\Dal\Dev\Customer')->find(1);
+
+foreach ($customer->getOrders() as $order) {
+	dump($order);
+}
 
 //$customers = $dm->getRepository('Graze\Dal\Dev\Customer')->findAll();
 //dump($customers);

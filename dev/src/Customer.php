@@ -9,6 +9,7 @@ class Customer implements EntityInterface
     private $id;
     private $firstName;
     private $lastName;
+	private $orders;
 
     /**
      * @return mixed
@@ -49,4 +50,12 @@ class Customer implements EntityInterface
     {
         $this->lastName = $lastName;
     }
+
+	/**
+	 * @return array
+	 */
+	public function getOrders()
+	{
+		return $this->orders;
+	}
 }
