@@ -11,6 +11,8 @@
  */
 namespace Graze\Dal\Adapter\ActiveRecord;
 
+use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
+use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
 use SplObjectStorage;
 

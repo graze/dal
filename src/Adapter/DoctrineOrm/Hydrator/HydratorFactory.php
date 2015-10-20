@@ -52,7 +52,7 @@ class HydratorFactory
      */
     public function buildRecordHydrator($record)
     {
-        $config = new Configuration($record);
+        $config = new Configuration(get_class($record));
         $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
         $class = $config->createFactory()->getHydratorClass();
 
