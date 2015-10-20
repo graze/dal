@@ -86,6 +86,8 @@ $order->setPrice(5.99);
 $dm->persist($order);
 $dm->flush();
 
-$customers = $dm->getRepository('Graze\Dal\Dev\Customer')->findAll();
+dump($order);
+dump($order->getCustomer()->getFirstName());
 
-dump($customers);
+//$customers = $dm->getRepository('Graze\Dal\Dev\Customer')->findAll();
+//dump($customers);
