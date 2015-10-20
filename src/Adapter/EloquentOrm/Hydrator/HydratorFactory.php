@@ -15,10 +15,10 @@ use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Hydrator\AttributeHydrator;
+use Graze\Dal\Adapter\ActiveRecord\Hydrator\FieldMappingHydrator;
 use Graze\Dal\Adapter\ActiveRecord\Hydrator\MethodProxyHydrator;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use Zend\Stdlib\Hydrator\HydratorInterface;
-use Zend\Stdlib\Hydrator\NamingStrategyEnabledInterface;
 
 class HydratorFactory
 {
@@ -48,14 +48,10 @@ class HydratorFactory
 
         $hydrator = new $class();
 
-        if ($hydrator instanceof NamingStrategyEnabledInterface) {
-            $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($entity));
-        }
-
         return new MethodProxyHydrator(
             $this->config,
             $this->proxyFactory,
-            $hydrator
+            new FieldMappingHydrator($this->config, $hydrator)
         );
     }
 
@@ -67,11 +63,6 @@ class HydratorFactory
     public function buildRecordHydrator($record)
     {
         $attributeHydrator = new AttributeHydrator('attributesToArray', 'fill');
-
-        if ($attributeHydrator instanceof NamingStrategyEnabledInterface) {
-            $attributeHydrator->setNamingStrategy($this->config->buildRecordNamingStrategy($record));
-        }
-
-        return $attributeHydrator;
+        return new FieldMappingHydrator($this->config, $attributeHydrator);
     }
 }

@@ -31,6 +31,17 @@ $dm->set('doctrine', new DoctrineOrmAdapter(new Configuration(
 	[
 		'Graze\Dal\Dev\Customer' => [
 			'record' => 'Graze\Dal\Dev\DoctrineOrm\Customer',
+			'fields' => [
+				'id' => [
+					'mapsTo' => 'id'
+				],
+				'firstName' => [
+					'mapsTo' => 'first_name'
+				],
+				'lastName' => [
+					'mapsTo' => 'last_name'
+				]
+			],
 			'related' => [
 				'orders' => [
 					'type' => 'manyToOne',
@@ -62,6 +73,14 @@ $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), 
 	[
 		'Graze\Dal\Dev\Order' => [
 			'record' => 'Graze\Dal\Dev\EloquentOrm\Order',
+			'fields' => [
+				'orderId' => [
+					'mapsTo' => 'id'
+				],
+				'orderPrice' => [
+					'mapsTo' => 'price'
+				]
+			],
 			'related' => [
 				'customer' => [
 					'type' => 'oneToMany',

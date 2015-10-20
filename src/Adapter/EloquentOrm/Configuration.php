@@ -17,9 +17,6 @@ use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\EloquentOrm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\EloquentOrm\Persister\EntityPersister;
 use Graze\Dal\DalManager;
-use Graze\Dal\NamingStrategy\CamelCaseNamingStrategy;
-use Graze\Dal\NamingStrategy\CombinedNamingStrategy;
-use Graze\Dal\NamingStrategy\PrefixNamingStrategy;
 
 class Configuration extends AbstractConfiguration
 {
@@ -74,21 +71,5 @@ class Configuration extends AbstractConfiguration
         }
 
         return $this->hydratorFactory;
-    }
-
-    public function buildRecordNamingStrategy($record)
-    {
-        $strategy = new CombinedNamingStrategy();
-        $strategy->addNamingStrategy(new PrefixNamingStrategy($record->getColumnPrefix()));
-        $strategy->addNamingStrategy(new CamelCaseNamingStrategy());
-        return $strategy;
-    }
-
-    public function buildEntityNamingStrategy($entity)
-    {
-        $strategy = new CombinedNamingStrategy();
-        $strategy->addNamingStrategy(new PrefixNamingStrategy('us_'));
-        $strategy->addNamingStrategy(new CamelCaseNamingStrategy());
-        return $strategy;
     }
 }

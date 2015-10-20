@@ -15,7 +15,6 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
-use Graze\Dal\NamingStrategy\NamingStrategyInterface;
 
 interface ConfigurationInterface
 {
@@ -63,17 +62,4 @@ interface ConfigurationInterface
      * @return array
      */
     public function getMapping($name);
-
-    /**
-     * @param string $recordName
-     * @return NamingStrategyInterface
-     */
-    public function buildRecordNamingStrategy($record);
-
-    /**
-     * @param string $entityName
-     *
-     * @return NamingStrategyInterface
-     */
-    public function buildEntityNamingStrategy($entity);
 }
