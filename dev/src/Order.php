@@ -7,9 +7,9 @@ use Graze\Dal\Entity\EntityInterface;
 
 class Order implements EntityInterface
 {
-	private $id;
-	private $customer;
-	private $price;
+    private $id;
+    private $customer;
+    private $price;
     private $products;
 
     public function __construct()
@@ -18,44 +18,44 @@ class Order implements EntityInterface
     }
 
     /**
-	 * @return mixed
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
-	 * @return Customer
-	 */
-	public function getCustomer()
-	{
-		return $this->customer;
-	}
+    /**
+     * @return Customer
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
 
-	/**
-	 * @param Customer $customer
-	 */
-	public function setCustomer(Customer $customer)
-	{
-		$this->customer = $customer;
-	}
+    /**
+     * @param Customer $customer
+     */
+    public function setCustomer(Customer $customer)
+    {
+        $this->customer = $customer;
+    }
 
-	/**
-	 * @return mixed
-	 */
-	public function getPrice()
-	{
-		return $this->price;
-	}
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
 
-	/**
-	 * @param mixed $price
-	 */
-	public function setPrice($price)
-	{
-		$this->price = $price;
-	}
+    /**
+     * @param mixed $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
 
     /**
      * @return mixed
@@ -70,6 +70,7 @@ class Order implements EntityInterface
      */
     public function addProduct(Product $product)
     {
-        $this->products->add($product);;
+        $this->products->add($product);
+        ;
     }
 }

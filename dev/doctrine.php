@@ -27,66 +27,66 @@ $em = EntityManager::create($conn, $config);
 $dm = new DalManager();
 
 $dm->set('doctrine', new DoctrineOrmAdapter(new Configuration(
-	$dm,
-	[
-		'Graze\Dal\Dev\Customer' => [
-			'record' => 'Graze\Dal\Dev\DoctrineOrm\Customer',
-			'fields' => [
-				'id' => [
-					'mapsTo' => 'id'
-				],
-				'firstName' => [
-					'mapsTo' => 'firstName'
-				],
-				'lastName' => [
-					'mapsTo' => 'lastName'
-				]
-			],
-			'related' => [
-				'orders' => [
-					'type' => 'manyToOne',
-					'entity' => 'Graze\Dal\Dev\Order',
-					'foreignKey' => 'customer_id',
-					'collection' => true
-				]
-			]
-		]
-	],
-	$em
+    $dm,
+    [
+        'Graze\Dal\Dev\Customer' => [
+            'record' => 'Graze\Dal\Dev\DoctrineOrm\Customer',
+            'fields' => [
+                'id' => [
+                    'mapsTo' => 'id'
+                ],
+                'firstName' => [
+                    'mapsTo' => 'firstName'
+                ],
+                'lastName' => [
+                    'mapsTo' => 'lastName'
+                ]
+            ],
+            'related' => [
+                'orders' => [
+                    'type' => 'manyToOne',
+                    'entity' => 'Graze\Dal\Dev\Order',
+                    'foreignKey' => 'customer_id',
+                    'collection' => true
+                ]
+            ]
+        ]
+    ],
+    $em
 ), $em));
 
 $capsule = new \Illuminate\Database\Capsule\Manager();
 $capsule->addConnection([
-	'driver' => 'mysql',
-	'host' => 'localhost',
-	'port' => 3306,
-	'username' => 'root',
-	'password' => 'password',
-	'database' => 'dal',
-	'charset'   => 'utf8',
-	'collation' => 'utf8_unicode_ci'
+    'driver' => 'mysql',
+    'host' => 'localhost',
+    'port' => 3306,
+    'username' => 'root',
+    'password' => 'password',
+    'database' => 'dal',
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci'
 ], 'default');
 $capsule->bootEloquent();
 
 $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), new EloquentConfiguration(
-	$dm,
-	[
-		'Graze\Dal\Dev\Order' => [
-			'record' => 'Graze\Dal\Dev\EloquentOrm\Order',
-			'fields' => [
-				'id' => [
-					'mapsTo' => 'id'
-				],
-				'price' => [
-					'mapsTo' => 'price'
-				]
-			],
-			'related' => [
-				'customer' => [
-					'type' => 'oneToMany',
-					'entity' => 'Graze\Dal\Dev\Customer',
-					'localKey' => 'customer_id'
-				],
+    $dm,
+    [
+        'Graze\Dal\Dev\Order' => [
+            'record' => 'Graze\Dal\Dev\EloquentOrm\Order',
+            'fields' => [
+                'id' => [
+                    'mapsTo' => 'id'
+                ],
+                'price' => [
+                    'mapsTo' => 'price'
+                ]
+            ],
+            'related' => [
+                'customer' => [
+                    'type' => 'oneToMany',
+                    'entity' => 'Graze\Dal\Dev\Customer',
+                    'localKey' => 'customer_id'
+                ],
                 'products' => [
                     'type' => 'manyToMany',
                     'entity' => 'Graze\Dal\Dev\Product',
@@ -95,12 +95,12 @@ $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), 
                     'foreignKey' => 'product_id',
                     'collection' => true
                 ]
-			]
-		],
+            ]
+        ],
         'Graze\Dal\Dev\Product' => [
             'record' => 'Graze\Dal\Dev\EloquentOrm\Product'
         ]
-	]
+    ]
 )));
 
 $em->getConnection()->executeQuery('TRUNCATE `order`');
@@ -146,7 +146,7 @@ $dm->flush();
 $customer = $dm->getRepository('Graze\Dal\Dev\Customer')->find(1);
 
 foreach ($customer->getOrders() as $order) {
-	dump($order->getCustomer()->getFirstName() . ' ' . $order->getCustomer()->getLastName());
+    dump($order->getCustomer()->getFirstName() . ' ' . $order->getCustomer()->getLastName());
 
     foreach ($order->getProducts() as $product) {
         dump($product->getName());
@@ -155,3 +155,4 @@ foreach ($customer->getOrders() as $order) {
 
 //$customers = $dm->getRepository('Graze\Dal\Dev\Customer')->findAll();
 //dump($customers);
+
