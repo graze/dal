@@ -86,14 +86,39 @@ $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), 
 					'type' => 'oneToMany',
 					'entity' => 'Graze\Dal\Dev\Customer',
 					'localKey' => 'customer_id'
-				]
+				],
+                'products' => [
+                    'type' => 'manyToMany',
+                    'entity' => 'Graze\Dal\Dev\Product',
+                    'pivot' => 'order_item',
+                    'localKey' => 'order_id',
+                    'foreignKey' => 'product_id',
+                    'collection' => true
+                ]
 			]
-		]
+		],
+        'Graze\Dal\Dev\Product' => [
+            'record' => 'Graze\Dal\Dev\EloquentOrm\Product'
+        ]
 	]
 )));
 
 $em->getConnection()->executeQuery('TRUNCATE `order`');
 $em->getConnection()->executeQuery('TRUNCATE `customer`');
+$em->getConnection()->executeQuery('TRUNCATE `product`');
+$em->getConnection()->executeQuery('TRUNCATE `order_item`');
+
+$toy = new \Graze\Dal\Dev\Product();
+$toy->setName('Toy');
+$toy->setPrice(1.99);
+
+$game = new \Graze\Dal\Dev\Product();
+$game->setName('Game');
+$game->setPrice(10.99);
+
+$dm->persist($toy);
+$dm->persist($game);
+$dm->flush();
 
 $customer = new \Graze\Dal\Dev\Customer();
 $customer->setFirstName('Will');
@@ -103,6 +128,7 @@ $dm->persist($customer);
 $dm->flush();
 
 $order = new \Graze\Dal\Dev\Order();
+$order->addProduct($toy);
 $order->setCustomer($customer);
 $order->setPrice(5.99);
 
@@ -110,6 +136,8 @@ $dm->persist($order);
 
 $order = new \Graze\Dal\Dev\Order();
 $order->setCustomer($customer);
+$order->addProduct($toy);
+$order->addProduct($game);
 $order->setPrice(10.99);
 
 $dm->persist($order);
@@ -118,7 +146,11 @@ $dm->flush();
 $customer = $dm->getRepository('Graze\Dal\Dev\Customer')->find(1);
 
 foreach ($customer->getOrders() as $order) {
-	dump($order);
+	dump($order->getCustomer()->getFirstName() . ' ' . $order->getCustomer()->getLastName());
+
+    foreach ($order->getProducts() as $product) {
+        dump($product->getName());
+    }
 }
 
 //$customers = $dm->getRepository('Graze\Dal\Dev\Customer')->findAll();

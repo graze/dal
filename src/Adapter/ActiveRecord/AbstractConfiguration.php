@@ -19,6 +19,8 @@ use Graze\Dal\Adapter\ActiveRecord\Identity\GeneratorInterface;
 use Graze\Dal\Adapter\ActiveRecord\Identity\ObjectHashGenerator;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use Graze\Dal\DalManager;
+use Graze\Dal\Entity\EntityInterface;
+use Graze\Dal\Entity\EntityMetadata;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
 use ProxyManager\Configuration as ProxyConfiguration;
@@ -158,6 +160,16 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     public function getMapping($name)
     {
         return isset($this->mapping[$name]) ? $this->mapping[$name] : null;
+    }
+
+    /**
+     * @param EntityInterface $entity
+     *
+     * @return EntityMetadata
+     */
+    public function buildEntityMetadata(EntityInterface $entity)
+    {
+        return new EntityMetadata($entity, $this);
     }
 
     /**

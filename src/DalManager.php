@@ -128,7 +128,7 @@ class DalManager implements DalManagerInterface
      * @return AdapterInterface
      * @throws UndefinedAdapterException If the adapter is not registered with entity
      */
-    protected function findAdapterByEntity($entity)
+    public function findAdapterByEntity($entity)
     {
         foreach ($this->adapters as $adapter) {
             $name = $adapter->getEntityName($entity);

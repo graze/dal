@@ -24,22 +24,22 @@ class Configuration extends AbstractConfiguration
      */
     private $hydratorFactory;
 
-	/**
-	 * @var EntityManager
-	 */
-	private $em;
+    /**
+     * @var EntityManager
+     */
+    private $em;
 
-	/**
-	 * @param DalManager $dalManager
-	 * @param array $mapping
-	 * @param int $trackingPolicy
-	 * @param EntityManager $em
-	 */
+    /**
+     * @param DalManager $dalManager
+     * @param array $mapping
+     * @param int $trackingPolicy
+     * @param EntityManager $em
+     */
     public function __construct(DalManager $dalManager, array $mapping, EntityManager $em, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         parent::__construct($dalManager, $mapping, $trackingPolicy);
         $this->proxyConfiguration = $this->buildProxyConfiguration();
-	    $this->em = $em;
+        $this->em = $em;
     }
 
     /**
@@ -63,7 +63,7 @@ class Configuration extends AbstractConfiguration
      */
     protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
     {
-        return new EntityPersister($entityName, $recordName, $unitOfWork, $this->em);
+        return new EntityPersister($entityName, $recordName, $unitOfWork, $this, $this->em);
     }
 
     /**

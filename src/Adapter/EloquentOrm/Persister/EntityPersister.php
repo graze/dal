@@ -12,6 +12,7 @@
 namespace Graze\Dal\Adapter\EloquentOrm\Persister;
 
 use Graze\Dal\Adapter\ActiveRecord\Persister\AbstractPersister;
+use Graze\Dal\Entity\EntityInterface;
 
 class EntityPersister extends AbstractPersister
 {
@@ -151,8 +152,41 @@ class EntityPersister extends AbstractPersister
 
         $mapper->toEntity($record, $entity);
 
+        $this->saveRelationships($entity);
+
         // set the entity record again after it's saved
         $this->unitOfWork->setEntityRecord($entity, $record);
+    }
+
+    private function saveRelationships(EntityInterface $entity)
+    {
+        $metadata = $this->config->buildEntityMetadata($entity);
+        $data = $this->unitOfWork->getMapper($this->entityName)->getEntityData($entity);
+
+        foreach ($data as $field => $value) {
+            // remove any keys that aren't relationships
+            if (! $metadata->hasRelationship($field)) {
+                unset($data[$field]);
+            }
+        }
+
+        foreach ($data as $field => $value) {
+            $relationship = $metadata->getRelationshipMetadata()[$field];
+
+            if ('manyToMany' === $relationship['type']) {
+                // assume $value is a collection for manyToMany
+                foreach ($value as $relatedEntity) {
+                    // insert into $relationship['pivot'] ($relationship['localKey'], $relationship['foreignKey']) values ($entity->getId(), $relatedEntity->getId())
+                    $adapter = $this->dalManager->findAdapterByEntity($entity);
+                    $table = $relationship['pivot'];
+                    $data = [
+                        $relationship['localKey'] => $entity->getId(),
+                        $relationship['foreignKey'] => $entity->getId(),
+                    ];
+                    $adapter->insert($table, $data);
+                }
+            }
+        }
     }
 
     /**

@@ -15,6 +15,8 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
 use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
+use Graze\Dal\Entity\EntityInterface;
+use Graze\Dal\Entity\EntityMetadata;
 
 interface ConfigurationInterface
 {
@@ -62,4 +64,11 @@ interface ConfigurationInterface
      * @return array
      */
     public function getMapping($name);
+
+    /**
+     * @param EntityInterface $entity
+     *
+     * @return EntityMetadata
+     */
+    public function buildEntityMetadata(EntityInterface $entity);
 }

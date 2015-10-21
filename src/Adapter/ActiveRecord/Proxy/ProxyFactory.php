@@ -42,19 +42,19 @@ class ProxyFactory
         return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($args, $class, $fn) {
             $proxy->setProxyInitializer(null);
 
-	        // find all the $class entities for criteria returned by $fn()
-	        $adapter = $this->dalManager->findAdapterByEntityName($class);
-	        $repository = $adapter->getRepository($class);
-	        $entities = $repository->findBy($fn());
+            // find all the $class entities for criteria returned by $fn()
+            $adapter = $this->dalManager->findAdapterByEntityName($class);
+            $repository = $adapter->getRepository($class);
+            $entities = $repository->findBy($fn());
 
-	        if ($entities) {
-		        $proxy->clear();
-		        foreach ($entities as $entity) {
-			        $adapter->getUnitOfWork()->persistByTrackingPolicy($entity);
-			        $proxy->add($entity);
-		        }
-		        return true;
-	        }
+            if ($entities) {
+                $proxy->clear();
+                foreach ($entities as $entity) {
+                    $adapter->getUnitOfWork()->persistByTrackingPolicy($entity);
+                    $proxy->add($entity);
+                }
+                return true;
+            }
 
             return false;
         });

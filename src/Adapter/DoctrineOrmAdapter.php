@@ -24,10 +24,10 @@ class DoctrineOrmAdapter extends ActiveRecordAdapter
 {
     protected $em;
 
-	/**
-	 * @param ConfigurationInterface $config
-	 * @param EntityManagerInterface $em
-	 */
+    /**
+     * @param ConfigurationInterface $config
+     * @param EntityManagerInterface $em
+     */
     public function __construct(ConfigurationInterface $config, EntityManagerInterface $em)
     {
         parent::__construct($config);

@@ -56,7 +56,7 @@ class Configuration extends AbstractConfiguration
      */
     protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
     {
-        return new EntityPersister($entityName, $recordName, $unitOfWork);
+        return new EntityPersister($entityName, $recordName, $unitOfWork, $this);
     }
 
     /**
