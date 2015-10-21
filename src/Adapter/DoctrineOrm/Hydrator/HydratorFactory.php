@@ -21,10 +21,10 @@ class HydratorFactory
      */
     private $proxyFactory;
 
-	/**
-	 * @param ConfigurationInterface $config
-	 * @param ProxyFactory $proxyFactory
-	 */
+    /**
+     * @param ConfigurationInterface $config
+     * @param ProxyFactory $proxyFactory
+     */
     public function __construct(ConfigurationInterface $config, ProxyFactory $proxyFactory)
     {
         $this->config = $config;
