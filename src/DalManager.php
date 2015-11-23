@@ -17,6 +17,9 @@ use Graze\Dal\Exception\UndefinedRepositoryException;
 
 class DalManager implements DalManagerInterface
 {
+    /**
+     * @var AdapterInterface[]
+     */
     protected $adapters;
 
     /**
