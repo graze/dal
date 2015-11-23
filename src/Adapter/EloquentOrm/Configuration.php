@@ -48,7 +48,7 @@ class Configuration extends AbstractConfiguration
      */
     protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
     {
-        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork));
+        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
     }
 
     /**

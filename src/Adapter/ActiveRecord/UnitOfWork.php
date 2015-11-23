@@ -161,4 +161,9 @@ class UnitOfWork
     {
         return $this->getPersister($this->config->getEntityName($entity));
     }
+
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
 }

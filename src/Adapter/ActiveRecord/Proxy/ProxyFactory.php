@@ -60,6 +60,39 @@ class ProxyFactory
         });
     }
 
+    public function buildManyToManyCollectionProxy($foreignEntityName, $localEntityName, $pivotTableName, $foreignKey, $localKey, callable $fn, $collectionClass)
+    {
+        $collectionClassName = is_string($collectionClass) ? $collectionClass : $this->collectionClass;
+
+        return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($foreignEntityName, $localEntityName, $pivotTableName, $foreignKey, $localKey, $fn) {
+            $proxy->setProxyInitializer(null);
+
+            $sql = "SELECT {$foreignKey} FROM {$pivotTableName} WHERE {$localKey} = ?";
+
+            // find all the $class entities using the many to many config
+            $foreignAdapter = $this->dalManager->findAdapterByEntityName($foreignEntityName);
+            $foreignRepository = $foreignAdapter->getRepository($foreignEntityName);
+            $localAdapter = $this->dalManager->findAdapterByEntityName($localEntityName);
+            $foreignIds = array_values($localAdapter->fetchCol($sql, [$fn()]));
+
+            $entities = [];
+            foreach ($foreignIds as $id) {
+                $entities[] = $foreignRepository->find($id);
+            }
+
+            if (is_array($entities) && count($entities) > 0) {
+                $proxy->clear();
+                foreach ($entities as $entity) {
+                    $foreignAdapter->getUnitOfWork()->persistByTrackingPolicy($entity);
+                    $proxy->add($entity);
+                }
+                return true;
+            }
+
+            return false;
+        });
+    }
+
     /**
      * @param string $class
      * @param callable $fn

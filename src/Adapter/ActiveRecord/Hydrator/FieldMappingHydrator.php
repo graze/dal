@@ -42,8 +42,13 @@ class FieldMappingHydrator implements HydratorInterface
         }
 
         $mapping = $this->getExtractionFieldMappings($object);
+        $fields = $this->getFields($object);
 
         foreach ($out as $field => $value) {
+//            if ($fields && ! array_key_exists($field, $fields)) {
+//                unset($out[$field]);
+//                continue;
+//            }
             if (array_key_exists($field, $mapping)) {
                 unset($out[$field]);
                 $out[$mapping[$field]] = $value;
@@ -64,8 +69,13 @@ class FieldMappingHydrator implements HydratorInterface
     public function hydrate(array $data, $object)
     {
         $mapping = $this->getHydrationFieldMappings($object);
+        $fields = $this->getFields($object);
 
         foreach ($data as $field => $value) {
+//            if ($fields && ! array_key_exists($field, $fields)) {
+////                unset($data[$field]);
+//                continue;
+//            }
             if (array_key_exists($field, $mapping)) {
                 unset($data[$field]);
                 $data[$mapping[$field]] = $value;
@@ -77,6 +87,21 @@ class FieldMappingHydrator implements HydratorInterface
         }
 
         return $object;
+    }
+
+    private function getFields($object)
+    {
+        $mapping = $this->config->getMapping($this->config->getEntityName($object));
+
+        if (! $mapping) {
+            return [];
+        }
+
+        if (array_key_exists('fields', $mapping)) {
+            return $mapping['fields'];
+        }
+
+        return [];
     }
 
     /**
