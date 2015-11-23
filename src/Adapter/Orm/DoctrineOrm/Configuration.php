@@ -6,10 +6,10 @@ use Doctrine\ORM\EntityManager;
 use Graze\Dal\Adapter\Orm\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
+use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
 use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
 use Graze\Dal\Adapter\Orm\UnitOfWork;
-use Graze\Dal\Adapter\Orm\DoctrineOrm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
 use Graze\Dal\DalManager;
 
@@ -52,7 +52,7 @@ class Configuration extends AbstractConfiguration
      */
     protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
     {
-        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork));
+        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
     }
 
     /**

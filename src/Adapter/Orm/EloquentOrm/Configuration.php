@@ -12,9 +12,9 @@
 namespace Graze\Dal\Adapter\Orm\EloquentOrm;
 
 use Graze\Dal\Adapter\Orm\AbstractConfiguration;
+use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\UnitOfWork;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator\HydratorFactory;
-use Graze\Dal\Adapter\Orm\EloquentOrm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Persister\EntityPersister;
 use Graze\Dal\DalManager;
 
