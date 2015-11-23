@@ -3,7 +3,7 @@
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Mapper;
 
 use Graze\Dal\Adapter\Orm\Mapper\AbstractMapper;
-use Graze\Dal\Adapter\Orm\DoctrineOrm\Hydrator\HydratorFactory;
+use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 

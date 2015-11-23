@@ -1,20 +1,18 @@
 <?php
 
-namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Hydrator;
+namespace Graze\Dal\Adapter\Orm\Hydrator;
 
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
 use Graze\Dal\Adapter\Orm\ConfigurationInterface;
-use Graze\Dal\Adapter\Orm\Hydrator\FieldMappingHydrator;
-use Graze\Dal\Adapter\Orm\Hydrator\MethodProxyHydrator;
 use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
 
-class HydratorFactory
+class HydratorFactory implements HydratorFactoryInterface
 {
     /**
      * @var ConfigurationInterface
      */
-    private $config;
+    protected $config;
 
     /**
      * @var ProxyFactory

@@ -67,7 +67,8 @@ class Configuration extends AbstractConfiguration
     {
         if (!$this->hydratorFactory) {
             $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);
-            $this->hydratorFactory = new HydratorFactory($this, $proxyFactory);
+            $ormHydratorFactory = new \Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory($this, $proxyFactory);
+            $this->hydratorFactory = new HydratorFactory($ormHydratorFactory, $this);
         }
 
         return $this->hydratorFactory;

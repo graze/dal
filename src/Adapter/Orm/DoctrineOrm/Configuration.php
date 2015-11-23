@@ -4,10 +4,10 @@ namespace Graze\Dal\Adapter\Orm\DoctrineOrm;
 
 use Doctrine\ORM\EntityManager;
 use Graze\Dal\Adapter\Orm\AbstractConfiguration;
+use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
 use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
 use Graze\Dal\Adapter\Orm\UnitOfWork;
-use Graze\Dal\Adapter\Orm\DoctrineOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
 use Graze\Dal\DalManager;
