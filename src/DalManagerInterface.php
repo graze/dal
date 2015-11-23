@@ -22,7 +22,7 @@ interface DalManagerInterface
      * @param string $name
      *
      * @return AdapterInterface
-     * @throws UndefinedAdapterInterface If the adapter is not registered with name
+     * @throws UndefinedAdapterException If the adapter is not registered with name
      */
     public function get($name);
 
@@ -71,4 +71,20 @@ interface DalManagerInterface
      * @param callable $fn
      */
     public function transaction($name, callable $fn);
+
+    /**
+     * @param string $name
+     *
+     * @return AdapterInterface
+     * @throws UndefinedAdapterException If the adapter is not registered with name
+     */
+    public function findAdapterByEntityName($name);
+
+    /**
+     * @param object $entity
+     *
+     * @return AdapterInterface
+     * @throws UndefinedAdapterException If the adapter is not registered with entity
+     */
+    public function findAdapterByEntity($entity);
 }
