@@ -3,14 +3,14 @@
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Mapper;
 
 use Graze\Dal\Adapter\Orm\Mapper\AbstractMapper;
-use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
+use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class EntityMapper extends AbstractMapper
 {
     /**
-     * @var HydratorFactory
+     * @var HydratorFactoryInterface
      */
     private $factory;
 
@@ -30,9 +30,9 @@ class EntityMapper extends AbstractMapper
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param HydratorFactory $factory
+     * @param HydratorFactoryInterface $factory
      */
-    public function __construct($entityName, $recordName, HydratorFactory $factory)
+    public function __construct($entityName, $recordName, HydratorFactoryInterface $factory)
     {
         parent::__construct($entityName, $recordName);
         $this->factory = $factory;
