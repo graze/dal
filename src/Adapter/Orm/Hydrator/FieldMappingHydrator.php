@@ -1,8 +1,8 @@
 <?php
 
-namespace Graze\Dal\Adapter\ActiveRecord\Hydrator;
+namespace Graze\Dal\Adapter\Orm\Hydrator;
 
-use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
+use Graze\Dal\Adapter\Orm\ConfigurationInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class FieldMappingHydrator implements HydratorInterface

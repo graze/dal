@@ -1,10 +1,10 @@
 <?php
 namespace Graze\Dal\Adapter\ActiveRecord\Hydrator;
 
-use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
+use LogicException;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class MethodProxyHydrator implements HydratorInterface
@@ -33,19 +33,24 @@ class MethodProxyHydrator implements HydratorInterface
      */
     public function extract($object)
     {
-        $out = [];
+        $entityName = $this->config->getEntityNameFromRecord($object);
+        $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
+
+        $out = array_map(function ($map) use ($object) {
+            $args = $map['args'];
+            $entity = $map['entity'];
+            $callable = [$object, $map['method']];
+
+            if ($map['collection']) {
+                $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
+                return $this->proxyFactory->buildCollectionProxy($entity, $callable, $collectionClass, $args);
+            } else {
+                return $this->proxyFactory->buildEntityProxy($entity, $callable, $args);
+            }
+        }, $mapping);
+
         if ($this->next) {
             $out += $this->next->extract($object);
-        }
-
-        $mapping = $this->formatMapping($this->config->getMapping($this->config->getEntityName($object)));
-
-        foreach ($out as $field => $value) {
-            if (is_object($value) && $value instanceof EntityInterface) {
-                $map = $mapping[$field];
-                unset($out[$field]);
-                $out[$map['localKey']] = $value->getId();
-            }
         }
 
         return $out;
@@ -56,44 +61,6 @@ class MethodProxyHydrator implements HydratorInterface
      */
     public function hydrate(array $data, $object)
     {
-        $entityName = $this->config->getEntityName($object);
-        $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
-
-        $out = array_map(function ($map) use ($data, $object, $entityName) {
-            $args = $map['args'];
-            $foreignEntity = $map['entity'];
-
-            if ($map['collection']) {
-                if ('manyToMany' === $map['type']) {
-                    $callable = function () use ($data, $map) {
-                        return (int) $data['id'];
-                    };
-                    $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
-                    return $this->proxyFactory->buildManyToManyCollectionProxy(
-                        $foreignEntity,
-                        $entityName,
-                        $map['pivot'],
-                        $map['foreignKey'],
-                        $map['localKey'],
-                        $callable,
-                        $collectionClass
-                    );
-                }
-                $callable = function () use ($object, $map) {
-                    return [$map['foreignKey'] => $object->getId()];
-                };
-                $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
-                return $this->proxyFactory->buildCollectionProxy($foreignEntity, $callable, $collectionClass, $args);
-            } else {
-                $callable = function () use ($data, $map) {
-                    return (int) $data[$map['localKey']];
-                };
-                return $this->proxyFactory->buildEntityProxy($foreignEntity, $callable, $args);
-            }
-        }, $mapping);
-
-        $data += $out;
-
         if ($this->next) {
             $this->next->hydrate($data, $object);
         }
@@ -115,15 +82,12 @@ class MethodProxyHydrator implements HydratorInterface
             $out = [
                 'args' => isset($map['args']) ? $map['args'] : [],
                 'entity' => isset($map['entity']) ? $map['entity'] : null,
-                'type' => isset($map['type']) ? $map['type'] : null,
+                'method' => isset($map['method']) ? $map['method'] : null,
                 'collection' => isset($map['collection']) ? $map['collection'] : false,
-                'localKey' => isset($map['localKey']) ? $map['localKey'] : null,
-                'foreignKey' => isset($map['foreignKey']) ? $map['foreignKey'] : null,
-                'pivot' => isset($map['pivot']) ? $map['pivot'] : null,
             ];
 
-            if (!$out['entity'] || !$out['type']) {
-                $message = 'Relationship mapping must contain "entity" and "type" values';
+            if (!$out['entity'] || !$out['method']) {
+                $message = 'Relationship mapping must contain "entity" and "method" values';
                 throw new InvalidMappingException($message, __METHOD__);
             }
 

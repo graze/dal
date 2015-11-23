@@ -9,12 +9,12 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter;
+namespace Graze\Dal\Adapter\Orm;
 
-use Graze\Dal\Adapter\EloquentOrm\Configuration;
+use Graze\Dal\Adapter\Orm\EloquentOrm\Configuration;
 use Illuminate\Database\ConnectionInterface;
 
-class EloquentOrmAdapter extends ActiveRecordAdapter
+class EloquentOrmAdapter extends OrmAdapter
 {
     /**
      * @param ConnectionInterface $conn
@@ -71,5 +71,32 @@ class EloquentOrmAdapter extends ActiveRecordAdapter
     public function fetchOne($sql, array $bindings = [])
     {
         return $this->conn->selectOne($sql, $bindings);
+    }
+
+    /**
+     * @param string $table
+     * @param array $data
+     */
+    public function insert($table, $data)
+    {
+        $this->conn->table($table)->insert($data);
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return array
+     */
+    public function fetchCol($sql, array $bindings = [])
+    {
+        $result = $this->fetch($sql, $bindings);
+        $col = [];
+
+        foreach ($result as $row) {
+            $col[] = array_values($row)[0];
+        }
+
+        return $col;
     }
 }

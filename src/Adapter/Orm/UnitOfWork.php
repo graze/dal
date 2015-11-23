@@ -9,9 +9,10 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\ActiveRecord;
+namespace Graze\Dal\Adapter\Orm;
 
-use Graze\Dal\Adapter\ActiveRecordAdapter;
+use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
+use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use SplObjectStorage;
 
 class UnitOfWork
@@ -28,12 +29,12 @@ class UnitOfWork
     protected $trackingPolicy;
 
     /**
-     * @param ActiveRecordAdapter $adapter
+     * @param OrmAdapter $adapter
      * @param ConfigurationInterface $config
      * @param integer $trackingPolicy
      */
     public function __construct(
-        ActiveRecordAdapter $adapter,
+        OrmAdapter $adapter,
         ConfigurationInterface $config,
         $trackingPolicy = self::POLICY_IMPLICIT
     ) {
@@ -152,31 +153,16 @@ class UnitOfWork
     }
 
     /**
-     * @param $entityName
-     *
-     * @return \Graze\Dal\NamingStrategy\NamingStrategyInterface
-     */
-    public function getEntityNamingStrategy($entityName)
-    {
-        return $this->config->buildEntityNamingStrategy($entityName);
-    }
-
-    /**
-     * @param $recordName
-     *
-     * @return \Graze\Dal\NamingStrategy\NamingStrategyInterface
-     */
-    public function getRecordNamingStrategy($recordName)
-    {
-        return $this->config->buildRecordNamingStrategy($recordName);
-    }
-
-    /**
      * @param object $entity
      * @return PersisterInterface
      */
     protected function getPersisterByEntity($entity)
     {
         return $this->getPersister($this->config->getEntityName($entity));
+    }
+
+    public function getAdapter()
+    {
+        return $this->adapter;
     }
 }

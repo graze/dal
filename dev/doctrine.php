@@ -2,10 +2,10 @@
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use Graze\Dal\Adapter\DoctrineOrm\Configuration;
-use Graze\Dal\Adapter\DoctrineOrmAdapter;
-use Graze\Dal\Adapter\EloquentOrm\Configuration as EloquentConfiguration;
-use Graze\Dal\Adapter\EloquentOrmAdapter;
+use Graze\Dal\Adapter\Orm\DoctrineOrm\Configuration;
+use Graze\Dal\Adapter\Orm\DoctrineOrmAdapter;
+use Graze\Dal\Adapter\Orm\EloquentOrm\Configuration as EloquentConfiguration;
+use Graze\Dal\Adapter\Orm\EloquentOrmAdapter;
 use Graze\Dal\DalManager;
 
 require __DIR__ . '/../vendor/autoload.php';

@@ -1,11 +1,11 @@
 <?php
 
-namespace Graze\Dal\Adapter\DoctrineOrm\Persister;
+namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Persister;
 
 use Doctrine\ORM\EntityManager;
-use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
-use Graze\Dal\Adapter\ActiveRecord\Persister\AbstractPersister;
-use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
+use Graze\Dal\Adapter\Orm\ConfigurationInterface;
+use Graze\Dal\Adapter\Orm\Persister\AbstractPersister;
+use Graze\Dal\Adapter\Orm\UnitOfWork;
 
 class EntityPersister extends AbstractPersister
 {

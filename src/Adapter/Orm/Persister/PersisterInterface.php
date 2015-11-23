@@ -9,7 +9,7 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\ActiveRecord\Persister;
+namespace Graze\Dal\Adapter\Orm\Persister;
 
 interface PersisterInterface
 {
@@ -41,8 +41,9 @@ interface PersisterInterface
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param array $criteria
+     * @param int $id
      * @param object $entity
+     *
      * @return object
      */
     public function loadById($id, $entity = null);

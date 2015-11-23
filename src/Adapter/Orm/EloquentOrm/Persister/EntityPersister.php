@@ -9,9 +9,10 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\EloquentOrm\Persister;
+namespace Graze\Dal\Adapter\Orm\EloquentOrm\Persister;
 
-use Graze\Dal\Adapter\ActiveRecord\Persister\AbstractPersister;
+use Graze\Dal\Adapter\Orm\Persister\AbstractPersister;
+use Graze\Dal\Entity\EntityInterface;
 
 class EntityPersister extends AbstractPersister
 {
@@ -20,7 +21,6 @@ class EntityPersister extends AbstractPersister
      */
     public function load(array $criteria, $entity = null, array $orderBy = null)
     {
-        $criteria = $this->applyNamingStrategy($criteria);
         $class = $this->recordName;
         $query = $class::query();
 
@@ -32,7 +32,6 @@ class EntityPersister extends AbstractPersister
             $orderBy = [];
         }
 
-        $orderBy = $this->applyNamingStrategy($orderBy);
         foreach ($orderBy as $field => $direction) {
             $query->orderBy($field, $direction);
         }
@@ -56,7 +55,6 @@ class EntityPersister extends AbstractPersister
      */
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $criteria = $this->applyNamingStrategy($criteria);
         $class = $this->recordName;
         $query = $class::query();
 
@@ -73,7 +71,6 @@ class EntityPersister extends AbstractPersister
             $orderBy = [];
         }
 
-        $orderBy = $this->applyNamingStrategy($orderBy);
         foreach ($orderBy as $field => $direction) {
             $query->orderBy($field, $direction);
         }
@@ -153,10 +150,43 @@ class EntityPersister extends AbstractPersister
 
         $this->unitOfWork->removeEntityRecord($entity);
 
+        $this->saveRelationships($entity, $record->id);
+
         $mapper->toEntity($record, $entity);
 
         // set the entity record again after it's saved
         $this->unitOfWork->setEntityRecord($entity, $record);
+    }
+
+    private function saveRelationships(EntityInterface $entity, $recordId)
+    {
+        $metadata = $this->config->buildEntityMetadata($entity);
+        $data = $this->unitOfWork->getMapper($this->entityName)->getEntityData($entity);
+
+        foreach ($data as $field => $value) {
+            // remove any keys that aren't relationships
+            if (! $metadata->hasRelationship($field)) {
+                unset($data[$field]);
+            }
+        }
+
+        foreach ($data as $field => $value) {
+            $relationship = $metadata->getRelationshipMetadata()[$field];
+
+            if ('manyToMany' === $relationship['type']) {
+                $table = $relationship['pivot'];
+                // assume $value is a collection for manyToMany
+                foreach ($value as $relatedEntity) {
+                    // insert into $relationship['pivot'] ($relationship['localKey'], $relationship['foreignKey']) values ($entity->getId(), $relatedEntity->getId())
+                    $data = [
+                        $relationship['localKey'] => $recordId,
+                        $relationship['foreignKey'] => $relatedEntity->getId(),
+                    ];
+                    $adapter = $this->unitOfWork->getAdapter();
+                    $adapter->insert($table, $data);
+                }
+            }
+        }
     }
 
     /**
@@ -168,21 +198,5 @@ class EntityPersister extends AbstractPersister
         $this->unitOfWork->persistByTrackingPolicy($entity);
 
         return $entity;
-    }
-
-    /**
-     * @param array $fieldsAndValues
-     * @return array
-     */
-    protected function applyNamingStrategy(array $fieldsAndValues)
-    {
-        $prepared = [];
-        $strategy = $this->unitOfWork->getRecordNamingStrategy($this->getRecordName());
-
-        foreach ($fieldsAndValues as $field => $value) {
-            $prepared[$strategy->hydrate($field)] = $value;
-        }
-
-        return $prepared;
     }
 }

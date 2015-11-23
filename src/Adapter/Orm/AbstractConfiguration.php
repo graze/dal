@@ -9,21 +9,21 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\ActiveRecord;
+namespace Graze\Dal\Adapter\Orm;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
-use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
-use Graze\Dal\Adapter\ActiveRecordAdapter;
-use Graze\Dal\Adapter\ActiveRecord\Identity\GeneratorInterface;
-use Graze\Dal\Adapter\ActiveRecord\Identity\ObjectHashGenerator;
-use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
+use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
+use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
+use Graze\Dal\Adapter\Orm\Identity\GeneratorInterface;
+use Graze\Dal\Adapter\Orm\Identity\ObjectHashGenerator;
+use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
+use Graze\Dal\DalManager;
+use Graze\Dal\Entity\EntityInterface;
+use Graze\Dal\Entity\EntityMetadata;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
-use Graze\Dal\NamingStrategy\CombinedNamingStrategy;
 use ProxyManager\Configuration as ProxyConfiguration;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
-use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
 
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
@@ -34,13 +34,15 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected $trackingPolicy;
 
     /**
+     * @param DalManager $dalManager
      * @param array $mapping
-     * @param integer $trackingPolicy
+     * @param int $trackingPolicy
      */
-    public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+    public function __construct(DalManager $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         $this->mapping = $mapping;
         $this->trackingPolicy = $trackingPolicy;
+        $this->dalManager = $dalManager;
 
         $this->identityGenerator = $this->buildDefaultIdentityGenerator();
     }
@@ -94,7 +96,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function buildRepository($name, ActiveRecordAdapter $adapter)
+    public function buildRepository($name, OrmAdapter $adapter)
     {
         $mapping = $this->getMapping($name);
 
@@ -115,7 +117,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function buildUnitOfWork(ActiveRecordAdapter $adapter)
+    public function buildUnitOfWork(OrmAdapter $adapter)
     {
         return new UnitOfWork($adapter, $this, $this->trackingPolicy);
     }
@@ -160,6 +162,16 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
+     * @param EntityInterface $entity
+     *
+     * @return EntityMetadata
+     */
+    public function buildEntityMetadata(EntityInterface $entity)
+    {
+        return new EntityMetadata($entity, $this);
+    }
+
+    /**
      * @return GeneratorInterface
      */
     protected function buildDefaultIdentityGenerator()
@@ -169,10 +181,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param string $name
-     * @param ActiveRecordAdapter $adapter
+     * @param OrmAdapter $adapter
      * @return EntityRepository
      */
-    protected function buildDefaultRepository($name, ActiveRecordAdapter $adapter)
+    protected function buildDefaultRepository($name, OrmAdapter $adapter)
     {
         return new EntityRepository($name, $adapter);
     }
@@ -196,25 +208,6 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
     {
-        return new ProxyFactory($this, $unitOfWork, new LazyLoadingGhostFactory($config));
-    }
-
-    /**
-     * @param string $recordName
-     * @return NamingStrategyInterface
-     */
-    public function buildRecordNamingStrategy($recordName)
-    {
-        return new CombinedNamingStrategy(); // just an empty strategy by default
-    }
-
-    /**
-     * @param string $entityName
-     *
-     * @return NamingStrategyInterface
-     */
-    public function buildEntityNamingStrategy($entityName)
-    {
-        return new CombinedNamingStrategy(); // just an empty strategy by default
+        return new ProxyFactory($this->dalManager, new LazyLoadingGhostFactory($config));
     }
 }

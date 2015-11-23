@@ -16,21 +16,18 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Exception;
-use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 use PDO;
 
-class DoctrineOrmAdapter extends ActiveRecordAdapter
+class DoctrineOrmAdapter implements AdapterInterface
 {
     protected $em;
 
     /**
-     * @param ConfigurationInterface $config
      * @param EntityManagerInterface $em
      */
-    public function __construct(ConfigurationInterface $config, EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($config);
         $this->em = $em;
     }
 
@@ -38,72 +35,72 @@ class DoctrineOrmAdapter extends ActiveRecordAdapter
      * @param object $entity
      * @return string
      */
-//    public function getEntityName($entity)
-//    {
-//        return ClassUtils::getClass($entity);
-//    }
+    public function getEntityName($entity)
+    {
+        return ClassUtils::getClass($entity);
+    }
 
     /**
      * {@inheritdoc}
      */
-//    public function getRepository($name)
-//    {
-//        try {
-//            return $this->em->getRepository($name);
-//        } catch (MappingException $e) {
-//            throw new UndefinedRepositoryException($name, __METHOD__, $e);
-//        }
-//    }
+    public function getRepository($name)
+    {
+        try {
+            return $this->em->getRepository($name);
+        } catch (MappingException $e) {
+            throw new UndefinedRepositoryException($name, __METHOD__, $e);
+        }
+    }
 
     /**
      * {@inheritdoc}
      */
-//    public function hasRepository($name)
-//    {
-//        try {
-//            $this->getRepository($name);
-//        } catch (UndefinedRepositoryException $e) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
+    public function hasRepository($name)
+    {
+        try {
+            $this->getRepository($name);
+        } catch (UndefinedRepositoryException $e) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * @{inheritdoc}
      */
-//    public function flush($entity = null)
-//    {
-//        if (null !== $entity) {
-//            $this->em->flush($entity);
-//        } else {
-//            $this->em->flush();
-//        }
-//    }
-//
-//    /**
-//     * @{inheritdoc}
-//     */
-//    public function persist($entity)
-//    {
-//        $this->em->persist($entity);
-//    }
-//
-//    /**
-//     * @{inheritdoc}
-//     */
-//    public function refresh($entity)
-//    {
-//        $this->em->refresh($entity);
-//    }
-//
-//    /**
-//     * @{inheritdoc}
-//     */
-//    public function remove($entity)
-//    {
-//        $this->em->remove($entity);
-//    }
+    public function flush($entity = null)
+    {
+        if (null !== $entity) {
+            $this->em->flush($entity);
+        } else {
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function persist($entity)
+    {
+        $this->em->persist($entity);
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function refresh($entity)
+    {
+        $this->em->refresh($entity);
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function remove($entity)
+    {
+        $this->em->remove($entity);
+    }
 
     /**
      * @{inheritdoc}
@@ -175,38 +172,5 @@ class DoctrineOrmAdapter extends ActiveRecordAdapter
         $stmt->execute($bindings);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * @param string $table
-     * @param array $data
-     */
-    public function insert($table, $data)
-    {
-        $fields = implode(', ', array_keys($data));
-        $values = implode(', ', array_values($data));
-        $sql = "INSERT INTO `?` (?) VALUES (?)";
-        $bindings = [
-            $table,
-            rtrim($fields, ', '),
-            rtrim($values, ', ')
-        ];
-
-        $stmt = $this->em->getConnection()->prepare($sql);
-        $stmt->execute($bindings);
-    }
-
-    /**
-     * @param string $sql
-     * @param array $bindings
-     *
-     * @return array
-     */
-    public function fetchCol($sql, array $bindings = [])
-    {
-        $stmt = $this->em->getConnection()->prepare($sql);
-        $stmt->execute($bindings);
-
-        return $stmt->fetchColumn(0);
     }
 }
