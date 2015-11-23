@@ -72,4 +72,31 @@ class EloquentOrmAdapter extends ActiveRecordAdapter
     {
         return $this->conn->selectOne($sql, $bindings);
     }
+
+    /**
+     * @param string $table
+     * @param array $data
+     */
+    public function insert($table, $data)
+    {
+        $this->conn->table($table)->insert($data);
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return array
+     */
+    public function fetchCol($sql, array $bindings = [])
+    {
+        $result = $this->fetch($sql, $bindings);
+        $col = [];
+
+        foreach ($result as $row) {
+            $col[] = array_values($row)[0];
+        }
+
+        return $col;
+    }
 }
