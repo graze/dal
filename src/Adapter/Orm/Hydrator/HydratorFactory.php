@@ -4,60 +4,35 @@ namespace Graze\Dal\Adapter\Orm\Hydrator;
 
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
-use Graze\Dal\Adapter\Orm\ConfigurationInterface;
-use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
+use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class HydratorFactory implements HydratorFactoryInterface
+class HydratorFactory extends AbstractHydratorFactory implements HydratorFactoryInterface
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    protected $config;
-
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
-
-    /**
-     * @param ConfigurationInterface $config
-     * @param ProxyFactory $proxyFactory
-     */
-    public function __construct(ConfigurationInterface $config, ProxyFactory $proxyFactory)
-    {
-        $this->config = $config;
-        $this->proxyFactory = $proxyFactory;
-    }
-
     /**
      * @param object $entity
      *
-     * @return MethodProxyHydrator
+     * @return HydratorInterface
      */
-    public function buildEntityHydrator($entity)
+    protected function buildDefaultEntityHydrator($entity)
     {
         $config = new Configuration($this->config->getEntityName($entity));
         $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
         $class = $config->createFactory()->getHydratorClass();
 
-        $hydrator = new $class();
-
-        return new MethodProxyHydrator($this->config, $this->proxyFactory, new FieldMappingHydrator($this->config, $hydrator));
+        return new $class();
     }
 
     /**
      * @param object $record
      *
-     * @return mixed
+     * @return HydratorInterface
      */
-    public function buildRecordHydrator($record)
+    protected function buildDefaultRecordHydrator($record)
     {
         $config = new Configuration(get_class($record));
         $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
         $class = $config->createFactory()->getHydratorClass();
 
-        $hydrator = new $class();
-
-        return new FieldMappingHydrator($this->config, $hydrator);
+        return new $class();
     }
 }
