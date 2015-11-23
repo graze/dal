@@ -27,7 +27,7 @@ class AttributeHydrator extends ArraySerializable
      */
     public function extract($object)
     {
-        if (!is_callable(array($object, $this->toData))) {
+        if (! is_callable(array($object, $this->toData))) {
             throw new InvalidEntityException($object, __METHOD__);
         }
 
@@ -35,7 +35,7 @@ class AttributeHydrator extends ArraySerializable
         $filter = $this->getFilter();
 
         foreach ($data as $name => $value) {
-            if (!$filter->filter($name)) {
+            if (! $filter->filter($name)) {
                 unset($data[$name]);
                 continue;
             }

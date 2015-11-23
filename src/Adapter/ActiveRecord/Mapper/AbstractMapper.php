@@ -40,6 +40,7 @@ abstract class AbstractMapper implements MapperInterface
 
     /**
      * @param object $entity
+     *
      * @return array
      */
     public function getEntityData($entity)
@@ -49,6 +50,7 @@ abstract class AbstractMapper implements MapperInterface
 
     /**
      * @param object $record
+     *
      * @return array
      */
     public function getRecordData($record)

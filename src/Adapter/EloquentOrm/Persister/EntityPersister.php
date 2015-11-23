@@ -58,7 +58,7 @@ class EntityPersister extends AbstractPersister
         $query = $class::query();
 
         $query->limit($limit);
-        if (!is_null($limit)) {
+        if (! is_null($limit)) {
             $query->offset($offset);
         }
 
@@ -89,7 +89,7 @@ class EntityPersister extends AbstractPersister
      */
     public function loadById($id, $entity = null)
     {
-        $class  = $this->recordName;
+        $class = $this->recordName;
         $record = $class::find($id);
 
         if (is_null($record)) {
@@ -157,6 +157,7 @@ class EntityPersister extends AbstractPersister
 
     /**
      * @param object $entity
+     *
      * @return object
      */
     protected function persistImplicit($entity)

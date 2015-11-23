@@ -103,11 +103,12 @@ class MethodProxyHydrator implements HydratorInterface
 
     /**
      * @param array $mapping
+     *
      * @return array
      */
     protected function formatMapping(array $mapping)
     {
-        if (!isset($mapping['related']) || !is_array($mapping['related'])) {
+        if (! isset($mapping['related']) || ! is_array($mapping['related'])) {
             return [];
         }
 
@@ -122,7 +123,7 @@ class MethodProxyHydrator implements HydratorInterface
                 'pivot' => isset($map['pivot']) ? $map['pivot'] : null,
             ];
 
-            if (!$out['entity'] || !$out['type']) {
+            if (! $out['entity'] || ! $out['type']) {
                 $message = 'Relationship mapping must contain "entity" and "type" values';
                 throw new InvalidMappingException($message, __METHOD__);
             }

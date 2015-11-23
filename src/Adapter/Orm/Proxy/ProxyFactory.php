@@ -33,6 +33,7 @@ class ProxyFactory
      * @param callable $fn
      * @param string $collectionClass
      * @param array $args
+     *
      * @return GhostObjectInterface
      */
     public function buildCollectionProxy($class, callable $fn, $collectionClass = null, array $args = [])
@@ -60,11 +61,25 @@ class ProxyFactory
         });
     }
 
-    public function buildManyToManyCollectionProxy($foreignEntityName, $localEntityName, $pivotTableName, $foreignKey, $localKey, callable $fn, $collectionClass)
-    {
+    public function buildManyToManyCollectionProxy(
+        $foreignEntityName,
+        $localEntityName,
+        $pivotTableName,
+        $foreignKey,
+        $localKey,
+        callable $fn,
+        $collectionClass
+    ) {
         $collectionClassName = is_string($collectionClass) ? $collectionClass : $this->collectionClass;
 
-        return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($foreignEntityName, $localEntityName, $pivotTableName, $foreignKey, $localKey, $fn) {
+        return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use (
+            $foreignEntityName,
+            $localEntityName,
+            $pivotTableName,
+            $foreignKey,
+            $localKey,
+            $fn
+        ) {
             $proxy->setProxyInitializer(null);
 
             $sql = "SELECT {$foreignKey} FROM {$pivotTableName} WHERE {$localKey} = ?";
@@ -97,6 +112,7 @@ class ProxyFactory
      * @param string $class
      * @param callable $fn
      * @param array $args
+     *
      * @return GhostObjectInterface
      */
     public function buildEntityProxy($class, callable $fn, array $args = [])

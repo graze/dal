@@ -33,6 +33,7 @@ class DoctrineOrmAdapter implements AdapterInterface
 
     /**
      * @param object $entity
+     *
      * @return string
      */
     public function getEntityName($entity)
@@ -131,8 +132,10 @@ class DoctrineOrmAdapter implements AdapterInterface
      */
     public function transaction(callable $fn)
     {
-        if (!$fn instanceof Closure) {
-            $fn = function ($adapter) use ($fn) { call_user_func($fn, $adapter); };
+        if (! $fn instanceof Closure) {
+            $fn = function ($adapter) use ($fn) {
+                call_user_func($fn, $adapter);
+            };
         }
 
         $this->beginTransaction();

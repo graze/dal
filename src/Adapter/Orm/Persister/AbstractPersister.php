@@ -255,6 +255,7 @@ abstract class AbstractPersister implements PersisterInterface
 
     /**
      * @param object $entity
+     *
      * @return object
      */
     protected function persistImplicit($entity)

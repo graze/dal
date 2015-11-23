@@ -18,12 +18,14 @@ interface AdapterInterface
 {
     /**
      * @param object $entity
+     *
      * @return string
      */
     public function getEntityName($entity);
 
     /**
      * @param string $name
+     *
      * @return ObjectRepository
      * @throws UndefinedRepositoryException If the repository is not found for name
      */
@@ -31,6 +33,7 @@ interface AdapterInterface
 
     /**
      * @param string $name
+     *
      * @return boolean
      */
     public function hasRepository($name);

@@ -51,7 +51,7 @@ class UnitOfWork
     public function commit($entity = null)
     {
         foreach ($this->persisted as $persisted) {
-            if (!$entity || $entity === $persisted) {
+            if (! $entity || $entity === $persisted) {
                 $this->getPersisterByEntity($persisted)->save($persisted);
 
                 if ($entity) {
@@ -133,7 +133,7 @@ class UnitOfWork
      */
     public function getMapper($name)
     {
-        if (!isset($this->mappers[$name])) {
+        if (! isset($this->mappers[$name])) {
             $this->mappers[$name] = $this->config->buildMapper($name, $this);
         }
 
@@ -145,7 +145,7 @@ class UnitOfWork
      */
     public function getPersister($name)
     {
-        if (!isset($this->persisters[$name])) {
+        if (! isset($this->persisters[$name])) {
             $this->persisters[$name] = $this->config->buildPersister($name, $this);
         }
 
@@ -154,6 +154,7 @@ class UnitOfWork
 
     /**
      * @param object $entity
+     *
      * @return PersisterInterface
      */
     protected function getPersisterByEntity($entity)

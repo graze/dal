@@ -20,6 +20,7 @@ interface DalManagerInterface
 {
     /**
      * @param string $name
+     *
      * @return AdapterInterface
      * @throws UndefinedAdapterInterface If the adapter is not registered with name
      */
@@ -27,6 +28,7 @@ interface DalManagerInterface
 
     /**
      * @param string $name
+     *
      * @return boolean
      */
     public function has($name);
@@ -38,6 +40,7 @@ interface DalManagerInterface
 
     /**
      * @param string $name
+     *
      * @return ObjectRepository
      * @throws UndefinedRepositoryException If the repository is not found for name
      */
