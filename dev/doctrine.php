@@ -143,9 +143,12 @@ $order->setPrice(10.99);
 $dm->persist($order);
 $dm->flush();
 
-$customer = $dm->getRepository('Graze\Dal\Dev\Customer')->find(1);
+//$customer = $dm->getRepository('Graze\Dal\Dev\Customer')->find(1);
+//
+//dump($customer);
 
 foreach ($customer->getOrders() as $order) {
+    dump($order->getId());
     dump($order->getCustomer()->getFirstName() . ' ' . $order->getCustomer()->getLastName());
 
     foreach ($order->getProducts() as $product) {

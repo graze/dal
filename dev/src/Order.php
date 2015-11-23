@@ -71,6 +71,5 @@ class Order implements EntityInterface
     public function addProduct(Product $product)
     {
         $this->products->add($product);
-        ;
     }
 }
