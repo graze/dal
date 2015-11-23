@@ -12,14 +12,41 @@
 namespace Graze\Dal\Adapter\Orm\EloquentOrm\Persister;
 
 use Graze\Dal\Adapter\Orm\Persister\AbstractPersister;
-use Graze\Dal\Entity\EntityInterface;
 
 class EntityPersister extends AbstractPersister
 {
     /**
-     * {@inheritdoc}
+     * @param object $record
      */
-    public function load(array $criteria, $entity = null, array $orderBy = null)
+    protected function saveRecord($record)
+    {
+        $record->save();
+    }
+
+    /**
+     * @param object $record
+     */
+    protected function deleteRecord($record)
+    {
+        $record->delete();
+    }
+
+    /**
+     * @return int
+     */
+    protected function getRecordId($record)
+    {
+        return $record->id;
+    }
+
+    /**
+     * @param array $criteria
+     * @param object $entity
+     * @param array $orderBy
+     *
+     * @return object
+     */
+    protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
         $class = $this->recordName;
         $query = $class::query();
@@ -36,24 +63,18 @@ class EntityPersister extends AbstractPersister
             $query->orderBy($field, $direction);
         }
 
-        $record = $query->first();
-
-        if (! $record) {
-            return null;
-        }
-
-        $mapper = $this->unitOfWork->getMapper($this->entityName);
-
-        $entity = $mapper->toEntity($record, $entity);
-        $this->unitOfWork->setEntityRecord($entity, $record);
-
-        return $record ? $this->persistImplicit($entity) : null;
+        return $query->first();
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array $orderBy
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array
      */
-    public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $class = $this->recordName;
         $query = $class::query();
@@ -75,128 +96,18 @@ class EntityPersister extends AbstractPersister
             $query->orderBy($field, $direction);
         }
 
-        $mapper = $this->unitOfWork->getMapper($this->entityName);
-
-        return array_map(function ($record) use ($mapper) {
-            $entity = $mapper->toEntity($record);
-            $this->unitOfWork->setEntityRecord($entity, $record);
-
-            return $this->persistImplicit($entity);
-        }, $query->get()->all());
+        return $query->get()->all();
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function loadById($id, $entity = null)
-    {
-        $class  = $this->recordName;
-        $record = $class::find($id);
-
-        if (is_null($record)) {
-            return null;
-        }
-
-        $mapper = $this->unitOfWork->getMapper($this->entityName);
-
-        $entity = $mapper->toEntity($record, $entity);
-        $this->unitOfWork->setEntityRecord($entity, $record);
-
-        return $record ? $this->persistImplicit($entity) : null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function delete($entity)
-    {
-        $mapper = $this->unitOfWork->getMapper($this->entityName);
-        $record = $this->unitOfWork->getEntityRecord($entity);
-        $record = $mapper->fromEntity($entity, $record);
-
-        $this->unitOfWork->setEntityRecord($entity, null);
-
-        $record->delete();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function refresh($entity)
-    {
-        $mapper = $this->unitOfWork->getMapper($this->entityName);
-        $data = $mapper->getEntityData($entity);
-
-        if (isset($data['id'])) {
-            $this->loadById($data['id'], $entity);
-        } else {
-            $record = $this->unitOfWork->getEntityRecord($entity);
-            $mapper->toEntity($record, $entity);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function save($entity)
-    {
-        $mapper = $this->unitOfWork->getMapper($this->entityName);
-        $record = $this->unitOfWork->getEntityRecord($entity);
-        $record = $mapper->fromEntity($entity, $record);
-
-        $this->unitOfWork->setEntityRecord($entity, $record);
-
-        $record->save();
-
-        $this->unitOfWork->removeEntityRecord($entity);
-
-        $this->saveRelationships($entity, $record->id);
-
-        $mapper->toEntity($record, $entity);
-
-        // set the entity record again after it's saved
-        $this->unitOfWork->setEntityRecord($entity, $record);
-    }
-
-    private function saveRelationships(EntityInterface $entity, $recordId)
-    {
-        $metadata = $this->config->buildEntityMetadata($entity);
-        $data = $this->unitOfWork->getMapper($this->entityName)->getEntityData($entity);
-
-        foreach ($data as $field => $value) {
-            // remove any keys that aren't relationships
-            if (! $metadata->hasRelationship($field)) {
-                unset($data[$field]);
-            }
-        }
-
-        foreach ($data as $field => $value) {
-            $relationship = $metadata->getRelationshipMetadata()[$field];
-
-            if ('manyToMany' === $relationship['type']) {
-                $table = $relationship['pivot'];
-                // assume $value is a collection for manyToMany
-                foreach ($value as $relatedEntity) {
-                    // insert into $relationship['pivot'] ($relationship['localKey'], $relationship['foreignKey']) values ($entity->getId(), $relatedEntity->getId())
-                    $data = [
-                        $relationship['localKey'] => $recordId,
-                        $relationship['foreignKey'] => $relatedEntity->getId(),
-                    ];
-                    $adapter = $this->unitOfWork->getAdapter();
-                    $adapter->insert($table, $data);
-                }
-            }
-        }
-    }
-
-    /**
+     * @param int $id
      * @param object $entity
+     *
      * @return object
      */
-    protected function persistImplicit($entity)
+    protected function loadRecordById($id, $entity = null)
     {
-        $this->unitOfWork->persistByTrackingPolicy($entity);
-
-        return $entity;
+        $class  = $this->recordName;
+        return $class::find($id);
     }
 }

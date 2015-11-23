@@ -27,50 +27,55 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
+     * @param object $record
+     */
+    protected function saveRecord($record)
+    {
+        $this->em->persist($record);
+        $this->em->flush();
+    }
+
+    /**
+     * @param object $record
+     */
+    protected function deleteRecord($record)
+    {
+        $this->em->remove($record);
+    }
+
+    /**
+     * @return int
+     */
+    protected function getRecordId($record)
+    {
+        return $record->getId();
+    }
+
+    /**
      * @param array $criteria
      * @param object $entity
      * @param array $orderBy
      *
      * @return object
      */
-    public function load(array $criteria, $entity = null, array $orderBy = null)
+    protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
         $repository = $this->em->getRepository($this->getRecordName());
-        $record = $repository->findOneBy($criteria);
-
-        if (! $record) {
-            return null;
-        }
-
-        $mapper = $this->unitOfWork->getMapper($this->getEntityName());
-        $entity = $mapper->toEntity($record, $entity);
-
-        return $record ? $this->persistImplicit($entity) : null;
+        return $repository->findOneBy($criteria);
     }
 
     /**
      * @param array $criteria
      * @param array $orderBy
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
-     * @return object[]
+     * @return array
      */
-    public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $repository = $this->em->getRepository($this->getRecordName());
-        $records = $repository->findBy($criteria, $orderBy, $limit, $offset);
-
-        $mapper = $this->unitOfWork->getMapper($this->getEntityName());
-        $entities = [];
-
-        foreach ($records as $record) {
-            $entity = $mapper->toEntity($record);
-            $this->unitOfWork->setEntityRecord($entity, $record);
-            $entities[] = $this->persistImplicit($entity);
-        }
-
-        return $entities;
+        return $repository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -79,82 +84,9 @@ class EntityPersister extends AbstractPersister
      *
      * @return object
      */
-    public function loadById($id, $entity = null)
+    protected function loadRecordById($id, $entity = null)
     {
         $repository = $this->em->getRepository($this->getRecordName());
-        $record = $repository->find($id);
-
-        if (is_null($record)) {
-            return $record;
-        }
-
-        $mapper = $this->unitOfWork->getMapper($this->getEntityName());
-        $entity = $mapper->toEntity($record, $entity);
-
-        $this->unitOfWork->setEntityRecord($entity, $record);
-
-        return $record ? $this->persistImplicit($entity) : null;
-    }
-
-    /**
-     * @param object $entity
-     * @return object
-     */
-    protected function persistImplicit($entity)
-    {
-        $this->unitOfWork->persistByTrackingPolicy($entity);
-
-        return $entity;
-    }
-
-    /**
-     * @param object $entity
-     */
-    public function delete($entity)
-    {
-        $mapper = $this->unitOfWork->getMapper($this->getEntityName());
-        $record = $this->unitOfWork->getEntityRecord($entity);
-        $record = $mapper->fromEntity($entity, $record);
-
-        $this->unitOfWork->setEntityRecord($entity, null);
-
-        $this->em->remove($record);
-    }
-
-    /**
-     * @param object $entity
-     */
-    public function refresh($entity)
-    {
-        $mapper = $this->unitOfWork->getMapper($this->getEntityName());
-        $data = $mapper->getEntityData($entity);
-
-        if (isset($data['id'])) {
-            $this->loadById($data['id'], $entity);
-        } else {
-            $record = $this->unitOfWork->getEntityRecord($entity);
-            $mapper->toEntity($record, $entity);
-        }
-    }
-
-    /**
-     * @param object $entity
-     */
-    public function save($entity)
-    {
-        $mapper = $this->unitOfWork->getMapper($this->getEntityName());
-        $record = $this->unitOfWork->getEntityRecord($entity);
-        $record = $mapper->fromEntity($entity, $record);
-
-        $this->unitOfWork->setEntityRecord($entity, $record);
-
-        $this->em->persist($record);
-        $this->em->flush();
-
-        $this->unitOfWork->removeEntityRecord($entity);
-
-        $mapper->toEntity($record, $entity);
-
-        $this->unitOfWork->setEntityRecord($entity, $record);
+        return $repository->find($id);
     }
 }
