@@ -11,48 +11,33 @@
  */
 namespace Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator;
 
-use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
-use GeneratedHydrator\Configuration;
 use Graze\Dal\Adapter\Orm\ConfigurationInterface;
 use Graze\Dal\Adapter\Orm\Hydrator\AttributeHydrator;
 use Graze\Dal\Adapter\Orm\Hydrator\FieldMappingHydrator;
-use Graze\Dal\Adapter\Orm\Hydrator\MethodProxyHydrator;
-use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
+use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory as OrmHydratorFactory;
+use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class HydratorFactory
+class HydratorFactory implements HydratorFactoryInterface
 {
-    protected $config;
-    protected $proxyFactory;
+    /**
+     * @var OrmHydratorFactory
+     */
+    private $hydratorFactory;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $config;
+
+    /**
+     * @param OrmHydratorFactory $hydratorFactory
      * @param ConfigurationInterface $config
-     * @param ProxyFactory $proxyFactory
      */
-    public function __construct(ConfigurationInterface $config, ProxyFactory $proxyFactory)
+    public function __construct(OrmHydratorFactory $hydratorFactory, ConfigurationInterface $config)
     {
+        $this->hydratorFactory = $hydratorFactory;
         $this->config = $config;
-        $this->proxyFactory = $proxyFactory;
-    }
-
-    /**
-     * @param object $entity
-     *
-     * @return HydratorInterface
-     */
-    public function buildEntityHydrator($entity)
-    {
-        $config = new Configuration($this->config->getEntityName($entity));
-        $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
-        $class = $config->createFactory()->getHydratorClass();
-
-        $hydrator = new $class();
-
-        return new MethodProxyHydrator(
-            $this->config,
-            $this->proxyFactory,
-            new FieldMappingHydrator($this->config, $hydrator)
-        );
     }
 
     /**
@@ -64,5 +49,15 @@ class HydratorFactory
     {
         $attributeHydrator = new AttributeHydrator('attributesToArray', 'fill');
         return new FieldMappingHydrator($this->config, $attributeHydrator);
+    }
+
+    /**
+     * @param object $entity
+     *
+     * @return HydratorInterface
+     */
+    public function buildEntityHydrator($entity)
+    {
+        return $this->hydratorFactory->buildEntityHydrator($entity);
     }
 }
