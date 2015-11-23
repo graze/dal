@@ -2,6 +2,7 @@
 
 namespace Graze\Dal\Dev;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Graze\Dal\Entity\EntityInterface;
 
 class Customer implements EntityInterface
@@ -10,6 +11,11 @@ class Customer implements EntityInterface
     private $firstName;
     private $lastName;
     private $orders;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
     /**
      * @return mixed
