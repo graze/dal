@@ -12,10 +12,9 @@
 namespace Graze\Dal\Adapter\Orm;
 
 use Closure;
-use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 
-abstract class OrmAdapter implements AdapterInterface
+abstract class OrmAdapter implements OrmAdapterInterface
 {
     protected $config;
     protected $repos = [];

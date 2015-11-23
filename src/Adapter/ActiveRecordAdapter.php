@@ -14,9 +14,10 @@ namespace Graze\Dal\Adapter;
 use Closure;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
+use Graze\Dal\Adapter\Orm\OrmAdapterInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 
-abstract class ActiveRecordAdapter implements AdapterInterface
+abstract class ActiveRecordAdapter implements OrmAdapterInterface
 {
     protected $config;
     protected $repos = [];

@@ -54,45 +54,4 @@ interface AdapterInterface
      * @param object $entity
      */
     public function remove($entity);
-
-    /**
-     * @param string $sql
-     * @param array $bindings
-     *
-     * @return array
-     */
-    public function fetch($sql, array $bindings = []);
-
-    /**
-     * @param string $sql
-     * @param array $bindings
-     *
-     * @return mixed
-     */
-    public function fetchOne($sql, array $bindings = []);
-
-    /**
-     * @param string $sql
-     * @param array $bindings
-     *
-     * @return array
-     */
-    public function fetchCol($sql, array $bindings = []);
-
-    public function beginTransaction();
-
-    public function commit();
-
-    public function rollback();
-
-    /**
-     * @param callable $fn
-     */
-    public function transaction(callable $fn);
-
-    /**
-     * @param string $table
-     * @param array $data
-     */
-    public function insert($table, $data);
 }
