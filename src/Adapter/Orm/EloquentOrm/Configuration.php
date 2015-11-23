@@ -12,44 +12,13 @@
 namespace Graze\Dal\Adapter\Orm\EloquentOrm;
 
 use Graze\Dal\Adapter\Orm\AbstractConfiguration;
-use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\UnitOfWork;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Persister\EntityPersister;
-use Graze\Dal\DalManager;
 
 class Configuration extends AbstractConfiguration
 {
-    protected $hydratorFactory;
-    protected $proxyConfiguration;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(DalManager $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
-    {
-        $this->proxyConfiguration = $this->buildProxyConfiguration();
-
-        parent::__construct($dalManager, $mapping, $trackingPolicy);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getEntityName($entity)
-    {
-        $inflector = $this->proxyConfiguration->getClassNameInflector();
-
-        return $inflector->getUserClassName(get_class($entity));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
-    {
-        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
-    }
+    private $hydratorFactory;
 
     /**
      * {@inheritdoc}

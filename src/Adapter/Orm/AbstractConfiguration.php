@@ -12,6 +12,7 @@
 namespace Graze\Dal\Adapter\Orm;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
 use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
 use Graze\Dal\Adapter\Orm\Identity\GeneratorInterface;
@@ -32,6 +33,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected $identityGenerator;
     protected $mapping;
     protected $trackingPolicy;
+	protected $proxyConfiguration;
 
     /**
      * @param DalManager $dalManager
@@ -45,6 +47,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         $this->dalManager = $dalManager;
 
         $this->identityGenerator = $this->buildDefaultIdentityGenerator();
+	    $this->proxyConfiguration = $this->buildProxyConfiguration();
     }
 
     /**
@@ -53,7 +56,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param UnitOfWork $unitOfWork
      * @return MapperInterface
      */
-    abstract protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork);
+	protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
+	{
+		return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
+	}
 
     /**
      * @param string $entityName
