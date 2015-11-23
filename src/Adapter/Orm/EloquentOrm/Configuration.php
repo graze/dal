@@ -9,13 +9,14 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\EloquentOrm;
+namespace Graze\Dal\Adapter\Orm\EloquentOrm;
 
-use Graze\Dal\Adapter\ActiveRecord\AbstractConfiguration;
-use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
-use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
-use Graze\Dal\Adapter\EloquentOrm\Mapper\EntityMapper;
-use Graze\Dal\Adapter\EloquentOrm\Persister\EntityPersister;
+use Graze\Dal\Adapter\Orm\AbstractConfiguration;
+use Graze\Dal\Adapter\Orm\UnitOfWork;
+use Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator\HydratorFactory;
+use Graze\Dal\Adapter\Orm\EloquentOrm\Mapper\EntityMapper;
+use Graze\Dal\Adapter\Orm\EloquentOrm\Persister\EntityPersister;
+use Graze\Dal\DalManager;
 
 class Configuration extends AbstractConfiguration
 {
@@ -25,11 +26,11 @@ class Configuration extends AbstractConfiguration
     /**
      * {@inheritdoc}
      */
-    public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+    public function __construct(DalManager $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         $this->proxyConfiguration = $this->buildProxyConfiguration();
 
-        parent::__construct($mapping, $trackingPolicy);
+        parent::__construct($dalManager, $mapping, $trackingPolicy);
     }
 
     /**
@@ -47,7 +48,7 @@ class Configuration extends AbstractConfiguration
      */
     protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
     {
-        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork));
+        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
     }
 
     /**
@@ -55,7 +56,7 @@ class Configuration extends AbstractConfiguration
      */
     protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
     {
-        return new EntityPersister($entityName, $recordName, $unitOfWork);
+        return new EntityPersister($entityName, $recordName, $unitOfWork, $this);
     }
 
     /**

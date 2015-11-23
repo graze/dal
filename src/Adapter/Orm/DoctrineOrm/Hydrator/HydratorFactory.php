@@ -1,13 +1,13 @@
 <?php
 
-namespace Graze\Dal\Adapter\DoctrineOrm\Hydrator;
+namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Hydrator;
 
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
-use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
-use Graze\Dal\Adapter\ActiveRecord\Hydrator\FieldMappingHydrator;
-use Graze\Dal\Adapter\ActiveRecord\Hydrator\MethodProxyHydrator;
-use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
+use Graze\Dal\Adapter\Orm\ConfigurationInterface;
+use Graze\Dal\Adapter\Orm\Hydrator\FieldMappingHydrator;
+use Graze\Dal\Adapter\Orm\Hydrator\MethodProxyHydrator;
+use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
 
 class HydratorFactory
 {

@@ -9,9 +9,10 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\ActiveRecord\Persister;
+namespace Graze\Dal\Adapter\Orm\Persister;
 
-use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
+use Graze\Dal\Adapter\Orm\ConfigurationInterface;
+use Graze\Dal\Adapter\Orm\UnitOfWork;
 
 abstract class AbstractPersister implements PersisterInterface
 {
@@ -20,15 +21,22 @@ abstract class AbstractPersister implements PersisterInterface
     protected $unitOfWork;
 
     /**
+     * @var ConfigurationInterface
+     */
+    protected $config;
+
+    /**
      * @param string $entityName
      * @param string $recordName
      * @param UnitOfWork $unitOfWork
+     * @param ConfigurationInterface $config
      */
-    public function __construct($entityName, $recordName, UnitOfWork $unitOfWork)
+    public function __construct($entityName, $recordName, UnitOfWork $unitOfWork, ConfigurationInterface $config)
     {
         $this->entityName = $entityName;
         $this->recordName = $recordName;
         $this->unitOfWork = $unitOfWork;
+        $this->config = $config;
     }
 
     /**

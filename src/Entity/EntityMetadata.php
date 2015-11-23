@@ -2,7 +2,7 @@
 
 namespace Graze\Dal\Entity;
 
-use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
+use Graze\Dal\Adapter\Orm\ConfigurationInterface;
 
 class EntityMetadata
 {

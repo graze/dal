@@ -9,16 +9,16 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\EloquentOrm\Hydrator;
+namespace Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator;
 
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
-use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
-use Graze\Dal\Adapter\ActiveRecord\Hydrator\AttributeHydrator;
-use Graze\Dal\Adapter\ActiveRecord\Hydrator\MethodProxyHydrator;
-use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
+use Graze\Dal\Adapter\Orm\ConfigurationInterface;
+use Graze\Dal\Adapter\Orm\Hydrator\AttributeHydrator;
+use Graze\Dal\Adapter\Orm\Hydrator\FieldMappingHydrator;
+use Graze\Dal\Adapter\Orm\Hydrator\MethodProxyHydrator;
+use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
 use Zend\Stdlib\Hydrator\HydratorInterface;
-use Zend\Stdlib\Hydrator\NamingStrategyEnabledInterface;
 
 class HydratorFactory
 {
@@ -36,40 +36,33 @@ class HydratorFactory
     }
 
     /**
-     * @param string $entityName
+     * @param object $entity
+     *
      * @return HydratorInterface
      */
-    public function buildEntityHydrator($entityName)
+    public function buildEntityHydrator($entity)
     {
-        $config = new Configuration($entityName);
+        $config = new Configuration($this->config->getEntityName($entity));
         $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
         $class = $config->createFactory()->getHydratorClass();
 
         $hydrator = new $class();
 
-        if ($hydrator instanceof NamingStrategyEnabledInterface) {
-            $hydrator->setNamingStrategy($this->config->buildEntityNamingStrategy($entityName));
-        }
-
-        return $hydrator;
-    }
-
-    /**
-     * @param string $recordName
-     * @return HydratorInterface
-     */
-    public function buildRecordHydrator($recordName)
-    {
-        $attributeHydrator = new AttributeHydrator('attributesToArray', 'fill');
-
-        if ($attributeHydrator instanceof NamingStrategyEnabledInterface) {
-            $attributeHydrator->setNamingStrategy($this->config->buildRecordNamingStrategy($recordName));
-        }
-
         return new MethodProxyHydrator(
             $this->config,
             $this->proxyFactory,
-            $attributeHydrator
+            new FieldMappingHydrator($this->config, $hydrator)
         );
+    }
+
+    /**
+     * @param object $record
+     *
+     * @return HydratorInterface
+     */
+    public function buildRecordHydrator($record)
+    {
+        $attributeHydrator = new AttributeHydrator('attributesToArray', 'fill');
+        return new FieldMappingHydrator($this->config, $attributeHydrator);
     }
 }

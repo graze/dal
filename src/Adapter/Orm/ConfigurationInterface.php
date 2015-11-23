@@ -9,13 +9,13 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\ActiveRecord;
+namespace Graze\Dal\Adapter\Orm;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
-use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
-use Graze\Dal\Adapter\ActiveRecordAdapter;
-use Graze\Dal\NamingStrategy\NamingStrategyInterface;
+use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
+use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
+use Graze\Dal\Entity\EntityInterface;
+use Graze\Dal\Entity\EntityMetadata;
 
 interface ConfigurationInterface
 {
@@ -35,16 +35,17 @@ interface ConfigurationInterface
 
     /**
      * @param string $name
-     * @param ActiveRecordAdapter $adapter
+     * @param OrmAdapter $adapter
+     *
      * @return ObjectRepository
      */
-    public function buildRepository($name, ActiveRecordAdapter $adapter);
+    public function buildRepository($name, OrmAdapter $adapter);
 
     /**
-     * @param ActiveRecordAdapter $adapter
+     * @param OrmAdapter $adapter
      * @return UnitOfWork
      */
-    public function buildUnitOfWork(ActiveRecordAdapter $adapter);
+    public function buildUnitOfWork(OrmAdapter $adapter);
 
     /**
      * @param object $entity
@@ -65,15 +66,9 @@ interface ConfigurationInterface
     public function getMapping($name);
 
     /**
-     * @param string $recordName
-     * @return NamingStrategyInterface
-     */
-    public function buildRecordNamingStrategy($recordName);
-
-    /**
-     * @param string $entityName
+     * @param EntityInterface $entity
      *
-     * @return NamingStrategyInterface
+     * @return EntityMetadata
      */
-    public function buildEntityNamingStrategy($entityName);
+    public function buildEntityMetadata(EntityInterface $entity);
 }

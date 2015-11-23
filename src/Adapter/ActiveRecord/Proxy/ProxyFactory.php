@@ -1,31 +1,29 @@
 <?php
 namespace Graze\Dal\Adapter\ActiveRecord\Proxy;
 
+use Closure;
 use Doctrine\Common\Collections\Collection;
-use GeneratedHydrator\Configuration;
-use Graze\Dal\DalManager;
+use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
+use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
+use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
 
 class ProxyFactory
 {
+    protected $config;
     protected $factory;
     protected $unitOfWork;
     protected $collectionClass = 'Doctrine\Common\Collections\ArrayCollection';
 
     /**
-     * @var DalManager
+     * @param UnitOfWork $unitOfWork
      */
-    private $dalManager;
-
-    /**
-     * @param DalManager $dalManager
-     * @param LazyLoadingGhostFactory $factory
-     */
-    public function __construct(DalManager $dalManager, LazyLoadingGhostFactory $factory)
+    public function __construct(ConfigurationInterface $config, UnitOfWork $unitOfWork, LazyLoadingGhostFactory $factory)
     {
+        $this->config = $config;
         $this->factory = $factory;
-        $this->dalManager = $dalManager;
+        $this->unitOfWork = $unitOfWork;
     }
 
     /**
@@ -41,51 +39,12 @@ class ProxyFactory
 
         return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($args, $class, $fn) {
             $proxy->setProxyInitializer(null);
+            $records = call_user_func_array($fn, $args);
 
-            // find all the $class entities for criteria returned by $fn()
-            $adapter = $this->dalManager->findAdapterByEntityName($class);
-            $repository = $adapter->getRepository($class);
-            $entities = $repository->findBy($fn());
+            if (is_array($records)) {
+                $mapper = $this->unitOfWork->getMapper($class);
+                $this->mapRecords($records, $proxy, $mapper);
 
-            if ($entities) {
-                $proxy->clear();
-                foreach ($entities as $entity) {
-                    $adapter->getUnitOfWork()->persistByTrackingPolicy($entity);
-                    $proxy->add($entity);
-                }
-                return true;
-            }
-
-            return false;
-        });
-    }
-
-    public function buildManyToManyCollectionProxy($foreignEntityName, $localEntityName, $pivotTableName, $foreignKey, $localKey, callable $fn, $collectionClass)
-    {
-        $collectionClassName = is_string($collectionClass) ? $collectionClass : $this->collectionClass;
-
-        return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($foreignEntityName, $localEntityName, $pivotTableName, $foreignKey, $localKey, $fn) {
-            $proxy->setProxyInitializer(null);
-
-            $sql = "SELECT {$foreignKey} FROM {$pivotTableName} WHERE {$localKey} = ?";
-
-            // find all the $class entities using the many to many config
-            $foreignAdapter = $this->dalManager->findAdapterByEntityName($foreignEntityName);
-            $foreignRepository = $foreignAdapter->getRepository($foreignEntityName);
-            $localAdapter = $this->dalManager->findAdapterByEntityName($localEntityName);
-            $foreignIds = array_values($localAdapter->fetchCol($sql, [$fn()]));
-
-            $entities = [];
-            foreach ($foreignIds as $id) {
-                $entities[] = $foreignRepository->find($id);
-            }
-
-            if (is_array($entities) && count($entities) > 0) {
-                $proxy->clear();
-                foreach ($entities as $entity) {
-                    $foreignAdapter->getUnitOfWork()->persistByTrackingPolicy($entity);
-                    $proxy->add($entity);
-                }
                 return true;
             }
 
@@ -103,21 +62,50 @@ class ProxyFactory
     {
         return $this->factory->createProxy($class, function ($proxy) use ($args, $class, $fn) {
             $proxy->setProxyInitializer(null);
-            $adapter = $this->dalManager->findAdapterByEntityName($class);
-            $repository = $adapter->getRepository($class);
-            $entity = $repository->find($fn());
+            $record = call_user_func_array($fn, $args);
 
-            if ($entity) {
-                $config = new Configuration($class);
-                $hydratorClass = $config->createFactory()->getHydratorClass();
-                $hydrator = new $hydratorClass();
-                $extracted = $hydrator->extract($entity);
-                $hydrator->hydrate($extracted, $proxy);
-                $adapter->getUnitOfWork()->persistByTrackingPolicy($proxy);
+            if ($record) {
+                $mapper = $this->unitOfWork->getMapper($class);
+                $this->mapRecord($record, $proxy, $mapper);
+
                 return true;
             }
 
             return false;
         });
+    }
+
+    /**
+     * @param object $record
+     * @param object $entity
+     * @param MapperInterface $mapper
+     * @return object
+     */
+    protected function mapRecord($record, $entity, MapperInterface $mapper)
+    {
+        $entity = $mapper->toEntity($record, $entity);
+        $this->unitOfWork->persistByTrackingPolicy($entity);
+
+        return $entity;
+    }
+
+    /**
+     * @param object $record
+     * @param Collection $collection
+     * @param MapperInterface $mapper
+     * @return Collection
+     */
+    protected function mapRecords(array $records, Collection $collection, MapperInterface $mapper)
+    {
+        $collection->clear();
+
+        foreach ($records as $record) {
+            $entity = $mapper->toEntity($record);
+            $this->unitOfWork->persistByTrackingPolicy($entity);
+
+            $collection->add($entity);
+        }
+
+        return $collection;
     }
 }
