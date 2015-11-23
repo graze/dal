@@ -5,6 +5,7 @@ namespace Graze\Dal\Adapter\Orm\DoctrineOrm;
 use Doctrine\ORM\EntityManager;
 use Graze\Dal\Adapter\Orm\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
+use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
 use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
 use Graze\Dal\Adapter\Orm\UnitOfWork;
@@ -20,7 +21,7 @@ class Configuration extends AbstractConfiguration
     private $proxyConfiguration;
 
     /**
-     * @var HydratorFactory
+     * @var HydratorFactoryInterface
      */
     private $hydratorFactory;
 
@@ -68,7 +69,7 @@ class Configuration extends AbstractConfiguration
 
     /**
      * @param UnitOfWork $unitOfWork
-     * @return HydratorFactory
+     * @return HydratorFactoryInterface
      */
     protected function getHydratorFactory(UnitOfWork $unitOfWork)
     {
