@@ -33,7 +33,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected $identityGenerator;
     protected $mapping;
     protected $trackingPolicy;
-	protected $proxyConfiguration;
+    protected $proxyConfiguration;
 
     /**
      * @param DalManager $dalManager
@@ -47,24 +47,26 @@ abstract class AbstractConfiguration implements ConfigurationInterface
         $this->dalManager = $dalManager;
 
         $this->identityGenerator = $this->buildDefaultIdentityGenerator();
-	    $this->proxyConfiguration = $this->buildProxyConfiguration();
+        $this->proxyConfiguration = $this->buildProxyConfiguration();
     }
 
     /**
      * @param string $entityName
      * @param string $recordName
      * @param UnitOfWork $unitOfWork
+     *
      * @return MapperInterface
      */
-	protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
-	{
-		return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
-	}
+    protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
+    {
+        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
+    }
 
     /**
      * @param string $entityName
      * @param string $recordName
      * @param UnitOfWork $unitOfWork
+     *
      * @return PersisterInterface
      */
     abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork);
@@ -76,7 +78,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     {
         $mapping = $this->getMapping($name);
 
-        if (!isset($mapping['record'])) {
+        if (! isset($mapping['record'])) {
             $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
             throw new InvalidMappingException($message, __METHOD__);
         }
@@ -91,7 +93,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     {
         $mapping = $this->getMapping($name);
 
-        if (!isset($mapping['record'])) {
+        if (! isset($mapping['record'])) {
             $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
             throw new InvalidMappingException($message, __METHOD__);
         }
@@ -110,7 +112,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
             $class = $mapping['repository'];
             $repo = new $class($name, $adapter);
 
-            if (!$repo instanceof ObjectRepository) {
+            if (! $repo instanceof ObjectRepository) {
                 throw new InvalidRepositoryException($repo, __METHOD__);
             }
         } else {
@@ -138,6 +140,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param object $record
+     *
      * @return string
      */
     public function getEntityNameFromRecord($record)
@@ -188,6 +191,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param string $name
      * @param OrmAdapter $adapter
+     *
      * @return EntityRepository
      */
     protected function buildDefaultRepository($name, OrmAdapter $adapter)
@@ -197,6 +201,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param string $namespace
+     *
      * @return ProxyConfiguration
      */
     protected function buildProxyConfiguration($namespace = self::PROXY_NAMESPACE)
@@ -210,6 +215,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param ProxyConfiguration $config
      * @param UnitOfWork $unitOfWork
+     *
      * @return ProxyFactory
      */
     protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)

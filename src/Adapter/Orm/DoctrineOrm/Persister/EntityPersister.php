@@ -20,8 +20,13 @@ class EntityPersister extends AbstractPersister
      * @param UnitOfWork $unitOfWork
      * @param EntityManager $em
      */
-    public function __construct($entityName, $recordName, UnitOfWork $unitOfWork, ConfigurationInterface $config, EntityManager $em)
-    {
+    public function __construct(
+        $entityName,
+        $recordName,
+        UnitOfWork $unitOfWork,
+        ConfigurationInterface $config,
+        EntityManager $em
+    ) {
         parent::__construct($entityName, $recordName, $unitOfWork, $config);
         $this->em = $em;
     }

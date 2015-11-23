@@ -20,27 +20,27 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class HydratorFactory extends AbstractHydratorFactory implements HydratorFactoryInterface
 {
-	/**
-	 * @param object $entity
-	 *
-	 * @return HydratorInterface
-	 */
-	protected function buildDefaultEntityHydrator($entity)
-	{
-		$config = new Configuration($this->config->getEntityName($entity));
-		$config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
-		$class = $config->createFactory()->getHydratorClass();
+    /**
+     * @param object $entity
+     *
+     * @return HydratorInterface
+     */
+    protected function buildDefaultEntityHydrator($entity)
+    {
+        $config = new Configuration($this->config->getEntityName($entity));
+        $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
+        $class = $config->createFactory()->getHydratorClass();
 
-		return new $class();
-	}
+        return new $class();
+    }
 
-	/**
-	 * @param object $record
-	 *
-	 * @return HydratorInterface
-	 */
-	protected function buildDefaultRecordHydrator($record)
-	{
-		return new AttributeHydrator('attributesToArray', 'fill');
-	}
+    /**
+     * @param object $record
+     *
+     * @return HydratorInterface
+     */
+    protected function buildDefaultRecordHydrator($record)
+    {
+        return new AttributeHydrator('attributesToArray', 'fill');
+    }
 }

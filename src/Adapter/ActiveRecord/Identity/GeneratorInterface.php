@@ -15,6 +15,7 @@ interface GeneratorInterface
 {
     /**
      * @param object $entity
+     *
      * @return string
      */
     public function generate($entity);

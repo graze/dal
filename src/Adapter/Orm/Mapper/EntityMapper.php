@@ -58,8 +58,12 @@ class EntityMapper implements MapperInterface
      * @param HydratorFactoryInterface $factory
      * @param ConfigurationInterface $config
      */
-    public function __construct($entityName, $recordName, HydratorFactoryInterface $factory, ConfigurationInterface $config)
-    {
+    public function __construct(
+        $entityName,
+        $recordName,
+        HydratorFactoryInterface $factory,
+        ConfigurationInterface $config
+    ) {
         $this->factory = $factory;
         $this->config = $config;
         $this->recordName = $recordName;
@@ -134,7 +138,7 @@ class EntityMapper implements MapperInterface
      */
     protected function instantiateEntity()
     {
-        if (!$this->entityReflectionClass) {
+        if (! $this->entityReflectionClass) {
             $this->entityReflectionClass = new ReflectionClass($this->entityName);
         }
 
@@ -146,7 +150,7 @@ class EntityMapper implements MapperInterface
      */
     protected function instantiateRecord()
     {
-        if (!$this->recordReflectionClass) {
+        if (! $this->recordReflectionClass) {
             $this->recordReflectionClass = new ReflectionClass($this->recordName);
         }
 
@@ -155,6 +159,7 @@ class EntityMapper implements MapperInterface
 
     /**
      * @param object $entity
+     *
      * @return array
      */
     public function getEntityData($entity)
@@ -164,6 +169,7 @@ class EntityMapper implements MapperInterface
 
     /**
      * @param object $record
+     *
      * @return array
      */
     public function getRecordData($record)

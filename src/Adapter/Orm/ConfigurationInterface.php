@@ -22,6 +22,7 @@ interface ConfigurationInterface
     /**
      * @param string $name
      * @param UnitOfWork $unitOfWork
+     *
      * @return MapperInterface
      */
     public function buildMapper($name, UnitOfWork $unitOfWork);
@@ -29,6 +30,7 @@ interface ConfigurationInterface
     /**
      * @param string $name
      * @param UnitOfWork $unitOfWork
+     *
      * @return PersisterInterface
      */
     public function buildPersister($name, UnitOfWork $unitOfWork);
@@ -43,24 +45,28 @@ interface ConfigurationInterface
 
     /**
      * @param OrmAdapter $adapter
+     *
      * @return UnitOfWork
      */
     public function buildUnitOfWork(OrmAdapter $adapter);
 
     /**
      * @param object $entity
+     *
      * @return string
      */
     public function getEntityName($entity);
 
     /**
      * @param object $record
+     *
      * @return string
      */
     public function getEntityNameFromRecord($record);
 
     /**
      * @param string $name
+     *
      * @return array
      */
     public function getMapping($name);

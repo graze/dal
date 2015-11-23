@@ -37,6 +37,7 @@ class HydratorFactory
 
     /**
      * @param string $entityName
+     *
      * @return HydratorInterface
      */
     public function buildEntityHydrator($entityName)
@@ -56,6 +57,7 @@ class HydratorFactory
 
     /**
      * @param string $recordName
+     *
      * @return HydratorInterface
      */
     public function buildRecordHydrator($recordName)

@@ -34,7 +34,7 @@ class DalManager implements DalManagerInterface
      */
     public function get($name)
     {
-        if (!$this->has($name)) {
+        if (! $this->has($name)) {
             throw new UndefinedAdapterException($name, __METHOD__);
         }
 
@@ -81,7 +81,7 @@ class DalManager implements DalManagerInterface
         foreach ($this->adapters as $adapter) {
             if ($adapter === $entityAdapter) {
                 $adapter->flush($entity);
-            } elseif (!$entityAdapter) {
+            } elseif (! $entityAdapter) {
                 $adapter->flush();
             }
         }
@@ -125,6 +125,7 @@ class DalManager implements DalManagerInterface
 
     /**
      * @param object $entity
+     *
      * @return AdapterInterface
      * @throws UndefinedAdapterException If the adapter is not registered with entity
      */
@@ -143,6 +144,7 @@ class DalManager implements DalManagerInterface
 
     /**
      * @param string $name
+     *
      * @return AdapterInterface
      * @throws UndefinedAdapterException If the adapter is not registered with name
      */

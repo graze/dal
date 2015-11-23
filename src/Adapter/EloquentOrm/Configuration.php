@@ -60,11 +60,12 @@ class Configuration extends AbstractConfiguration
 
     /**
      * @param UnitOfWork $unitOfWork
+     *
      * @return HydratorFactory
      */
     protected function getHydratorFactory(UnitOfWork $unitOfWork)
     {
-        if (!$this->hydratorFactory) {
+        if (! $this->hydratorFactory) {
             $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);
             $this->hydratorFactory = new HydratorFactory($this, $proxyFactory);
         }

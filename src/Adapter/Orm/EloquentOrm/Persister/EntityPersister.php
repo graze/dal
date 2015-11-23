@@ -80,7 +80,7 @@ class EntityPersister extends AbstractPersister
         $query = $class::query();
 
         $query->limit($limit);
-        if (!is_null($limit)) {
+        if (! is_null($limit)) {
             $query->offset($offset);
         }
 
@@ -107,7 +107,7 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadRecordById($id, $entity = null)
     {
-        $class  = $this->recordName;
+        $class = $this->recordName;
         return $class::find($id);
     }
 }

@@ -19,8 +19,11 @@ class ProxyFactory
     /**
      * @param UnitOfWork $unitOfWork
      */
-    public function __construct(ConfigurationInterface $config, UnitOfWork $unitOfWork, LazyLoadingGhostFactory $factory)
-    {
+    public function __construct(
+        ConfigurationInterface $config,
+        UnitOfWork $unitOfWork,
+        LazyLoadingGhostFactory $factory
+    ) {
         $this->config = $config;
         $this->factory = $factory;
         $this->unitOfWork = $unitOfWork;
@@ -31,6 +34,7 @@ class ProxyFactory
      * @param callable $fn
      * @param string $collectionClass
      * @param array $args
+     *
      * @return GhostObjectInterface
      */
     public function buildCollectionProxy($class, callable $fn, $collectionClass = null, array $args = [])
@@ -56,6 +60,7 @@ class ProxyFactory
      * @param string $class
      * @param callable $fn
      * @param array $args
+     *
      * @return GhostObjectInterface
      */
     public function buildEntityProxy($class, callable $fn, array $args = [])
@@ -79,6 +84,7 @@ class ProxyFactory
      * @param object $record
      * @param object $entity
      * @param MapperInterface $mapper
+     *
      * @return object
      */
     protected function mapRecord($record, $entity, MapperInterface $mapper)
@@ -93,6 +99,7 @@ class ProxyFactory
      * @param object $record
      * @param Collection $collection
      * @param MapperInterface $mapper
+     *
      * @return Collection
      */
     protected function mapRecords(array $records, Collection $collection, MapperInterface $mapper)

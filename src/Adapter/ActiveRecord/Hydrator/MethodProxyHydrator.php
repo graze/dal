@@ -70,11 +70,12 @@ class MethodProxyHydrator implements HydratorInterface
 
     /**
      * @param array $mapping
+     *
      * @return array
      */
     protected function formatMapping(array $mapping)
     {
-        if (!isset($mapping['related']) || !is_array($mapping['related'])) {
+        if (! isset($mapping['related']) || ! is_array($mapping['related'])) {
             return [];
         }
 
@@ -86,7 +87,7 @@ class MethodProxyHydrator implements HydratorInterface
                 'collection' => isset($map['collection']) ? $map['collection'] : false,
             ];
 
-            if (!$out['entity'] || !$out['method']) {
+            if (! $out['entity'] || ! $out['method']) {
                 $message = 'Relationship mapping must contain "entity" and "method" values';
                 throw new InvalidMappingException($message, __METHOD__);
             }

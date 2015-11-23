@@ -32,14 +32,18 @@ class Configuration extends AbstractConfiguration
      */
     private $em;
 
-	/**
-	 * @param DalManager $dalManager
-	 * @param array $mapping
-	 * @param EntityManager $em
-	 * @param int $trackingPolicy
-	 */
-    public function __construct(DalManager $dalManager, array $mapping, EntityManager $em, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
-    {
+    /**
+     * @param DalManager $dalManager
+     * @param array $mapping
+     * @param EntityManager $em
+     * @param int $trackingPolicy
+     */
+    public function __construct(
+        DalManager $dalManager,
+        array $mapping,
+        EntityManager $em,
+        $trackingPolicy = UnitOfWork::POLICY_IMPLICIT
+    ) {
         parent::__construct($dalManager, $mapping, $trackingPolicy);
         $this->em = $em;
     }
@@ -58,6 +62,7 @@ class Configuration extends AbstractConfiguration
 
     /**
      * @param UnitOfWork $unitOfWork
+     *
      * @return HydratorFactoryInterface
      */
     protected function getHydratorFactory(UnitOfWork $unitOfWork)

@@ -31,6 +31,7 @@ abstract class OrmAdapter implements OrmAdapterInterface
 
     /**
      * @param object $entity
+     *
      * @return string
      */
     public function getEntityName($entity)
@@ -43,9 +44,9 @@ abstract class OrmAdapter implements OrmAdapterInterface
      */
     public function getRepository($name)
     {
-        if (!$this->hasRepository($name)) {
+        if (! $this->hasRepository($name)) {
             throw new UndefinedRepositoryException($name, __METHOD__);
-        } elseif (!isset($this->repos[$name])) {
+        } elseif (! isset($this->repos[$name])) {
             $this->repos[$name] = $this->config->buildRepository($name, $this);
         }
 
@@ -109,8 +110,10 @@ abstract class OrmAdapter implements OrmAdapterInterface
      */
     public function transaction(callable $fn)
     {
-        if (!$fn instanceof Closure) {
-            $fn = function ($adapter) use ($fn) { call_user_func($fn, $adapter); };
+        if (! $fn instanceof Closure) {
+            $fn = function ($adapter) use ($fn) {
+                call_user_func($fn, $adapter);
+            };
         }
 
         $this->beginTransaction();
