@@ -11,6 +11,7 @@
  */
 namespace Graze\Dal\Adapter\EloquentOrm\Mapper;
 
+use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Mapper\AbstractMapper;
 use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use ReflectionClass;
@@ -23,15 +24,21 @@ class EntityMapper extends AbstractMapper
     protected $recordHydrator;
     protected $entityReflectionClass;
     protected $recordReflectionClass;
+    /**
+     * @var ConfigurationInterface
+     */
+    private $config;
 
     /**
      * @param string $entityName
      * @param string $recordName
      * @param HydratorFactory $factory
+     * @param ConfigurationInterface $config
      */
-    public function __construct($entityName, $recordName, HydratorFactory $factory)
+    public function __construct($entityName, $recordName, HydratorFactory $factory, ConfigurationInterface $config)
     {
         $this->factory = $factory;
+        $this->config = $config;
 
         parent::__construct($entityName, $recordName);
     }
@@ -43,6 +50,13 @@ class EntityMapper extends AbstractMapper
     {
         $data = $this->getEntityHydrator($entity)->extract($entity);
         $record = is_object($record) ? $record : $this->instantiateRecord();
+
+        $metadata = $this->config->buildEntityMetadata($entity);
+        foreach ($data as $field => $value) {
+            if ($metadata->hasRelationship($field)) {
+                unset($data[$field]);
+            }
+        }
 
         $this->getRecordHydrator($record)->hydrate($data, $record);
 

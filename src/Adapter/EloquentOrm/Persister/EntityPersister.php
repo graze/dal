@@ -150,15 +150,15 @@ class EntityPersister extends AbstractPersister
 
         $this->unitOfWork->removeEntityRecord($entity);
 
-        $mapper->toEntity($record, $entity);
+        $this->saveRelationships($entity, $record->id);
 
-        $this->saveRelationships($entity);
+        $mapper->toEntity($record, $entity);
 
         // set the entity record again after it's saved
         $this->unitOfWork->setEntityRecord($entity, $record);
     }
 
-    private function saveRelationships(EntityInterface $entity)
+    private function saveRelationships(EntityInterface $entity, $recordId)
     {
         $metadata = $this->config->buildEntityMetadata($entity);
         $data = $this->unitOfWork->getMapper($this->entityName)->getEntityData($entity);
@@ -174,15 +174,15 @@ class EntityPersister extends AbstractPersister
             $relationship = $metadata->getRelationshipMetadata()[$field];
 
             if ('manyToMany' === $relationship['type']) {
+                $table = $relationship['pivot'];
                 // assume $value is a collection for manyToMany
                 foreach ($value as $relatedEntity) {
                     // insert into $relationship['pivot'] ($relationship['localKey'], $relationship['foreignKey']) values ($entity->getId(), $relatedEntity->getId())
-                    $adapter = $this->dalManager->findAdapterByEntity($entity);
-                    $table = $relationship['pivot'];
                     $data = [
-                        $relationship['localKey'] => $entity->getId(),
-                        $relationship['foreignKey'] => $entity->getId(),
+                        $relationship['localKey'] => $recordId,
+                        $relationship['foreignKey'] => $relatedEntity->getId(),
                     ];
+                    $adapter = $this->unitOfWork->getAdapter();
                     $adapter->insert($table, $data);
                 }
             }

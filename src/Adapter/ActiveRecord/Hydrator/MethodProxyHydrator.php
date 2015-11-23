@@ -59,21 +59,36 @@ class MethodProxyHydrator implements HydratorInterface
         $entityName = $this->config->getEntityName($object);
         $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
 
-        $out = array_map(function ($map) use ($data, $object) {
+        $out = array_map(function ($map) use ($data, $object, $entityName) {
             $args = $map['args'];
-            $entity = $map['entity'];
+            $foreignEntity = $map['entity'];
 
             if ($map['collection']) {
+                if ('manyToMany' === $map['type']) {
+                    $callable = function () use ($data, $map) {
+                        return (int) $data['id'];
+                    };
+                    $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
+                    return $this->proxyFactory->buildManyToManyCollectionProxy(
+                        $foreignEntity,
+                        $entityName,
+                        $map['pivot'],
+                        $map['foreignKey'],
+                        $map['localKey'],
+                        $callable,
+                        $collectionClass
+                    );
+                }
                 $callable = function () use ($object, $map) {
                     return [$map['foreignKey'] => $object->getId()];
                 };
                 $collectionClass = is_string($map['collection']) ? $map['collection'] : null;
-                return $this->proxyFactory->buildCollectionProxy($entity, $callable, $collectionClass, $args);
+                return $this->proxyFactory->buildCollectionProxy($foreignEntity, $callable, $collectionClass, $args);
             } else {
                 $callable = function () use ($data, $map) {
                     return (int) $data[$map['localKey']];
                 };
-                return $this->proxyFactory->buildEntityProxy($entity, $callable, $args);
+                return $this->proxyFactory->buildEntityProxy($foreignEntity, $callable, $args);
             }
         }, $mapping);
 
@@ -104,6 +119,7 @@ class MethodProxyHydrator implements HydratorInterface
                 'collection' => isset($map['collection']) ? $map['collection'] : false,
                 'localKey' => isset($map['localKey']) ? $map['localKey'] : null,
                 'foreignKey' => isset($map['foreignKey']) ? $map['foreignKey'] : null,
+                'pivot' => isset($map['pivot']) ? $map['pivot'] : null,
             ];
 
             if (!$out['entity'] || !$out['type']) {

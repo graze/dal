@@ -176,4 +176,37 @@ class DoctrineOrmAdapter extends ActiveRecordAdapter
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * @param string $table
+     * @param array $data
+     */
+    public function insert($table, $data)
+    {
+        $fields = implode(', ', array_keys($data));
+        $values = implode(', ', array_values($data));
+        $sql = "INSERT INTO `?` (?) VALUES (?)";
+        $bindings = [
+            $table,
+            rtrim($fields, ', '),
+            rtrim($values, ', ')
+        ];
+
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->execute($bindings);
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return array
+     */
+    public function fetchCol($sql, array $bindings = [])
+    {
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->execute($bindings);
+
+        return $stmt->fetchColumn(0);
+    }
 }
