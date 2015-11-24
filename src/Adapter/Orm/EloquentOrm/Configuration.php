@@ -11,29 +11,33 @@
  */
 namespace Graze\Dal\Adapter\Orm\EloquentOrm;
 
-use Graze\Dal\Adapter\Orm\AbstractConfiguration;
-use Graze\Dal\Adapter\Orm\UnitOfWork;
+use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Persister\EntityPersister;
+use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 class Configuration extends AbstractConfiguration
 {
+    /**
+     * @var HydratorFactoryInterface
+     */
     private $hydratorFactory;
 
     /**
      * {@inheritdoc}
      */
-    protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
+    protected function buildDefaultPersister($entityName, $recordName, UnitOfWorkInterface $unitOfWork)
     {
         return new EntityPersister($entityName, $recordName, $unitOfWork, $this);
     }
 
     /**
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      *
-     * @return HydratorFactory
+     * @return HydratorFactoryInterface
      */
-    protected function getHydratorFactory(UnitOfWork $unitOfWork)
+    protected function getHydratorFactory(UnitOfWorkInterface $unitOfWork)
     {
         if (! $this->hydratorFactory) {
             $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);

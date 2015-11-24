@@ -9,22 +9,23 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\Orm;
+namespace Graze\Dal\Configuration;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
-use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
-use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
-use Graze\Dal\Adapter\Orm\Identity\GeneratorInterface;
-use Graze\Dal\Adapter\Orm\Identity\ObjectHashGenerator;
+use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
-use Graze\Dal\DalManager;
+use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
+use Graze\Dal\Identity\GeneratorInterface;
+use Graze\Dal\Identity\ObjectHashGenerator;
+use Graze\Dal\Mapper\MapperInterface;
+use Graze\Dal\Persister\PersisterInterface;
+use Graze\Dal\UnitOfWork\UnitOfWork;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 use ProxyManager\Configuration as ProxyConfiguration;
-use ProxyManager\Factory\LazyLoadingGhostFactory;
 
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
@@ -36,11 +37,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected $proxyConfiguration;
 
     /**
-     * @param DalManager $dalManager
+     * @param DalManagerInterface $dalManager
      * @param array $mapping
      * @param int $trackingPolicy
      */
-    public function __construct(DalManager $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+    public function __construct(DalManagerInterface $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         $this->mapping = $mapping;
         $this->trackingPolicy = $trackingPolicy;
@@ -53,28 +54,25 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return MapperInterface
      */
-    protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
-    {
-        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
-    }
+    abstract protected function buildDefaultMapper($entityName, $recordName, UnitOfWorkInterface $unitOfWork);
 
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return PersisterInterface
      */
-    abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork);
+    abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWorkInterface $unitOfWork);
 
     /**
      * {@inheritdoc}
      */
-    public function buildMapper($name, UnitOfWork $unitOfWork)
+    public function buildMapper($name, UnitOfWorkInterface $unitOfWork)
     {
         $mapping = $this->getMapping($name);
 
@@ -89,7 +87,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function buildPersister($name, UnitOfWork $unitOfWork)
+    public function buildPersister($name, UnitOfWorkInterface $unitOfWork)
     {
         $mapping = $this->getMapping($name);
 
@@ -104,7 +102,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function buildRepository($name, OrmAdapter $adapter)
+    public function buildRepository($name, AdapterInterface $adapter)
     {
         $mapping = $this->getMapping($name);
 
@@ -125,7 +123,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function buildUnitOfWork(OrmAdapter $adapter)
+    public function buildUnitOfWork(AdapterInterface $adapter)
     {
         return new UnitOfWork($adapter, $this, $this->trackingPolicy);
     }
@@ -190,14 +188,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param string $name
-     * @param OrmAdapter $adapter
+     * @param AdapterInterface $adapter
      *
-     * @return EntityRepository
+     * @return ObjectRepository
      */
-    protected function buildDefaultRepository($name, OrmAdapter $adapter)
-    {
-        return new EntityRepository($name, $adapter);
-    }
+    abstract protected function buildDefaultRepository($name, AdapterInterface $adapter);
 
     /**
      * @param string $namespace
@@ -214,12 +209,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param ProxyConfiguration $config
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return ProxyFactory
      */
-    protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
-    {
-        return new ProxyFactory($this->dalManager, new LazyLoadingGhostFactory($config));
-    }
+    abstract protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWorkInterface $unitOfWork);
 }

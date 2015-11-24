@@ -1,9 +1,9 @@
 <?php
 namespace Graze\Dal\Adapter\Orm\Hydrator;
 
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Exception\InvalidMappingException;
-use Graze\Dal\Adapter\Orm\ConfigurationInterface;
 use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 

@@ -9,7 +9,7 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\Orm\Persister;
+namespace Graze\Dal\Persister;
 
 interface PersisterInterface
 {

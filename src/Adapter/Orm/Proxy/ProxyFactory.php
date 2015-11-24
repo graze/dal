@@ -3,7 +3,7 @@ namespace Graze\Dal\Adapter\Orm\Proxy;
 
 use Doctrine\Common\Collections\Collection;
 use GeneratedHydrator\Configuration;
-use Graze\Dal\DalManager;
+use Graze\Dal\DalManagerInterface;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
 
@@ -14,15 +14,15 @@ class ProxyFactory
     protected $collectionClass = 'Doctrine\Common\Collections\ArrayCollection';
 
     /**
-     * @var DalManager
+     * @var DalManagerInterface
      */
     private $dalManager;
 
     /**
-     * @param DalManager $dalManager
+     * @param DalManagerInterface $dalManager
      * @param LazyLoadingGhostFactory $factory
      */
-    public function __construct(DalManager $dalManager, LazyLoadingGhostFactory $factory)
+    public function __construct(DalManagerInterface $dalManager, LazyLoadingGhostFactory $factory)
     {
         $this->factory = $factory;
         $this->dalManager = $dalManager;

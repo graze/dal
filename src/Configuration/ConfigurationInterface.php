@@ -9,46 +9,49 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\Orm;
+namespace Graze\Dal\Configuration;
 
 use Doctrine\Common\Persistence\ObjectRepository;
-use Graze\Dal\Adapter\Orm\Mapper\MapperInterface;
-use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
+use Graze\Dal\Adapter\AdapterInterface;
+use Graze\Dal\Identity\GeneratorInterface;
+use Graze\Dal\Mapper\MapperInterface;
+use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 interface ConfigurationInterface
 {
     /**
      * @param string $name
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return MapperInterface
      */
-    public function buildMapper($name, UnitOfWork $unitOfWork);
+    public function buildMapper($name, UnitOfWorkInterface $unitOfWork);
 
     /**
      * @param string $name
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return PersisterInterface
      */
-    public function buildPersister($name, UnitOfWork $unitOfWork);
+    public function buildPersister($name, UnitOfWorkInterface $unitOfWork);
 
     /**
      * @param string $name
-     * @param OrmAdapter $adapter
+     * @param AdapterInterface $adapter
      *
      * @return ObjectRepository
      */
-    public function buildRepository($name, OrmAdapter $adapter);
+    public function buildRepository($name, AdapterInterface $adapter);
 
     /**
-     * @param OrmAdapter $adapter
+     * @param AdapterInterface $adapter
      *
-     * @return UnitOfWork
+     * @return UnitOfWorkInterface
      */
-    public function buildUnitOfWork(OrmAdapter $adapter);
+    public function buildUnitOfWork(AdapterInterface $adapter);
 
     /**
      * @param object $entity
@@ -77,4 +80,9 @@ interface ConfigurationInterface
      * @return EntityMetadata
      */
     public function buildEntityMetadata(EntityInterface $entity);
+
+    /**
+     * @return GeneratorInterface
+     */
+    public function getIdentityGenerator();
 }

@@ -9,7 +9,7 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\Orm\Identity;
+namespace Graze\Dal\Identity;
 
 class ObjectHashGenerator implements GeneratorInterface
 {

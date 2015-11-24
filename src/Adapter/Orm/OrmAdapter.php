@@ -12,7 +12,9 @@
 namespace Graze\Dal\Adapter\Orm;
 
 use Closure;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 abstract class OrmAdapter implements OrmAdapterInterface
 {
@@ -54,7 +56,7 @@ abstract class OrmAdapter implements OrmAdapterInterface
     }
 
     /**
-     * @return UnitOfWork
+     * @return UnitOfWorkInterface
      */
     public function getUnitOfWork()
     {

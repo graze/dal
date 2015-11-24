@@ -9,13 +9,15 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\Orm;
+namespace Graze\Dal\UnitOfWork;
 
-use Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface;
-use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
+use Graze\Dal\Adapter\AdapterInterface;
+use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Mapper\MapperInterface;
+use Graze\Dal\Persister\PersisterInterface;
 use SplObjectStorage;
 
-class UnitOfWork
+class UnitOfWork implements UnitOfWorkInterface
 {
     const POLICY_IMPLICIT = 0;
     const POLICY_EXPLICIT = 1;
@@ -29,12 +31,12 @@ class UnitOfWork
     protected $trackingPolicy;
 
     /**
-     * @param OrmAdapter $adapter
+     * @param AdapterInterface $adapter
      * @param ConfigurationInterface $config
      * @param integer $trackingPolicy
      */
     public function __construct(
-        OrmAdapter $adapter,
+        AdapterInterface $adapter,
         ConfigurationInterface $config,
         $trackingPolicy = self::POLICY_IMPLICIT
     ) {
@@ -100,6 +102,8 @@ class UnitOfWork
 
     /**
      * @param object $entity
+     *
+     * @return object
      */
     public function getEntityRecord($entity)
     {
@@ -129,6 +133,8 @@ class UnitOfWork
     }
 
     /**
+     * @param string $name
+     *
      * @return MapperInterface
      */
     public function getMapper($name)
@@ -141,6 +147,8 @@ class UnitOfWork
     }
 
     /**
+     * @param string $name
+     *
      * @return PersisterInterface
      */
     public function getPersister($name)
@@ -162,6 +170,9 @@ class UnitOfWork
         return $this->getPersister($this->config->getEntityName($entity));
     }
 
+    /**
+     * @return AdapterInterface
+     */
     public function getAdapter()
     {
         return $this->adapter;
