@@ -2,7 +2,7 @@
 
 namespace Graze\Dal\Adapter\Orm\Hydrator;
 
-use Graze\Dal\Adapter\Orm\ConfigurationInterface;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class FieldMappingHydrator implements HydratorInterface

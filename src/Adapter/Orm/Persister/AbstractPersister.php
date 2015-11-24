@@ -11,14 +11,19 @@
  */
 namespace Graze\Dal\Adapter\Orm\Persister;
 
-use Graze\Dal\Adapter\Orm\ConfigurationInterface;
-use Graze\Dal\Adapter\Orm\UnitOfWork;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Entity\EntityInterface;
+use Graze\Dal\Persister\PersisterInterface;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 abstract class AbstractPersister implements PersisterInterface
 {
     protected $entityName;
     protected $recordName;
+
+    /**
+     * @var UnitOfWorkInterface
+     */
     protected $unitOfWork;
 
     /**
@@ -29,10 +34,10 @@ abstract class AbstractPersister implements PersisterInterface
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      * @param ConfigurationInterface $config
      */
-    public function __construct($entityName, $recordName, UnitOfWork $unitOfWork, ConfigurationInterface $config)
+    public function __construct($entityName, $recordName, UnitOfWorkInterface $unitOfWork, ConfigurationInterface $config)
     {
         $this->entityName = $entityName;
         $this->recordName = $recordName;
@@ -51,6 +56,8 @@ abstract class AbstractPersister implements PersisterInterface
     abstract protected function deleteRecord($record);
 
     /**
+     * @param object $record
+     *
      * @return int
      */
     abstract protected function getRecordId($record);

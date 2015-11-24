@@ -3,9 +3,9 @@
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Persister;
 
 use Doctrine\ORM\EntityManager;
-use Graze\Dal\Adapter\Orm\ConfigurationInterface;
 use Graze\Dal\Adapter\Orm\Persister\AbstractPersister;
-use Graze\Dal\Adapter\Orm\UnitOfWork;
+use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 class EntityPersister extends AbstractPersister
 {
@@ -17,13 +17,14 @@ class EntityPersister extends AbstractPersister
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
+     * @param ConfigurationInterface $config
      * @param EntityManager $em
      */
     public function __construct(
         $entityName,
         $recordName,
-        UnitOfWork $unitOfWork,
+        UnitOfWorkInterface $unitOfWork,
         ConfigurationInterface $config,
         EntityManager $em
     ) {

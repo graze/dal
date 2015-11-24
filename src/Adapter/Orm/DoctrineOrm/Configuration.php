@@ -12,34 +12,28 @@
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm;
 
 use Doctrine\ORM\EntityManager;
-use Graze\Dal\Adapter\Orm\AbstractConfiguration;
-use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
-use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
-use Graze\Dal\Adapter\Orm\Persister\PersisterInterface;
-use Graze\Dal\Adapter\Orm\UnitOfWork;
+use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
-use Graze\Dal\DalManager;
+use Graze\Dal\DalManagerInterface;
+use Graze\Dal\Persister\PersisterInterface;
+use Graze\Dal\UnitOfWork\UnitOfWork;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 class Configuration extends AbstractConfiguration
 {
-    /**
-     * @var HydratorFactoryInterface
-     */
-    private $hydratorFactory;
-
     /**
      * @var EntityManager
      */
     private $em;
 
     /**
-     * @param DalManager $dalManager
+     * @param DalManagerInterface $dalManager
      * @param array $mapping
      * @param EntityManager $em
      * @param int $trackingPolicy
      */
     public function __construct(
-        DalManager $dalManager,
+        DalManagerInterface $dalManager,
         array $mapping,
         EntityManager $em,
         $trackingPolicy = UnitOfWork::POLICY_IMPLICIT
@@ -51,27 +45,12 @@ class Configuration extends AbstractConfiguration
     /**
      * @param string $entityName
      * @param string $recordName
-     * @param UnitOfWork $unitOfWork
+     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return PersisterInterface
      */
-    protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
+    protected function buildDefaultPersister($entityName, $recordName, UnitOfWorkInterface $unitOfWork)
     {
         return new EntityPersister($entityName, $recordName, $unitOfWork, $this, $this->em);
-    }
-
-    /**
-     * @param UnitOfWork $unitOfWork
-     *
-     * @return HydratorFactoryInterface
-     */
-    protected function getHydratorFactory(UnitOfWork $unitOfWork)
-    {
-        if (! $this->hydratorFactory) {
-            $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);
-            $this->hydratorFactory = new HydratorFactory($this, $proxyFactory);
-        }
-
-        return $this->hydratorFactory;
     }
 }

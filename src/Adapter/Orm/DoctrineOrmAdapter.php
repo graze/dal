@@ -16,7 +16,7 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Exception;
-use Graze\Dal\Adapter\Orm\ConfigurationInterface;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 use PDO;
 
