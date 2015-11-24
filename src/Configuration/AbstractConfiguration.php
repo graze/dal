@@ -23,6 +23,7 @@ use Graze\Dal\Identity\GeneratorInterface;
 use Graze\Dal\Identity\ObjectHashGenerator;
 use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\Persister\PersisterInterface;
+use Graze\Dal\Repository\EntityRepository;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 use ProxyManager\Configuration as ProxyConfiguration;
@@ -192,7 +193,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      *
      * @return ObjectRepository
      */
-    abstract protected function buildDefaultRepository($name, AdapterInterface $adapter);
+    protected function buildDefaultRepository($name, AdapterInterface $adapter)
+    {
+        return new EntityRepository($name, $adapter);
+    }
 
     /**
      * @param string $namespace
