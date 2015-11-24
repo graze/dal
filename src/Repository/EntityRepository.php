@@ -9,9 +9,10 @@
  *
  * @see  http://github.com/graze/dal/blob/master/LICENSE
  */
-namespace Graze\Dal\Adapter\Orm;
+namespace Graze\Dal\Repository;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Graze\Dal\Adapter\AdapterInterface;
 
 class EntityRepository implements ObjectRepository
 {
@@ -20,9 +21,9 @@ class EntityRepository implements ObjectRepository
 
     /**
      * @param string $entityName
-     * @param OrmAdapter $adapter
+     * @param AdapterInterface $adapter
      */
-    public function __construct($entityName, OrmAdapter $adapter)
+    public function __construct($entityName, AdapterInterface $adapter)
     {
         $this->adapter = $adapter;
         $this->entityName = $entityName;

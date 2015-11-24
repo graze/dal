@@ -13,6 +13,7 @@ namespace Graze\Dal\Adapter;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Exception\UndefinedRepositoryException;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 interface AdapterInterface
 {
@@ -57,4 +58,9 @@ interface AdapterInterface
      * @param object $entity
      */
     public function remove($entity);
+
+    /**
+     * @return UnitOfWorkInterface
+     */
+    public function getUnitOfWork();
 }

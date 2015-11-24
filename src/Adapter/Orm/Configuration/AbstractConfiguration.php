@@ -2,9 +2,6 @@
 
 namespace Graze\Dal\Adapter\Orm\Configuration;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Graze\Dal\Adapter\AdapterInterface;
-use Graze\Dal\Adapter\Orm\EntityRepository;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
@@ -34,17 +31,6 @@ abstract class AbstractConfiguration extends \Graze\Dal\Configuration\AbstractCo
     }
 
     /**
-     * @param string $name
-     * @param AdapterInterface $adapter
-     *
-     * @return ObjectRepository
-     */
-    protected function buildDefaultRepository($name, AdapterInterface $adapter)
-    {
-        return new EntityRepository($name, $adapter);
-    }
-
-    /**
      * @param ProxyConfiguration $config
      * @param UnitOfWorkInterface $unitOfWork
      *
@@ -54,7 +40,6 @@ abstract class AbstractConfiguration extends \Graze\Dal\Configuration\AbstractCo
     {
         return new ProxyFactory($this->dalManager, new LazyLoadingGhostFactory($config));
     }
-
 
     /**
      * @param UnitOfWorkInterface $unitOfWork
