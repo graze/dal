@@ -61,13 +61,6 @@ interface ConfigurationInterface
     public function getEntityName($entity);
 
     /**
-     * @param object $record
-     *
-     * @return string
-     */
-    public function getEntityNameFromRecord($record);
-
-    /**
      * @param string $name
      *
      * @return array

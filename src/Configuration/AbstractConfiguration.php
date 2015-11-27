@@ -138,22 +138,6 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * @param object $record
-     *
-     * @return string
-     */
-    public function getEntityNameFromRecord($record)
-    {
-        $class = get_class($record);
-
-        foreach ($this->mapping as $name => $mapping) {
-            if (isset($mapping['record']) && $class === $mapping['record']) {
-                return $name;
-            }
-        }
-    }
-
-    /**
      * @return GeneratorInterface
      */
     public function getIdentityGenerator()
