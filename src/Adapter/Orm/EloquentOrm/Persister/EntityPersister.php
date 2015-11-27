@@ -48,7 +48,7 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
-        $class = $this->recordName;
+        $class = $this->getRecordName();
         $query = $class::query();
 
         foreach ($criteria as $field => $value) {
@@ -76,7 +76,7 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        $class = $this->recordName;
+        $class = $this->getRecordName();
         $query = $class::query();
 
         $query->limit($limit);
@@ -107,7 +107,7 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadRecordById($id, $entity = null)
     {
-        $class = $this->recordName;
+        $class = $this->getRecordName();
         return $class::find($id);
     }
 }

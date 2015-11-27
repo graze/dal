@@ -18,8 +18,15 @@ use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 abstract class AbstractPersister implements PersisterInterface
 {
+    /**
+     * @var string
+     */
     protected $entityName;
-    protected $recordName;
+
+    /**
+     * @var string
+     */
+    private $recordName;
 
     /**
      * @var UnitOfWorkInterface
