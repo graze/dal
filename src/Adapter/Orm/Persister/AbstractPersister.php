@@ -13,7 +13,6 @@ namespace Graze\Dal\Adapter\Orm\Persister;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Entity\EntityInterface;
-use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 abstract class AbstractPersister implements PersisterInterface
