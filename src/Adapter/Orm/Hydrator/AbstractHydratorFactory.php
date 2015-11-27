@@ -51,7 +51,7 @@ abstract class AbstractHydratorFactory implements HydratorFactoryInterface
     {
         $defaultHydrator = $this->buildDefaultEntityHydrator($entity);
 
-        return new MethodProxyHydrator(
+        return new RelationshipProxyHydrator(
             $this->config,
             $this->proxyFactory,
             new FieldMappingHydrator($this->config, $defaultHydrator)
