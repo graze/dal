@@ -42,7 +42,7 @@ interface UnitOfWorkInterface
 
     /**
      * @param object $entity
-     * @param object $record
+     * @param object|array $record
      */
     public function setEntityRecord($entity, $record);
 
