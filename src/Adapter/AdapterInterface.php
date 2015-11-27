@@ -35,7 +35,7 @@ interface AdapterInterface
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
      */
     public function hasRepository($name);
 

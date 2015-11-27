@@ -5,7 +5,7 @@ namespace Graze\Dal\Hydrator;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class FieldMappingHydrator implements HydratorInterface
+class RecordFieldMappingHydrator implements HydratorInterface
 {
     /**
      * @var ConfigurationInterface
@@ -83,7 +83,7 @@ class FieldMappingHydrator implements HydratorInterface
         }
 
         if ($this->next) {
-            $this->next->hydrate($data, $object);
+            $object = $this->next->hydrate($data, $object);
         }
 
         return $object;

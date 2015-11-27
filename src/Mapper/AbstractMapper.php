@@ -1,23 +1,13 @@
 <?php
-/*
- * This file is part of Graze DAL
- *
- * Copyright (c) 2014 Nature Delivered Ltd. <http://graze.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @see  http://github.com/graze/dal/blob/master/LICENSE
- */
-namespace Graze\Dal\Adapter\Orm\Mapper;
+
+namespace Graze\Dal\Mapper;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Hydrator\HydratorFactoryInterface;
-use Graze\Dal\Mapper\MapperInterface;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class EntityMapper implements MapperInterface
+abstract class AbstractMapper implements MapperInterface
 {
     /**
      * @var HydratorFactoryInterface
@@ -69,45 +59,6 @@ class EntityMapper implements MapperInterface
         $this->config = $config;
         $this->recordName = $recordName;
         $this->entityName = $entityName;
-    }
-
-    /**
-     * @param object $entity
-     * @param object $record
-     *
-     * @return object
-     */
-    public function fromEntity($entity, $record = null)
-    {
-        $data = $this->getEntityHydrator($entity)->extract($entity);
-        $record = is_object($record) ? $record : $this->instantiateRecord();
-
-        $metadata = $this->config->buildEntityMetadata($entity);
-        foreach ($data as $field => $value) {
-            if ($metadata->hasRelationship($field)) {
-                unset($data[$field]);
-            }
-        }
-
-        $this->getRecordHydrator($record)->hydrate($data, $record);
-
-        return $record;
-    }
-
-    /**
-     * @param object $record
-     * @param object $entity
-     *
-     * @return object
-     */
-    public function toEntity($record, $entity = null)
-    {
-        $data = $this->getRecordHydrator($record)->extract($record);
-        $entity = is_object($entity) ? $entity : $this->instantiateEntity();
-
-        $this->getEntityHydrator($entity)->hydrate($data, $entity);
-
-        return $entity;
     }
 
     /**
