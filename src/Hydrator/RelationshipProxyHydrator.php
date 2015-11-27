@@ -1,5 +1,5 @@
 <?php
-namespace Graze\Dal\Adapter\Orm\Hydrator;
+namespace Graze\Dal\Hydrator;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Entity\EntityInterface;

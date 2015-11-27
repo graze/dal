@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Adapter\Orm\Hydrator;
+namespace Graze\Dal\Hydrator;
 
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
@@ -23,7 +23,7 @@ class HydratorFactory extends AbstractHydratorFactory implements HydratorFactory
     }
 
     /**
-     * @param object $record
+     * @param object|array $record
      *
      * @return HydratorInterface
      */
