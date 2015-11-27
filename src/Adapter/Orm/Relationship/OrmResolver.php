@@ -2,24 +2,16 @@
 
 namespace Graze\Dal\Adapter\Orm\Relationship;
 
-use Graze\Dal\Relationship\ResolverInterface;
+use Graze\Dal\Relationship\ManyToOneResolver;
+use Graze\Dal\Relationship\OneToManyResolver;
+use Graze\Dal\Relationship\RelationshipResolver;
 
-class OrmResolver implements ResolverInterface
+class OrmResolver extends RelationshipResolver
 {
     /**
      * @var ManyToManyResolver
      */
     private $manyToManyResolver;
-
-    /**
-     * @var ManyToOneResolver
-     */
-    private $manyToOneResolver;
-
-    /**
-     * @var OneToManyResolver
-     */
-    private $oneToManyResolver;
 
     /**
      * @param ManyToManyResolver $manyToManyResolver
@@ -31,9 +23,8 @@ class OrmResolver implements ResolverInterface
         ManyToOneResolver $manyToOneResolver,
         OneToManyResolver $oneToManyResolver
     ) {
+        parent::__construct($manyToOneResolver, $oneToManyResolver);
         $this->manyToManyResolver = $manyToManyResolver;
-        $this->manyToOneResolver = $manyToOneResolver;
-        $this->oneToManyResolver = $oneToManyResolver;
     }
 
     /**
@@ -47,13 +38,10 @@ class OrmResolver implements ResolverInterface
     {
         $type = $config['type'];
 
-        switch ($type) {
-            case 'manyToMany':
-                return $this->manyToManyResolver->resolve($entityName, $id, $config);
-            case 'manyToOne':
-                return $this->manyToOneResolver->resolve($entityName, $id, $config);
-            case 'oneToMany':
-                return $this->oneToManyResolver->resolve($entityName, $id, $config);
+        if ('manyToMany' === $type) {
+            return $this->manyToManyResolver->resolve($entityName, $id, $config);
         }
+
+        return parent::resolve($entityName, $id, $config);
     }
 }

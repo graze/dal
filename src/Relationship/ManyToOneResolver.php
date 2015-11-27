@@ -1,11 +1,10 @@
 <?php
 
-namespace Graze\Dal\Adapter\Orm\Relationship;
+namespace Graze\Dal\Relationship;
 
 use Graze\Dal\DalManagerInterface;
-use Graze\Dal\Relationship\ResolverInterface;
 
-class OneToManyResolver implements ResolverInterface
+class ManyToOneResolver implements ResolverInterface
 {
     /**
      * @var DalManagerInterface
@@ -31,8 +30,8 @@ class OneToManyResolver implements ResolverInterface
     {
         $entity = $config['entity'];
         $repository = $this->dm->getRepository($entity);
-        $entities = $repository->findBy([$config['foreignKey'] => $id]);
+        $entity = $repository->find($id);
 
-        return $entities;
+        return [$entity];
     }
 }
