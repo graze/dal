@@ -5,10 +5,15 @@ namespace Graze\Dal\Adapter\Orm\Configuration;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
-use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
+use Graze\Dal\Adapter\Orm\Relationship\ManyToManyResolver;
+use Graze\Dal\Adapter\Orm\Relationship\ManyToOneResolver;
+use Graze\Dal\Adapter\Orm\Relationship\OneToManyResolver;
+use Graze\Dal\Adapter\Orm\Relationship\OrmResolver;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Mapper\MapperInterface;
+use Graze\Dal\Proxy\ProxyFactory;
+use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 use ProxyManager\Configuration as ProxyConfiguration;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
@@ -44,11 +49,17 @@ abstract class AbstractConfiguration extends \Graze\Dal\Configuration\AbstractCo
      * @param ProxyConfiguration $config
      * @param UnitOfWorkInterface $unitOfWork
      *
-     * @return ProxyFactory
+     * @return ProxyFactoryInterface
      */
     protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWorkInterface $unitOfWork)
     {
-        return new ProxyFactory($this->dalManager, new LazyLoadingGhostFactory($config));
+        $resolver = new OrmResolver(
+            new ManyToManyResolver($this->dalManager),
+            new ManyToOneResolver($this->dalManager),
+            new OneToManyResolver($this->dalManager)
+        );
+
+        return new ProxyFactory($this->dalManager, $resolver, new LazyLoadingGhostFactory($config));
     }
 
     /**

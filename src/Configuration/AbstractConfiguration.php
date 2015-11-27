@@ -13,7 +13,6 @@ namespace Graze\Dal\Configuration;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\AdapterInterface;
-use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
 use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
@@ -22,6 +21,7 @@ use Graze\Dal\Identity\GeneratorInterface;
 use Graze\Dal\Identity\ObjectHashGenerator;
 use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\Persister\PersisterInterface;
+use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Graze\Dal\Repository\EntityRepository;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -184,7 +184,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param ProxyConfiguration $config
      * @param UnitOfWorkInterface $unitOfWork
      *
-     * @return ProxyFactory
+     * @return ProxyFactoryInterface
      */
     abstract protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWorkInterface $unitOfWork);
 }

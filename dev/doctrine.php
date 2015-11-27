@@ -44,7 +44,7 @@ $dm->set('doctrine', new DoctrineOrmAdapter(new Configuration(
             ],
             'related' => [
                 'orders' => [
-                    'type' => 'manyToOne',
+                    'type' => 'oneToMany',
                     'entity' => 'Graze\Dal\Dev\Order',
                     'foreignKey' => 'customer_id',
                     'collection' => true
@@ -83,7 +83,7 @@ $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), 
             ],
             'related' => [
                 'customer' => [
-                    'type' => 'oneToMany',
+                    'type' => 'manyToOne',
                     'entity' => 'Graze\Dal\Dev\Customer',
                     'localKey' => 'customer_id'
                 ],

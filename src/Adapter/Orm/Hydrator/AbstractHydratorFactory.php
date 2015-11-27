@@ -2,8 +2,8 @@
 
 namespace Graze\Dal\Adapter\Orm\Hydrator;
 
-use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 abstract class AbstractHydratorFactory implements HydratorFactoryInterface
@@ -14,15 +14,15 @@ abstract class AbstractHydratorFactory implements HydratorFactoryInterface
     protected $config;
 
     /**
-     * @var ProxyFactory
+     * @var ProxyFactoryInterface
      */
     private $proxyFactory;
 
     /**
      * @param ConfigurationInterface $config
-     * @param ProxyFactory $proxyFactory
+     * @param ProxyFactoryInterface $proxyFactory
      */
-    public function __construct(ConfigurationInterface $config, ProxyFactory $proxyFactory)
+    public function __construct(ConfigurationInterface $config, ProxyFactoryInterface $proxyFactory)
     {
         $this->config = $config;
         $this->proxyFactory = $proxyFactory;
