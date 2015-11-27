@@ -21,7 +21,7 @@ interface MapperInterface
     public function getEntityData($entity);
 
     /**
-     * @param object $record
+     * @param object|array $record
      *
      * @return array
      */
@@ -29,14 +29,14 @@ interface MapperInterface
 
     /**
      * @param object $entity
-     * @param object $record
+     * @param object|array $record
      *
-     * @return object
+     * @return object|array
      */
     public function fromEntity($entity, $record = null);
 
     /**
-     * @param object $record
+     * @param object|array $record
      * @param object $entity
      *
      * @return object
