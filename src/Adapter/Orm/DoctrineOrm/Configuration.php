@@ -14,7 +14,9 @@ namespace Graze\Dal\Adapter\Orm\DoctrineOrm;
 use Doctrine\ORM\EntityManager;
 use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\DalManagerInterface;
+use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -44,13 +46,21 @@ class Configuration extends AbstractConfiguration
 
     /**
      * @param string $entityName
-     * @param string $recordName
+     * @param ConfigurationInterface $config
      * @param UnitOfWorkInterface $unitOfWork
      *
      * @return PersisterInterface
+     * @throws InvalidMappingException
      */
-    protected function buildDefaultPersister($entityName, $recordName, UnitOfWorkInterface $unitOfWork)
+    protected function buildDefaultPersister($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)
     {
-        return new EntityPersister($entityName, $recordName, $unitOfWork, $this, $this->em);
+        $mapping = $config->getMapping($entityName);
+
+        if (! array_key_exists('record', $mapping)) {
+            $message = sprintf('Invalid or missing value for "record" for "%s"', $entityName);
+            throw new InvalidMappingException($message, __METHOD__);
+        }
+
+        return new EntityPersister($entityName, $mapping['record'], $unitOfWork, $this, $this->em);
     }
 }

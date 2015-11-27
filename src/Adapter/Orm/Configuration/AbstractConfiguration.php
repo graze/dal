@@ -6,6 +6,8 @@ use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
+use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 use ProxyManager\Configuration as ProxyConfiguration;
@@ -20,14 +22,22 @@ abstract class AbstractConfiguration extends \Graze\Dal\Configuration\AbstractCo
 
     /**
      * @param string $entityName
-     * @param string $recordName
+     * @param ConfigurationInterface $config
      * @param UnitOfWorkInterface $unitOfWork
      *
      * @return MapperInterface
+     * @throws InvalidMappingException
      */
-    protected function buildDefaultMapper($entityName, $recordName, UnitOfWorkInterface $unitOfWork)
+    protected function buildDefaultMapper($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)
     {
-        return new EntityMapper($entityName, $recordName, $this->getHydratorFactory($unitOfWork), $this);
+        $mapping = $config->getMapping($entityName);
+
+        if (! array_key_exists('record', $mapping)) {
+            $message = sprintf('Invalid or missing value for "record" for "%s"', $entityName);
+            throw new InvalidMappingException($message, __METHOD__);
+        }
+
+        return new EntityMapper($entityName, $mapping['record'], $this->getHydratorFactory($unitOfWork), $this);
     }
 
     /**
