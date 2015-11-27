@@ -15,6 +15,8 @@ use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Persister\EntityPersister;
 use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
+use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 class Configuration extends AbstractConfiguration
@@ -26,10 +28,18 @@ class Configuration extends AbstractConfiguration
 
     /**
      * {@inheritdoc}
+     * @throws InvalidMappingException
      */
-    protected function buildDefaultPersister($entityName, $recordName, UnitOfWorkInterface $unitOfWork)
+    protected function buildDefaultPersister($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)
     {
-        return new EntityPersister($entityName, $recordName, $unitOfWork, $this);
+        $mapping = $config->getMapping($entityName);
+
+        if (! array_key_exists('record', $mapping)) {
+            $message = sprintf('Invalid or missing value for "record" for "%s"', $entityName);
+            throw new InvalidMappingException($message, __METHOD__);
+        }
+
+        return new EntityPersister($entityName, $mapping['record'], $unitOfWork, $this);
     }
 
     /**

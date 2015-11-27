@@ -17,7 +17,6 @@ use Graze\Dal\Adapter\Orm\Proxy\ProxyFactory;
 use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
-use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Exception\InvalidRepositoryException;
 use Graze\Dal\Identity\GeneratorInterface;
 use Graze\Dal\Identity\ObjectHashGenerator;
@@ -54,35 +53,28 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param string $entityName
-     * @param string $recordName
+     * @param ConfigurationInterface $config
      * @param UnitOfWorkInterface $unitOfWork
      *
      * @return MapperInterface
      */
-    abstract protected function buildDefaultMapper($entityName, $recordName, UnitOfWorkInterface $unitOfWork);
+    abstract protected function buildDefaultMapper($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork);
 
     /**
      * @param string $entityName
-     * @param string $recordName
+     * @param ConfigurationInterface $config
      * @param UnitOfWorkInterface $unitOfWork
      *
      * @return PersisterInterface
      */
-    abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWorkInterface $unitOfWork);
+    abstract protected function buildDefaultPersister($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork);
 
     /**
      * {@inheritdoc}
      */
     public function buildMapper($name, UnitOfWorkInterface $unitOfWork)
     {
-        $mapping = $this->getMapping($name);
-
-        if (! isset($mapping['record'])) {
-            $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
-            throw new InvalidMappingException($message, __METHOD__);
-        }
-
-        return $this->buildDefaultMapper($name, $mapping['record'], $unitOfWork);
+        return $this->buildDefaultMapper($name, $this, $unitOfWork);
     }
 
     /**
@@ -90,14 +82,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      */
     public function buildPersister($name, UnitOfWorkInterface $unitOfWork)
     {
-        $mapping = $this->getMapping($name);
-
-        if (! isset($mapping['record'])) {
-            $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
-            throw new InvalidMappingException($message, __METHOD__);
-        }
-
-        return $this->buildDefaultPersister($name, $mapping['record'], $unitOfWork);
+        return $this->buildDefaultPersister($name, $this, $unitOfWork);
     }
 
     /**
