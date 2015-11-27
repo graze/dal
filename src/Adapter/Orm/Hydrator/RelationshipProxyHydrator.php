@@ -7,7 +7,7 @@ use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-class MethodProxyHydrator implements HydratorInterface
+class RelationshipProxyHydrator implements HydratorInterface
 {
     protected $config;
     protected $next;
