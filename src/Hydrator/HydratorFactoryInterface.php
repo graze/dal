@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Adapter\Orm\Hydrator;
+namespace Graze\Dal\Hydrator;
 
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
@@ -14,7 +14,7 @@ interface HydratorFactoryInterface
     public function buildEntityHydrator($entity);
 
     /**
-     * @param object $record
+     * @param object|array $record
      *
      * @return HydratorInterface
      */

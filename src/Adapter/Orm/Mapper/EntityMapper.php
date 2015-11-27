@@ -11,8 +11,8 @@
  */
 namespace Graze\Dal\Adapter\Orm\Mapper;
 
-use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Mapper\MapperInterface;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\HydratorInterface;

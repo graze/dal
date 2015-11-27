@@ -2,13 +2,13 @@
 
 namespace Graze\Dal\Adapter\Orm\Configuration;
 
-use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactory;
-use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\Relationship\ManyToManyResolver;
 use Graze\Dal\Adapter\Orm\Relationship\OrmResolver;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\InvalidMappingException;
+use Graze\Dal\Hydrator\HydratorFactory;
+use Graze\Dal\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\Proxy\ProxyFactory;
 use Graze\Dal\Proxy\ProxyFactoryInterface;
