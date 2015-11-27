@@ -19,11 +19,6 @@ interface PersisterInterface
     public function getEntityName();
 
     /**
-     * @return string
-     */
-    public function getRecordName();
-
-    /**
      * @param array $criteria
      * @param object $entity
      * @param array $orderBy
