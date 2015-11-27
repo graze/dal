@@ -2,14 +2,10 @@
 
 namespace Graze\Dal\Adapter\Orm\Configuration;
 
-use Graze\Dal\Adapter\Orm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\Orm\Relationship\ManyToManyResolver;
 use Graze\Dal\Adapter\Orm\Relationship\OrmResolver;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\InvalidMappingException;
-use Graze\Dal\Hydrator\HydratorFactory;
-use Graze\Dal\Hydrator\HydratorFactoryInterface;
-use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\Proxy\ProxyFactory;
 use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Graze\Dal\Relationship\ManyToOneResolver;
@@ -21,19 +17,12 @@ use ProxyManager\Factory\LazyLoadingGhostFactory;
 abstract class AbstractConfiguration extends \Graze\Dal\Configuration\AbstractConfiguration
 {
     /**
-     * @var HydratorFactoryInterface
-     */
-    private $hydratorFactory;
-
-    /**
      * @param string $entityName
      * @param ConfigurationInterface $config
-     * @param UnitOfWorkInterface $unitOfWork
      *
-     * @return MapperInterface
-     * @throws InvalidMappingException
+     * @return string
      */
-    protected function buildDefaultMapper($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)
+    protected function getRecordName($entityName, ConfigurationInterface $config)
     {
         $mapping = $config->getMapping($entityName);
 
@@ -42,7 +31,7 @@ abstract class AbstractConfiguration extends \Graze\Dal\Configuration\AbstractCo
             throw new InvalidMappingException($message, __METHOD__);
         }
 
-        return new EntityMapper($entityName, $mapping['record'], $this->getHydratorFactory($unitOfWork), $this);
+        return $mapping['record'];
     }
 
     /**
@@ -60,20 +49,5 @@ abstract class AbstractConfiguration extends \Graze\Dal\Configuration\AbstractCo
         );
 
         return new ProxyFactory($this->dalManager, $resolver, new LazyLoadingGhostFactory($config));
-    }
-
-    /**
-     * @param UnitOfWorkInterface $unitOfWork
-     *
-     * @return HydratorFactoryInterface
-     */
-    protected function getHydratorFactory(UnitOfWorkInterface $unitOfWork)
-    {
-        if (! $this->hydratorFactory) {
-            $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);
-            $this->hydratorFactory = new HydratorFactory($this, $proxyFactory);
-        }
-
-        return $this->hydratorFactory;
     }
 }

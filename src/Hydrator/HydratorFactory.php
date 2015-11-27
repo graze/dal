@@ -29,10 +29,14 @@ class HydratorFactory extends AbstractHydratorFactory implements HydratorFactory
      */
     protected function buildDefaultRecordHydrator($record)
     {
-        $config = new Configuration(get_class($record));
-        $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
-        $class = $config->createFactory()->getHydratorClass();
+        if (is_object($record)) {
+            $config = new Configuration(get_class($record));
+            $config->setGeneratorStrategy(new EvaluatingGeneratorStrategy());
+            $class = $config->createFactory()->getHydratorClass();
 
-        return new $class();
+            return new $class();
+        } elseif (is_array($record)) {
+            return new ArrayHydrator();
+        }
     }
 }

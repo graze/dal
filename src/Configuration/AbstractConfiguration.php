@@ -17,8 +17,11 @@ use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
 use Graze\Dal\Exception\InvalidRepositoryException;
+use Graze\Dal\Hydrator\HydratorFactory;
+use Graze\Dal\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Identity\GeneratorInterface;
 use Graze\Dal\Identity\ObjectHashGenerator;
+use Graze\Dal\Mapper\EntityMapper;
 use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\Proxy\ProxyFactoryInterface;
@@ -31,10 +34,30 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 {
     const PROXY_NAMESPACE = 'Graze\Dal';
 
+    /**
+     * @var GeneratorInterface
+     */
     protected $identityGenerator;
+
+    /**
+     * @var array
+     */
     protected $mapping;
+
+    /**
+     * @var int
+     */
     protected $trackingPolicy;
+
+    /**
+     * @var ProxyConfiguration
+     */
     protected $proxyConfiguration;
+
+    /**
+     * @var HydratorFactoryInterface
+     */
+    private $hydratorFactory;
 
     /**
      * @param DalManagerInterface $dalManager
@@ -58,7 +81,33 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      *
      * @return MapperInterface
      */
-    abstract protected function buildDefaultMapper($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork);
+    protected function buildDefaultMapper($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)
+    {
+        return new EntityMapper($entityName, $this->getRecordName($entityName, $config), $this->getHydratorFactory($unitOfWork), $config);
+    }
+
+    /**
+     * @param UnitOfWorkInterface $unitOfWork
+     *
+     * @return HydratorFactoryInterface
+     */
+    protected function getHydratorFactory(UnitOfWorkInterface $unitOfWork)
+    {
+        if (! $this->hydratorFactory) {
+            $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);
+            $this->hydratorFactory = new HydratorFactory($this, $proxyFactory);
+        }
+
+        return $this->hydratorFactory;
+    }
+
+    /**
+     * @param string $entityName
+     * @param ConfigurationInterface $config
+     *
+     * @return string
+     */
+    abstract protected function getRecordName($entityName, ConfigurationInterface $config);
 
     /**
      * @param string $entityName
