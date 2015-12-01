@@ -24,11 +24,10 @@ interface ConfigurationInterface
 {
     /**
      * @param string $name
-     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return MapperInterface
      */
-    public function buildMapper($name, UnitOfWorkInterface $unitOfWork);
+    public function buildMapper($name);
 
     /**
      * @param string $name

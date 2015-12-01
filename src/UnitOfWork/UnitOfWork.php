@@ -140,7 +140,7 @@ class UnitOfWork implements UnitOfWorkInterface
     public function getMapper($name)
     {
         if (! isset($this->mappers[$name])) {
-            $this->mappers[$name] = $this->config->buildMapper($name, $this);
+            $this->mappers[$name] = $this->config->buildMapper($name);
         }
 
         return $this->mappers[$name];
