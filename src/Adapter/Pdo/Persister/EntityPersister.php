@@ -36,31 +36,40 @@ class EntityPersister extends AbstractPersister
 
     /**
      * @param array $record
+     *
+     * @return array
      */
     protected function saveRecord($record)
     {
         if ($this->getRecordId($record)) {
-            $this->update($record);
+            return $this->update($record);
         } else {
-            $this->insert($record);
+            unset($record['id']);
+            return $this->insert($record);
         }
     }
 
     /**
      * @param array $record
+     *
+     * @return array
      */
     private function insert($record)
     {
         $cols = implode(',', array_keys($record));
         $vals = array_values($record);
 
-        $stmt = "INSERT INTO {$this->getRecordName()} ({$cols}) VALUES (?)";
-        $sth = $this->db->perform($stmt, [1 => $vals]);
-        $sth->execute();
+        $stmt = "INSERT INTO `{$this->getRecordName()}` ({$cols}) VALUES (?)";
+        $this->db->perform($stmt, [1 => $vals]);
+        $record['id'] = $this->db->lastInsertId();
+
+        return $record;
     }
 
     /**
      * @param array $record
+     *
+     * @return array
      */
     private function update($record)
     {
@@ -71,12 +80,14 @@ class EntityPersister extends AbstractPersister
         }
         $set = rtrim($set, ',');
 
-        $stmt = $this->db->prepare("UPDATE {$this->getRecordName()} SET {$set}");
+        $stmt = $this->db->prepare("UPDATE `{$this->getRecordName()}` SET {$set}");
         foreach ($record as $col => $value) {
             $stmt->bindValue($col, $value);
         }
 
         $this->db->exec($stmt);
+
+        return $record;
     }
 
     /**
@@ -111,7 +122,7 @@ class EntityPersister extends AbstractPersister
     {
         $where = $this->buildWhereClause($criteria);
 
-        $stmt = "SELECT * FROM {$this->getRecordName()} WHERE {$where} LIMIT 1";
+        $stmt = "SELECT * FROM `{$this->getRecordName()}` WHERE {$where} LIMIT 1";
 
         return $this->db->fetchOne($stmt, $criteria);
     }
@@ -128,7 +139,7 @@ class EntityPersister extends AbstractPersister
     {
         $where = $this->buildWhereClause($criteria);
 
-        $stmt = "SELECT * FROM {$this->getRecordName()} WHERE {$where}";
+        $stmt = "SELECT * FROM `{$this->getRecordName()}` WHERE {$where}";
 
         if ($offset) {
             $stmt .= " OFFSET {$offset}";
@@ -149,16 +160,8 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadRecordById($id, $entity = null)
     {
-        $stmt = "SELECT * FROM {$this->getRecordName()} WHERE `id` = :id";
+        $stmt = "SELECT * FROM `{$this->getRecordName()}` WHERE `id` = :id";
         return $this->db->fetchOne($stmt, ['id' => $id]);
-    }
-
-    /**
-     * @param object $entity
-     * @param array $record
-     */
-    protected function postSaveHook($entity, $record)
-    {
     }
 
     /**

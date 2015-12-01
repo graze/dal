@@ -3,8 +3,8 @@
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Persister;
 
 use Doctrine\ORM\EntityManager;
-use Graze\Dal\Adapter\Orm\Persister\AbstractPersister;
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Persister\AbstractPersister;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 class EntityPersister extends AbstractPersister
@@ -34,11 +34,15 @@ class EntityPersister extends AbstractPersister
 
     /**
      * @param object $record
+     *
+     * @return array|object
      */
     protected function saveRecord($record)
     {
         $this->em->persist($record);
         $this->em->flush();
+
+        return $record;
     }
 
     /**

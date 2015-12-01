@@ -1,9 +1,8 @@
 <?php
 
-namespace Graze\Dal\Adapter\Orm\Relationship;
+namespace Graze\Dal\Relationship;
 
 use Graze\Dal\DalManagerInterface;
-use Graze\Dal\Relationship\ResolverInterface;
 
 class ManyToManyResolver implements ResolverInterface
 {
@@ -26,6 +25,7 @@ class ManyToManyResolver implements ResolverInterface
      * @param array $config
      *
      * @return \Graze\Dal\Entity\EntityInterface[]
+     * @throws \RuntimeException
      */
     public function resolve($entityName, $id, array $config)
     {
@@ -39,6 +39,11 @@ class ManyToManyResolver implements ResolverInterface
         // find all the $class entities using the many to many config
         $foreignRepository = $this->dm->getRepository($foreignEntityName);
         $localAdapter = $this->dm->findAdapterByEntityName($entityName);
+
+        if (! $localAdapter instanceof ManyToManyInterface) {
+            throw new \RuntimeException('Adapter ' . get_class($localAdapter) . ' must implement ManyToManyInterface to support manyToMany relationships');
+        }
+
         $foreignIds = array_values($localAdapter->fetchCol($sql, [$id]));
 
         $entities = [];

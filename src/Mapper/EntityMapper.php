@@ -22,7 +22,7 @@ class EntityMapper extends AbstractMapper implements MapperInterface
     public function fromEntity($entity, $record = null)
     {
         $data = $this->getEntityHydrator($entity)->extract($entity);
-        $record = is_object($record) ? $record : (is_string($record) ? $this->instantiateRecord() : []);
+        $record = is_object($record) ? $record : $this->instantiateRecord();
 
         $metadata = $this->config->buildEntityMetadata($entity);
         foreach ($data as $field => $value) {

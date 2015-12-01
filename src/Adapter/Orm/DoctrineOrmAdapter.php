@@ -184,7 +184,7 @@ class DoctrineOrmAdapter extends OrmAdapter
      * @param string $table
      * @param array $data
      */
-    public function insert($table, $data)
+    public function insert($table, array $data)
     {
         $fields = implode(', ', array_keys($data));
         $values = implode(', ', array_values($data));

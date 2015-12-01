@@ -102,11 +102,15 @@ abstract class AbstractMapper implements MapperInterface
      */
     protected function instantiateRecord()
     {
-        if (! $this->recordReflectionClass) {
-            $this->recordReflectionClass = new ReflectionClass($this->recordName);
+        if (class_exists($this->recordName)) {
+            if (!$this->recordReflectionClass) {
+                $this->recordReflectionClass = new ReflectionClass($this->recordName);
+            }
+
+            return $this->recordReflectionClass->newInstanceWithoutConstructor();
         }
 
-        return $this->recordReflectionClass->newInstanceWithoutConstructor();
+        return ['_name' => $this->getRecordName()];
     }
 
     /**
@@ -127,5 +131,13 @@ abstract class AbstractMapper implements MapperInterface
     public function getRecordData($record)
     {
         return $this->getRecordHydrator($record)->extract($record);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRecordName()
+    {
+        return $this->recordName;
     }
 }

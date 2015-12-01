@@ -13,8 +13,9 @@ namespace Graze\Dal\Adapter\Orm;
 
 use Closure;
 use Graze\Dal\Adapter\AbstractAdapter;
+use Graze\Dal\Relationship\ManyToManyInterface;
 
-abstract class OrmAdapter extends AbstractAdapter implements OrmAdapterInterface
+abstract class OrmAdapter extends AbstractAdapter implements OrmAdapterInterface, ManyToManyInterface
 {
     /**
      * {@inheritdoc}
