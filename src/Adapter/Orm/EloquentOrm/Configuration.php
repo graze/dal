@@ -14,9 +14,9 @@ namespace Graze\Dal\Adapter\Orm\EloquentOrm;
 use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Persister\EntityPersister;
-use Graze\Dal\Adapter\Orm\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\InvalidMappingException;
+use Graze\Dal\Hydrator\HydratorFactoryInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 class Configuration extends AbstractConfiguration
