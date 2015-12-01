@@ -35,24 +35,24 @@ class RelationshipResolver implements ResolverInterface
     }
 
     /**
-     * @param string $entityName
+     * @param string $localEntityName
+     * @param string $foreignEntityName
      * @param int $id
      * @param array $config
      *
      * @return \Graze\Dal\Entity\EntityInterface[]
-     * @throws \RuntimeException
      */
-    public function resolve($entityName, $id, array $config)
+    public function resolve($localEntityName, $foreignEntityName, $id, array $config)
     {
         $type = $config['type'];
 
         switch ($type) {
             case 'manyToMany':
-                return $this->manyToManyResolver->resolve($entityName, $id, $config);
+                return $this->manyToManyResolver->resolve($localEntityName, $foreignEntityName, $id, $config);
             case 'manyToOne':
-                return $this->manyToOneResolver->resolve($entityName, $id, $config);
+                return $this->manyToOneResolver->resolve($localEntityName, $foreignEntityName, $id, $config);
             case 'oneToMany':
-                return $this->oneToManyResolver->resolve($entityName, $id, $config);
+                return $this->oneToManyResolver->resolve($localEntityName, $foreignEntityName, $id, $config);
         }
     }
 }
