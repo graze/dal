@@ -77,7 +77,7 @@ class EloquentOrmAdapter extends OrmAdapter
      * @param string $table
      * @param array $data
      */
-    public function insert($table, $data)
+    public function insert($table, array $data)
     {
         $this->conn->table($table)->insert($data);
     }

@@ -91,6 +91,10 @@ class RecordFieldMappingHydrator implements HydratorInterface
 
     private function getFields($object)
     {
+        if (! is_object($object)) {
+            return [];
+        }
+
         $mapping = $this->config->getMapping($this->config->getEntityName($object));
 
         if (! $mapping) {
@@ -111,6 +115,10 @@ class RecordFieldMappingHydrator implements HydratorInterface
      */
     protected function getHydrationFieldMappings($object)
     {
+        if (! is_object($object)) {
+            return [];
+        }
+
         $mapping = $this->config->getMapping($this->config->getEntityName($object));
         $mappings = [];
 
@@ -136,6 +144,10 @@ class RecordFieldMappingHydrator implements HydratorInterface
      */
     protected function getExtractionFieldMappings($object)
     {
+        if (! is_object($object)) {
+            return [];
+        }
+
         $mapping = $this->config->getMapping($this->config->getEntityName($object));
         $mappings = [];
 

@@ -11,16 +11,19 @@
  */
 namespace Graze\Dal\Adapter\Orm\EloquentOrm\Persister;
 
-use Graze\Dal\Adapter\Orm\Persister\AbstractPersister;
+use Graze\Dal\Persister\AbstractPersister;
 
 class EntityPersister extends AbstractPersister
 {
     /**
      * @param object $record
+     *
+     * @return array|object
      */
     protected function saveRecord($record)
     {
         $record->save();
+        return $record;
     }
 
     /**

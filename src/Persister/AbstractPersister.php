@@ -12,6 +12,7 @@
 namespace Graze\Dal\Persister;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Relationship\ManyToManyInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 abstract class AbstractPersister implements PersisterInterface
@@ -52,6 +53,8 @@ abstract class AbstractPersister implements PersisterInterface
 
     /**
      * @param object $record
+     *
+     * @return object|array
      */
     abstract protected function saveRecord($record);
 
@@ -219,22 +222,20 @@ abstract class AbstractPersister implements PersisterInterface
 
         $this->unitOfWork->setEntityRecord($entity, $record);
 
-        $this->saveRecord($record);
+        $record = $this->saveRecord($record);
 
         $this->unitOfWork->removeEntityRecord($entity);
 
-        $this->postSaveHook($entity, $record);
+        $adapter = $this->unitOfWork->getAdapter();
+
+        if ($adapter instanceof ManyToManyInterface) {
+            $this->handleManyToManyRelationship($adapter, $entity, $record);
+        }
 
         $mapper->toEntity($record, $entity);
 
         $this->unitOfWork->setEntityRecord($entity, $record);
     }
-
-    /**
-     * @param object $entity
-     * @param object|array $record
-     */
-    abstract protected function postSaveHook($entity, $record);
 
     /**
      * @param object $entity
@@ -246,5 +247,41 @@ abstract class AbstractPersister implements PersisterInterface
         $this->unitOfWork->persistByTrackingPolicy($entity);
 
         return $entity;
+    }
+
+    /**
+     * @param ManyToManyInterface $adapter
+     * @param object $entity
+     * @param object|array $record
+     */
+    protected function handleManyToManyRelationship(ManyToManyInterface $adapter, $entity, $record)
+    {
+        $metadata = $this->config->buildEntityMetadata($entity);
+        $data = $this->unitOfWork->getMapper($this->entityName)->getEntityData($entity);
+        $recordId = $this->getRecordId($record);
+
+        foreach ($data as $field => $value) {
+            // remove any keys that aren't relationships
+            if (! $metadata->hasRelationship($field)) {
+                unset($data[$field]);
+            }
+        }
+
+        foreach ($data as $field => $value) {
+            $relationship = $metadata->getRelationshipMetadata()[$field];
+
+            if ('manyToMany' === $relationship['type']) {
+                $table = $relationship['pivot'];
+                // assume $value is a collection for manyToMany
+                foreach ($value as $relatedEntity) {
+                    // insert into $relationship['pivot'] ($relationship['localKey'], $relationship['foreignKey']) values ($entity->getId(), $relatedEntity->getId())
+                    $data = [
+                        $relationship['localKey'] => $recordId,
+                        $relationship['foreignKey'] => $relatedEntity->getId(),
+                    ];
+                    $adapter->insert($table, $data);
+                }
+            }
+        }
     }
 }

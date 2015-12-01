@@ -9,15 +9,8 @@ use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Persister\PersisterInterface;
-use Graze\Dal\Proxy\ProxyFactory;
-use Graze\Dal\Proxy\ProxyFactoryInterface;
-use Graze\Dal\Relationship\ManyToOneResolver;
-use Graze\Dal\Relationship\OneToManyResolver;
-use Graze\Dal\Relationship\RelationshipResolver;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
-use ProxyManager\Configuration as ProxyConfiguration;
-use ProxyManager\Factory\LazyLoadingGhostFactory;
 
 class Configuration extends AbstractConfiguration implements ConfigurationInterface
 {
@@ -51,22 +44,6 @@ class Configuration extends AbstractConfiguration implements ConfigurationInterf
         UnitOfWorkInterface $unitOfWork
     ) {
         return new EntityPersister($entityName, $this->getRecordName($entityName, $config), $unitOfWork, $config, $this->db);
-    }
-
-    /**
-     * @param ProxyConfiguration $config
-     * @param UnitOfWorkInterface $unitOfWork
-     *
-     * @return ProxyFactoryInterface
-     */
-    protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWorkInterface $unitOfWork)
-    {
-        $resolver = new RelationshipResolver(
-            new ManyToOneResolver($this->dalManager),
-            new OneToManyResolver($this->dalManager)
-        );
-
-        return new ProxyFactory($this->dalManager, $resolver, new LazyLoadingGhostFactory());
     }
 
     /**

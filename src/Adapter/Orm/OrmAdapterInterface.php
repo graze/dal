@@ -40,10 +40,4 @@ interface OrmAdapterInterface extends AdapterInterface
      * @param callable $fn
      */
     public function transaction(callable $fn);
-
-    /**
-     * @param string $table
-     * @param array $data
-     */
-    public function insert($table, $data);
 }
