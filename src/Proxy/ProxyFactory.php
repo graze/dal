@@ -37,25 +37,26 @@ class ProxyFactory implements ProxyFactoryInterface
     }
 
     /**
-     * @param string $class
+     * @param string $localClass
+     * @param string $foreignClass
      * @param callable $id
      * @param array $config
      * @param string $collectionClass
      *
      * @return GhostObjectInterface
      */
-    public function buildCollectionProxy($class, callable $id, array $config, $collectionClass = null)
+    public function buildCollectionProxy($localClass, $foreignClass, callable $id, array $config, $collectionClass = null)
     {
         $collectionClassName = is_string($collectionClass) ? $collectionClass : $this->collectionClass;
 
-        return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($class, $id, $config) {
+        return $this->factory->createProxy($collectionClassName, function (Collection $proxy) use ($localClass, $foreignClass, $id, $config) {
             $proxy->setProxyInitializer(null);
 
-            $entities = $this->relationshipResolver->resolve($class, $id(), $config);
+            $entities = $this->relationshipResolver->resolve($localClass, $foreignClass, $id(), $config);
 
             if ($entities) {
                 $proxy->clear();
-                $adapter = $this->dm->findAdapterByEntityName($class);
+                $adapter = $this->dm->findAdapterByEntityName($foreignClass);
                 foreach ($entities as $entity) {
                     $adapter->getUnitOfWork()->persistByTrackingPolicy($entity);
                     $proxy->add($entity);
@@ -68,23 +69,24 @@ class ProxyFactory implements ProxyFactoryInterface
     }
 
     /**
-     * @param string $class
+     * @param string $localClass
+     * @param string $foreignClass
      * @param callable $id
      * @param array $config
      *
      * @return GhostObjectInterface
      */
-    public function buildEntityProxy($class, callable $id, array $config)
+    public function buildEntityProxy($localClass, $foreignClass, callable $id, array $config)
     {
-        return $this->factory->createProxy($class, function ($proxy) use ($class, $id, $config) {
+        return $this->factory->createProxy($foreignClass, function ($proxy) use ($localClass, $foreignClass, $id, $config) {
             $proxy->setProxyInitializer(null);
 
-            $entities = $this->relationshipResolver->resolve($class, $id(), $config);
+            $entities = $this->relationshipResolver->resolve($localClass, $foreignClass, $id(), $config);
             $entity = reset($entities);
 
             if ($entity) {
-                $adapter = $this->dm->findAdapterByEntityName($class);
-                $config = new Configuration($class);
+                $adapter = $this->dm->findAdapterByEntityName($foreignClass);
+                $config = new Configuration($foreignClass);
                 $hydratorClass = $config->createFactory()->getHydratorClass();
                 $hydrator = new $hydratorClass();
                 $extracted = $hydrator->extract($entity);
