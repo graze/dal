@@ -12,19 +12,13 @@
 namespace Graze\Dal\Adapter\Orm;
 
 use Closure;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\MappingException;
 use Exception;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Configuration;
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\Exception\UndefinedRepositoryException;
 use PDO;
 use Symfony\Component\Yaml\Parser;
 
-/**
- * @todo - cleanup
- */
 class DoctrineOrmAdapter extends OrmAdapter
 {
     protected $em;
@@ -38,78 +32,6 @@ class DoctrineOrmAdapter extends OrmAdapter
         parent::__construct($config);
         $this->em = $em;
     }
-
-    /**
-     * @param object $entity
-     *
-     * @return string
-     */
-//    public function getEntityName($entity)
-//    {
-//        return ClassUtils::getClass($entity);
-//    }
-
-    /**
-     * {@inheritdoc}
-     */
-//    public function getRepository($name)
-//    {
-//        try {
-//            return $this->em->getRepository($name);
-//        } catch (MappingException $e) {
-//            throw new UndefinedRepositoryException($name, __METHOD__, $e);
-//        }
-//    }
-
-    /**
-     * {@inheritdoc}
-     */
-//    public function hasRepository($name)
-//    {
-//        try {
-//            $this->getRepository($name);
-//        } catch (UndefinedRepositoryException $e) {
-//            return false;
-//        }
-//
-//        return true;
-//    }
-
-    /**
-     * @{inheritdoc}
-     */
-//    public function flush($entity = null)
-//    {
-//        if (null !== $entity) {
-//            $this->em->flush($entity);
-//        } else {
-//            $this->em->flush();
-//        }
-//    }
-//
-//    /**
-//     * @{inheritdoc}
-//     */
-//    public function persist($entity)
-//    {
-//        $this->em->persist($entity);
-//    }
-//
-//    /**
-//     * @{inheritdoc}
-//     */
-//    public function refresh($entity)
-//    {
-//        $this->em->refresh($entity);
-//    }
-//
-//    /**
-//     * @{inheritdoc}
-//     */
-//    public function remove($entity)
-//    {
-//        $this->em->remove($entity);
-//    }
 
     /**
      * @{inheritdoc}
