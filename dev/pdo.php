@@ -3,67 +3,9 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 $dm = new \Graze\Dal\DalManager();
-$pdo = new \Aura\Sql\ExtendedPdo('mysql:host=localhost;dbname=dal', 'root', 'password');
 
-$dm->set('pdo', new \Graze\Dal\Adapter\Pdo\PdoAdapter(
-    $pdo,
-    new \Graze\Dal\Adapter\Pdo\Configuration\Configuration(
-        $pdo,
-        [
-            'Graze\Dal\Dev\Customer' => [
-                'table' => 'customer',
-                'fields' => [
-                    'id' => [
-                        'mapsTo' => 'id'
-                    ],
-                    'firstName' => [
-                        'mapsTo' => 'first_name'
-                    ],
-                    'lastName' => [
-                        'mapsTo' => 'last_name'
-                    ]
-                ],
-                'related' => [
-                    'orders' => [
-                        'type' => 'oneToMany',
-                        'entity' => 'Graze\Dal\Dev\Order',
-                        'foreignKey' => 'customer_id',
-                        'collection' => true
-                    ]
-                ]
-            ],
-            'Graze\Dal\Dev\Order' => [
-                'table' => 'order',
-                'fields' => [
-                    'id' => [
-                        'mapsTo' => 'id'
-                    ],
-                    'price' => [
-                        'mapsTo' => 'price'
-                    ]
-                ],
-                'related' => [
-                    'customer' => [
-                        'type' => 'manyToOne',
-                        'entity' => 'Graze\Dal\Dev\Customer',
-                        'localKey' => 'customer_id'
-                    ],
-                    'products' => [
-                        'type' => 'manyToMany',
-                        'entity' => 'Graze\Dal\Dev\Product',
-                        'pivot' => 'order_item',
-                        'localKey' => 'order_id',
-                        'foreignKey' => 'product_id',
-                        'collection' => true
-                    ]
-                ]
-            ],
-            'Graze\Dal\Dev\Product' => [
-                'table' => 'product'
-            ]
-        ]
-    )
-));
+$pdo = new \Aura\Sql\ExtendedPdo('mysql:host=localhost;dbname=dal', 'root', 'password');
+$dm->set('pdo', \Graze\Dal\Adapter\Pdo\PdoAdapter::factory($pdo, __DIR__ . '/config/pdo.yml'));
 
 $toy = new \Graze\Dal\Dev\Product();
 $toy->setName('Toy');

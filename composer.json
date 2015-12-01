@@ -65,7 +65,8 @@
     "require": {
         "php": ">=5.4.0",
         "doctrine/common": "~2.4",
-        "zendframework/zend-stdlib": "~2.3"
+        "zendframework/zend-stdlib": "~2.3",
+        "symfony/yaml": "^2.8"
     },
     "require-dev": {
         "adlawson/timezone": "~1.0",

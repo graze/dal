@@ -1,0 +1,23 @@
+---
+Graze\Dal\Dev\Order:
+    record: Graze\Dal\Dev\EloquentOrm\Order
+    fields:
+        id:
+            mapsTo: id
+        price:
+            mapsTo: price
+    related:
+        customer:
+            type: manyToOne
+            entity: Graze\Dal\Dev\Customer
+            localKey: customer_id
+        products:
+            type: manyToMany
+            entity: Graze\Dal\Dev\Product
+            pivot: order_item
+            localKey: order_id
+            foreignKey: product_id
+            collection: true
+
+Graze\Dal\Dev\Product:
+    record: Graze\Dal\Dev\EloquentOrm\Product

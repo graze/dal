@@ -12,6 +12,7 @@
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
 use Graze\Dal\Configuration\ConfigurationInterface;
@@ -29,12 +30,12 @@ class Configuration extends AbstractConfiguration
 
     /**
      * @param array $mapping
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param int $trackingPolicy
      */
     public function __construct(
+        EntityManagerInterface $em,
         array $mapping,
-        EntityManager $em,
         $trackingPolicy = UnitOfWork::POLICY_IMPLICIT
     ) {
         parent::__construct($mapping, $trackingPolicy);
