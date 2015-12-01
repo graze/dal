@@ -27,7 +27,6 @@ $em = EntityManager::create($conn, $config);
 $dm = new DalManager();
 
 $dm->set('doctrine', new DoctrineOrmAdapter(new Configuration(
-    $dm,
     [
         'Graze\Dal\Dev\Customer' => [
             'record' => 'Graze\Dal\Dev\DoctrineOrm\Customer',
@@ -69,7 +68,6 @@ $capsule->addConnection([
 $capsule->bootEloquent();
 
 $dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), new EloquentConfiguration(
-    $dm,
     [
         'Graze\Dal\Dev\Order' => [
             'record' => 'Graze\Dal\Dev\EloquentOrm\Order',

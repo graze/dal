@@ -4,10 +4,12 @@ namespace Graze\Dal\Adapter;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\DalManagerAwareInterface;
+use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
-abstract class AbstractAdapter implements AdapterInterface
+abstract class AbstractAdapter implements AdapterInterface, DalManagerAwareInterface
 {
     /**
      * @var ConfigurationInterface
@@ -31,6 +33,16 @@ abstract class AbstractAdapter implements AdapterInterface
     {
         $this->config = $config;
         $this->unitOfWork = $config->buildUnitOfWork($this);
+    }
+
+    /**
+     * @param DalManagerInterface $dm
+     */
+    public function setDalManager(DalManagerInterface $dm)
+    {
+        if ($this->config instanceof DalManagerAwareInterface) {
+            $this->config->setDalManager($dm);
+        }
     }
 
     /**

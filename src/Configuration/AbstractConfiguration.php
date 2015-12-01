@@ -13,6 +13,7 @@ namespace Graze\Dal\Configuration;
 
 use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\AdapterInterface;
+use Graze\Dal\DalManagerAwareInterface;
 use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
@@ -36,7 +37,7 @@ use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 use ProxyManager\Configuration as ProxyConfiguration;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 
-abstract class AbstractConfiguration implements ConfigurationInterface
+abstract class AbstractConfiguration implements ConfigurationInterface, DalManagerAwareInterface
 {
     const PROXY_NAMESPACE = 'Graze\Dal';
 
@@ -66,18 +67,29 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     private $hydratorFactory;
 
     /**
-     * @param DalManagerInterface $dalManager
+     * @var DalManagerInterface
+     */
+    private $dm;
+
+    /**
      * @param array $mapping
      * @param int $trackingPolicy
      */
-    public function __construct(DalManagerInterface $dalManager, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+    public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
         $this->mapping = $mapping;
         $this->trackingPolicy = $trackingPolicy;
-        $this->dalManager = $dalManager;
 
         $this->identityGenerator = $this->buildDefaultIdentityGenerator();
         $this->proxyConfiguration = $this->buildProxyConfiguration();
+    }
+
+    /**
+     * @param DalManagerInterface $dm
+     */
+    public function setDalManager(DalManagerInterface $dm)
+    {
+        $this->dm = $dm;
     }
 
     /**
@@ -240,11 +252,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected function buildProxyFactory(ProxyConfiguration $config)
     {
         $resolver = new RelationshipResolver(
-            new ManyToManyResolver($this->dalManager),
-            new ManyToOneResolver($this->dalManager),
-            new OneToManyResolver($this->dalManager)
+            new ManyToManyResolver($this->dm),
+            new ManyToOneResolver($this->dm),
+            new OneToManyResolver($this->dm)
         );
 
-        return new ProxyFactory($this->dalManager, $resolver, new LazyLoadingGhostFactory($config));
+        return new ProxyFactory($this->dm, $resolver, new LazyLoadingGhostFactory($config));
     }
 }

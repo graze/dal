@@ -6,7 +6,6 @@ use Aura\Sql\ExtendedPdo;
 use Graze\Dal\Adapter\Pdo\Persister\EntityPersister;
 use Graze\Dal\Configuration\AbstractConfiguration;
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\UnitOfWork\UnitOfWork;
@@ -20,14 +19,13 @@ class Configuration extends AbstractConfiguration implements ConfigurationInterf
     private $db;
 
     /**
-     * @param DalManagerInterface $dalManager
      * @param ExtendedPdo $db
      * @param array $mapping
      * @param $trackingPolicy
      */
-    public function __construct(DalManagerInterface $dalManager, ExtendedPdo $db, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
+    public function __construct(ExtendedPdo $db, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
-        parent::__construct($dalManager, $mapping, $trackingPolicy);
+        parent::__construct($mapping, $trackingPolicy);
         $this->db = $db;
     }
 

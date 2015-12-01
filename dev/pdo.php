@@ -8,7 +8,6 @@ $pdo = new \Aura\Sql\ExtendedPdo('mysql:host=localhost;dbname=dal', 'root', 'pas
 $dm->set('pdo', new \Graze\Dal\Adapter\Pdo\PdoAdapter(
     $pdo,
     new \Graze\Dal\Adapter\Pdo\Configuration\Configuration(
-        $dm,
         $pdo,
         [
             'Graze\Dal\Dev\Customer' => [

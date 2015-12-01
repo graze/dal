@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManager;
 use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\UnitOfWork\UnitOfWork;
@@ -29,18 +28,16 @@ class Configuration extends AbstractConfiguration
     private $em;
 
     /**
-     * @param DalManagerInterface $dalManager
      * @param array $mapping
      * @param EntityManager $em
      * @param int $trackingPolicy
      */
     public function __construct(
-        DalManagerInterface $dalManager,
         array $mapping,
         EntityManager $em,
         $trackingPolicy = UnitOfWork::POLICY_IMPLICIT
     ) {
-        parent::__construct($dalManager, $mapping, $trackingPolicy);
+        parent::__construct($mapping, $trackingPolicy);
         $this->em = $em;
     }
 
