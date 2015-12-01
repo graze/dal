@@ -13,6 +13,7 @@ namespace Graze\Dal\Adapter\Orm;
 
 use Graze\Dal\Adapter\Orm\EloquentOrm\Configuration;
 use Illuminate\Database\ConnectionInterface;
+use Symfony\Component\Yaml\Parser;
 
 class EloquentOrmAdapter extends OrmAdapter
 {
@@ -98,5 +99,19 @@ class EloquentOrmAdapter extends OrmAdapter
         }
 
         return $col;
+    }
+
+    /**
+     * @param ConnectionInterface $connection
+     * @param $configPath
+     *
+     * @return static
+     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     */
+    public static function factory(ConnectionInterface $connection, $configPath)
+    {
+        $parser = new Parser();
+        $config = $parser->parse(file_get_contents($configPath));
+        return new static($connection, new Configuration($config));
     }
 }

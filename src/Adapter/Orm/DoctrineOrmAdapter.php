@@ -16,10 +16,15 @@ use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Exception;
+use Graze\Dal\Adapter\Orm\DoctrineOrm\Configuration;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 use PDO;
+use Symfony\Component\Yaml\Parser;
 
+/**
+ * @todo - cleanup
+ */
 class DoctrineOrmAdapter extends OrmAdapter
 {
     protected $em;
@@ -28,7 +33,7 @@ class DoctrineOrmAdapter extends OrmAdapter
      * @param ConfigurationInterface $config
      * @param EntityManagerInterface $em
      */
-    public function __construct(ConfigurationInterface $config, EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, ConfigurationInterface $config)
     {
         parent::__construct($config);
         $this->em = $em;
@@ -211,5 +216,19 @@ class DoctrineOrmAdapter extends OrmAdapter
         $stmt->execute($bindings);
 
         return $stmt->fetchColumn(0);
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string $configPath
+     *
+     * @return static
+     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     */
+    public static function factory(EntityManagerInterface $em, $configPath)
+    {
+        $parser = new Parser();
+        $config = $parser->parse(file_get_contents($configPath));
+        return new static($em, new Configuration($em, $config));
     }
 }

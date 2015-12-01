@@ -2,9 +2,7 @@
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use Graze\Dal\Adapter\Orm\DoctrineOrm\Configuration;
 use Graze\Dal\Adapter\Orm\DoctrineOrmAdapter;
-use Graze\Dal\Adapter\Orm\EloquentOrm\Configuration as EloquentConfiguration;
 use Graze\Dal\Adapter\Orm\EloquentOrmAdapter;
 use Graze\Dal\DalManager;
 
@@ -26,33 +24,7 @@ $conn = [
 $em = EntityManager::create($conn, $config);
 $dm = new DalManager();
 
-$dm->set('doctrine', new DoctrineOrmAdapter(new Configuration(
-    [
-        'Graze\Dal\Dev\Customer' => [
-            'record' => 'Graze\Dal\Dev\DoctrineOrm\Customer',
-            'fields' => [
-                'id' => [
-                    'mapsTo' => 'id'
-                ],
-                'firstName' => [
-                    'mapsTo' => 'firstName'
-                ],
-                'lastName' => [
-                    'mapsTo' => 'lastName'
-                ]
-            ],
-            'related' => [
-                'orders' => [
-                    'type' => 'oneToMany',
-                    'entity' => 'Graze\Dal\Dev\Order',
-                    'foreignKey' => 'customer_id',
-                    'collection' => true
-                ]
-            ]
-        ]
-    ],
-    $em
-), $em));
+$dm->set('doctrine', DoctrineOrmAdapter::factory($em, __DIR__ . '/config/doctrine.yml'));
 
 $capsule = new \Illuminate\Database\Capsule\Manager();
 $capsule->addConnection([
@@ -67,39 +39,7 @@ $capsule->addConnection([
 ], 'default');
 $capsule->bootEloquent();
 
-$dm->set('eloquent', new EloquentOrmAdapter($capsule->getConnection('default'), new EloquentConfiguration(
-    [
-        'Graze\Dal\Dev\Order' => [
-            'record' => 'Graze\Dal\Dev\EloquentOrm\Order',
-            'fields' => [
-                'id' => [
-                    'mapsTo' => 'id'
-                ],
-                'price' => [
-                    'mapsTo' => 'price'
-                ]
-            ],
-            'related' => [
-                'customer' => [
-                    'type' => 'manyToOne',
-                    'entity' => 'Graze\Dal\Dev\Customer',
-                    'localKey' => 'customer_id'
-                ],
-                'products' => [
-                    'type' => 'manyToMany',
-                    'entity' => 'Graze\Dal\Dev\Product',
-                    'pivot' => 'order_item',
-                    'localKey' => 'order_id',
-                    'foreignKey' => 'product_id',
-                    'collection' => true
-                ]
-            ]
-        ],
-        'Graze\Dal\Dev\Product' => [
-            'record' => 'Graze\Dal\Dev\EloquentOrm\Product'
-        ]
-    ]
-)));
+$dm->set('eloquent', EloquentOrmAdapter::factory($capsule->getConnection('default'), __DIR__ . '/config/eloquent.yml'));
 
 $em->getConnection()->executeQuery('TRUNCATE `order`');
 $em->getConnection()->executeQuery('TRUNCATE `customer`');

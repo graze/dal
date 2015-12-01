@@ -5,8 +5,10 @@ namespace Graze\Dal\Adapter\Pdo;
 use Aura\Sql\ExtendedPdo;
 use Graze\Dal\Adapter\AbstractAdapter;
 use Graze\Dal\Adapter\AdapterInterface;
+use Graze\Dal\Adapter\Pdo\Configuration\Configuration;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Relationship\ManyToManyInterface;
+use Symfony\Component\Yaml\Parser;
 
 class PdoAdapter extends AbstractAdapter implements AdapterInterface, ManyToManyInterface
 {
@@ -47,5 +49,19 @@ class PdoAdapter extends AbstractAdapter implements AdapterInterface, ManyToMany
     public function fetchCol($sql, array $bindings)
     {
         return $this->db->fetchCol($sql, $bindings);
+    }
+
+    /**
+     * @param ExtendedPdo $db
+     * @param string $configPath
+     *
+     * @return static
+     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     */
+    public static function factory(ExtendedPdo $db, $configPath)
+    {
+        $parser = new Parser();
+        $config = $parser->parse(file_get_contents($configPath));
+        return new static($db, new Configuration($db, $config));
     }
 }
