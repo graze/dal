@@ -83,24 +83,21 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param string $entityName
      * @param ConfigurationInterface $config
-     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return MapperInterface
      */
-    protected function buildDefaultMapper($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)
+    protected function buildDefaultMapper($entityName, ConfigurationInterface $config)
     {
-        return new EntityMapper($entityName, $this->getRecordName($entityName, $config), $this->getHydratorFactory($unitOfWork), $config);
+        return new EntityMapper($entityName, $this->getRecordName($entityName, $config), $this->getHydratorFactory(), $config);
     }
 
     /**
-     * @param UnitOfWorkInterface $unitOfWork
-     *
      * @return HydratorFactoryInterface
      */
-    protected function getHydratorFactory(UnitOfWorkInterface $unitOfWork)
+    protected function getHydratorFactory()
     {
         if (! $this->hydratorFactory) {
-            $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration, $unitOfWork);
+            $proxyFactory = $this->buildProxyFactory($this->proxyConfiguration);
             $this->hydratorFactory = new HydratorFactory($this, $proxyFactory);
         }
 
@@ -127,9 +124,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function buildMapper($name, UnitOfWorkInterface $unitOfWork)
+    public function buildMapper($name)
     {
-        return $this->buildDefaultMapper($name, $this, $unitOfWork);
+        return $this->buildDefaultMapper($name, $this);
     }
 
     /**
@@ -237,11 +234,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param ProxyConfiguration $config
-     * @param UnitOfWorkInterface $unitOfWork
      *
      * @return ProxyFactoryInterface
      */
-    protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWorkInterface $unitOfWork)
+    protected function buildProxyFactory(ProxyConfiguration $config)
     {
         $resolver = new RelationshipResolver(
             new ManyToManyResolver($this->dalManager),
@@ -249,6 +245,6 @@ abstract class AbstractConfiguration implements ConfigurationInterface
             new OneToManyResolver($this->dalManager)
         );
 
-        return new ProxyFactory($this->dalManager, $resolver, new LazyLoadingGhostFactory());
+        return new ProxyFactory($this->dalManager, $resolver, new LazyLoadingGhostFactory($config));
     }
 }
