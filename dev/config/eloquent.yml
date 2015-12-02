@@ -1,11 +1,15 @@
 ---
 Graze\Dal\Dev\Order:
     record: Graze\Dal\Dev\EloquentOrm\Order
+    table: order
+    timestamps: false
     fields:
         id:
             mapsTo: id
+            type: int
         price:
             mapsTo: price
+            type: float
     related:
         customer:
             type: manyToOne
@@ -21,3 +25,15 @@ Graze\Dal\Dev\Order:
 
 Graze\Dal\Dev\Product:
     record: Graze\Dal\Dev\EloquentOrm\Product
+    table: product
+    timestamps: false
+    fields:
+        id:
+            mapsTo: id
+            type: int
+        name:
+            mapsTo: name
+            type: string
+        price:
+            mapsTo: price
+            type: float

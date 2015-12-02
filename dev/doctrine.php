@@ -46,37 +46,26 @@ $em->getConnection()->executeQuery('TRUNCATE `customer`');
 $em->getConnection()->executeQuery('TRUNCATE `product`');
 $em->getConnection()->executeQuery('TRUNCATE `order_item`');
 
-$toy = new \Graze\Dal\Dev\Product();
-$toy->setName('Toy');
-$toy->setPrice(1.99);
-
-$game = new \Graze\Dal\Dev\Product();
-$game->setName('Game');
-$game->setPrice(10.99);
+$toy = new \Graze\Dal\Dev\Product('Toy', 1.99);
+$game = new \Graze\Dal\Dev\Product('Game', 10.99);
 
 $dm->persist($toy);
 $dm->persist($game);
 $dm->flush();
 
-$customer = new \Graze\Dal\Dev\Customer();
-$customer->setFirstName('Will');
-$customer->setLastName('Pillar');
+$customer = new \Graze\Dal\Dev\Customer('Will', 'Pillar');
 
 $dm->persist($customer);
 $dm->flush();
 
-$order = new \Graze\Dal\Dev\Order();
+$order = new \Graze\Dal\Dev\Order(5.99, $customer);
 $order->addProduct($toy);
-$order->setCustomer($customer);
-$order->setPrice(5.99);
 
 $dm->persist($order);
 
-$order = new \Graze\Dal\Dev\Order();
-$order->setCustomer($customer);
+$order = new \Graze\Dal\Dev\Order(10.00, $customer);
 $order->addProduct($toy);
 $order->addProduct($game);
-$order->setPrice(10.99);
 
 $dm->persist($order);
 $dm->flush();

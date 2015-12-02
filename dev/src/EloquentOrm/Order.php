@@ -2,11 +2,15 @@
 
 namespace Graze\Dal\Dev\EloquentOrm;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Order extends Model
+class Order extends \Illuminate\Database\Eloquent\Model
 {
+
     public $table = 'order';
+
     public $timestamps = false;
-    protected $guarded = ['id'];
+
+    protected $guarded = array(
+        'id',
+    );
+
 }

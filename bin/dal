@@ -4,8 +4,10 @@
 require __DIR__.'/../vendor/autoload.php';
 
 use Graze\Dal\Console\Command\GenerateEntitiesCommand;
+use Graze\Dal\Console\Command\GenerateRecordsCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 $application->add(new GenerateEntitiesCommand());
+$application->add(new GenerateRecordsCommand());
 $application->run();

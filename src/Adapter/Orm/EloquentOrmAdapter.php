@@ -11,11 +11,14 @@
  */
 namespace Graze\Dal\Adapter\Orm;
 
+use Graze\Dal\Adapter\GeneratableInterface;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Configuration;
+use Graze\Dal\Adapter\Orm\EloquentOrm\Generator\RecordGenerator;
+use Graze\Dal\Generator\GeneratorInterface;
 use Illuminate\Database\ConnectionInterface;
 use Symfony\Component\Yaml\Parser;
 
-class EloquentOrmAdapter extends OrmAdapter
+class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
 {
     /**
      * @param ConnectionInterface $conn
@@ -113,5 +116,15 @@ class EloquentOrmAdapter extends OrmAdapter
         $parser = new Parser();
         $config = $parser->parse(file_get_contents($configPath));
         return new static($connection, new Configuration($config));
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return GeneratorInterface
+     */
+    public static function buildRecordGenerator(array $config)
+    {
+        return new RecordGenerator($config);
     }
 }
