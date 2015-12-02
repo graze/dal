@@ -2,51 +2,64 @@
 
 namespace Graze\Dal\Dev;
 
-use Graze\Dal\Entity\EntityInterface;
-
-class Product implements EntityInterface
+class Product implements \Graze\Dal\Entity\EntityInterface
 {
-    private $id;
-    private $name;
-    private $price;
+
+    private $id = null;
+
+    private $name = null;
+
+    private $price = null;
+
+    /**
+     * @param string $name
+     * @param float $price
+     */
+    public function __construct($name, $price)
+    {
+        $this->name = (string) $name;
+        $this->price = (float) $price;
+    }
 
     /**
      * @return int
      */
     public function getId()
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
+     * @param string $name
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->name = (string) $name;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPrice()
+    public function getName()
     {
-        return $this->price;
+        return (string) $this->name;
     }
 
     /**
-     * @param mixed $price
+     * @param float $price
      */
     public function setPrice($price)
     {
-        $this->price = $price;
+        $this->price = (float) $price;
     }
+
+    /**
+     * @return float
+     */
+    public function getPrice()
+    {
+        return (float) $this->price;
+    }
+
+
 }

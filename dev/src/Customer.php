@@ -2,23 +2,30 @@
 
 namespace Graze\Dal\Dev;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Graze\Dal\Entity\EntityInterface;
-
-class Customer implements EntityInterface
+class Customer implements \Graze\Dal\Entity\EntityInterface
 {
-    private $id;
-    private $firstName;
-    private $lastName;
-    private $orders;
 
-    public function __construct()
+    private $id = null;
+
+    private $firstName = null;
+
+    private $lastName = null;
+
+    private $orders = null;
+
+    /**
+     * @param string $firstName
+     * @param string $lastName
+     */
+    public function __construct($firstName, $lastName)
     {
-        $this->orders = new ArrayCollection();
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getId()
     {
@@ -26,15 +33,7 @@ class Customer implements EntityInterface
     }
 
     /**
-     * @return mixed
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @param mixed $firstName
+     * @param string $firstName
      */
     public function setFirstName($firstName)
     {
@@ -42,15 +41,15 @@ class Customer implements EntityInterface
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getLastName()
+    public function getFirstName()
     {
-        return $this->lastName;
+        return $this->firstName;
     }
 
     /**
-     * @param mixed $lastName
+     * @param string $lastName
      */
     public function setLastName($lastName)
     {
@@ -58,10 +57,36 @@ class Customer implements EntityInterface
     }
 
     /**
-     * @return array
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getOrders()
     {
         return $this->orders;
     }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $orders
+     */
+    public function setOrders(\Doctrine\Common\Collections\ArrayCollection $orders)
+    {
+        $this->orders = $orders;
+    }
+
+    /**
+     * @param \Graze\Dal\Dev\Order $orders
+     */
+    public function addOrder(\Graze\Dal\Dev\Order $orders)
+    {
+        $this->orders->add($orders);
+    }
+
+
 }
