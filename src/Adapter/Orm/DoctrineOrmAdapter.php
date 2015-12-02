@@ -14,12 +14,14 @@ namespace Graze\Dal\Adapter\Orm;
 use Closure;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Graze\Dal\Adapter\GeneratableInterface;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Configuration;
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Generator\GeneratorInterface;
 use PDO;
 use Symfony\Component\Yaml\Parser;
 
-class DoctrineOrmAdapter extends OrmAdapter
+class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
 {
     protected $em;
 
@@ -152,5 +154,14 @@ class DoctrineOrmAdapter extends OrmAdapter
         $parser = new Parser();
         $config = $parser->parse(file_get_contents($configPath));
         return new static($em, new Configuration($em, $config));
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return GeneratorInterface
+     */
+    public static function buildRecordGenerator(array $config)
+    {
     }
 }
