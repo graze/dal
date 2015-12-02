@@ -61,5 +61,4 @@ class Product implements \Graze\Dal\Entity\EntityInterface
         return (float) $this->price;
     }
 
-
 }

@@ -48,9 +48,7 @@ class EntityGenerator
         $entities = [];
 
         foreach ($this->config as $name => $config) {
-            $entity = new ClassGenerator();
-            $entity->setName($name);
-            $entity->setImplementedInterfaces(['\Graze\Dal\Entity\EntityInterface']);
+            $entity = $this->getClassGenerator($name);
 
             $this->addConstructor($entity, $config);
 
@@ -91,11 +89,12 @@ class EntityGenerator
 
                     if (array_key_exists('collection', $relationConfig) && $relationConfig['collection']) {
                         $type = '\\' . $relationConfig['entity'];
+                        $addMethodName = 'add' . ucfirst(Inflector::singularize($relation));
                         $entity->addMethod(
-                            'add' . ucfirst(Inflector::singularize($relation)),
+                            $addMethodName,
                             [['name' => $relation, 'type' => $type]],
                             MethodGenerator::FLAG_PUBLIC,
-                            '$this->' . $relation . '->add($' . $relation .');',
+                            '$this->' . $relation . '->add($' . $relation . ');',
                             DocBlockGenerator::fromArray([
                                 'tags' => [
                                     new ParamTag($relation, $type)
@@ -107,7 +106,7 @@ class EntityGenerator
             }
 
             $file = FileGenerator::fromArray(['classes' => [$entity]]);
-            $entities[$name] = $file->generate();
+            $entities[$name] = rtrim(preg_replace('/\n(\s*\n){2,}/', "\n\n", $file->generate()), "\n") . "\n";
         }
 
         return $entities;
@@ -122,8 +121,9 @@ class EntityGenerator
      */
     private function addGetter(ClassGenerator $entity, $property, $type, $cast = ' ')
     {
+        $methodName = 'get' . ucfirst($property);
         $entity->addMethod(
-            'get' . ucfirst($property),
+            $methodName,
             [],
             MethodGenerator::FLAG_PUBLIC,
             'return' . $cast . '$this->' . $property . ';',
@@ -144,8 +144,9 @@ class EntityGenerator
      */
     private function addSetter(ClassGenerator $entity, $property, $type, $cast = ' ')
     {
+        $methodName = 'set' . ucfirst($property);
         $entity->addMethod(
-            'set' . ucfirst($property),
+            $methodName,
             [['name' => $property, 'type' => $type]],
             MethodGenerator::FLAG_PUBLIC,
             '$this->' . $property . ' =' . $cast . '$' . $property . ';',
@@ -302,5 +303,19 @@ class EntityGenerator
         }
 
         return '\\' . $returnType;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return ClassGenerator
+     */
+    private function getClassGenerator($name)
+    {
+        $generator = new ClassGenerator();
+        $generator->setName($name);
+        $generator->setImplementedInterfaces(['\\Graze\Dal\Entity\EntityInterface']);
+
+        return $generator;
     }
 }
