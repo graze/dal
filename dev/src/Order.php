@@ -2,31 +2,54 @@
 
 namespace Graze\Dal\Dev;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Graze\Dal\Entity\EntityInterface;
-
-class Order implements EntityInterface
+class Order implements \Graze\Dal\Entity\EntityInterface
 {
-    private $id;
-    private $customer;
-    private $price;
-    private $products;
 
-    public function __construct()
+    private $id = null;
+
+    private $price = null;
+
+    private $customer = null;
+
+    private $products = null;
+
+    /**
+     * @param float $price
+     * @param \Graze\Dal\Dev\Customer $customer
+     */
+    public function __construct($price, \Graze\Dal\Dev\Customer $customer)
     {
-        $this->products = new ArrayCollection();
+        $this->price = (float) $price;
+        $this->customer = $customer;
+        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     /**
-     * @return Customer
+     * @param float $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = (float) $price;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice()
+    {
+        return (float) $this->price;
+    }
+
+    /**
+     * @return \Graze\Dal\Dev\Customer
      */
     public function getCustomer()
     {
@@ -34,31 +57,15 @@ class Order implements EntityInterface
     }
 
     /**
-     * @param Customer $customer
+     * @param \Graze\Dal\Dev\Customer $customer
      */
-    public function setCustomer(Customer $customer)
+    public function setCustomer(\Graze\Dal\Dev\Customer $customer)
     {
         $this->customer = $customer;
     }
 
     /**
-     * @return mixed
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * @param mixed $price
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-    }
-
-    /**
-     * @return mixed
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getProducts()
     {
@@ -66,10 +73,18 @@ class Order implements EntityInterface
     }
 
     /**
-     * @param Product $product
+     * @param \Doctrine\Common\Collections\ArrayCollection $products
      */
-    public function addProduct(Product $product)
+    public function setProducts(\Doctrine\Common\Collections\ArrayCollection $products)
     {
-        $this->products->add($product);
+        $this->products = $products;
+    }
+
+    /**
+     * @param \Graze\Dal\Dev\Product $products
+     */
+    public function addProduct(\Graze\Dal\Dev\Product $products)
+    {
+        $this->products->add($products);
     }
 }
