@@ -88,5 +88,4 @@ class Customer implements \Graze\Dal\Entity\EntityInterface
         $this->orders->add($orders);
     }
 
-
 }

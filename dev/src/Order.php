@@ -87,4 +87,5 @@ class Order implements \Graze\Dal\Entity\EntityInterface
     {
         $this->products->add($products);
     }
+
 }

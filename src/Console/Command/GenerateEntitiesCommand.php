@@ -44,8 +44,9 @@ class GenerateEntitiesCommand extends Command
         $directory = rtrim($directory, '/');
 
         foreach ($entities as $name => $entity) {
-            if (! $input->getOption('force') && class_exists($name)) {
-                continue;
+            $prefix = '<info>Generated</info>';
+            if (class_exists($name)) {
+                $prefix = '<fg=yellow>Updated</>';
             }
             $nameWithoutRoot = str_replace($rootNamespace, '', $name);
             $nameBits = explode('\\', $nameWithoutRoot);
@@ -57,8 +58,20 @@ class GenerateEntitiesCommand extends Command
             }
             $filePath .= '/' . $filename;
 
-            file_put_contents($filePath, $entity);
-            $output->writeln('<info>Generated: </info><comment>' . $name . ' -> ' . $filePath . '</comment>');
+            $isUpdated = false;
+            if (file_exists($filePath)) {
+                $oldContents = file_get_contents($filePath);
+                if ($oldContents !== $entity) {
+                    $isUpdated = true;
+                }
+            } else {
+                $isUpdated = true;
+            }
+
+            if ($isUpdated) {
+                file_put_contents($filePath, $entity);
+                $output->writeln($prefix . ': <fg=cyan>' . $name . ' -> ' . $filePath . '</>');
+            }
         }
     }
 }
