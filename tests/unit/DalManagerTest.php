@@ -11,9 +11,9 @@ class DalManagerTest extends UnitTestCase
 {
     public function setUp()
     {
-        $this->adapterA = $a = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
-        $this->adapterB = $b = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
-        $this->adapterC = $c = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
+        $this->adapterA = $a = Mockery::mock('Graze\Dal\Adapter\AdapterInterface')->shouldReceive('setDalManager')->getMock();
+        $this->adapterB = $b = Mockery::mock('Graze\Dal\Adapter\AdapterInterface')->shouldReceive('setDalManager')->getMock();
+        $this->adapterC = $c = Mockery::mock('Graze\Dal\Adapter\AdapterInterface')->shouldReceive('setDalManager')->getMock();
         $this->adapters = ['foo'=>$a, 'bar'=>$b, 'baz'=>$c];
     }
 
@@ -81,7 +81,7 @@ class DalManagerTest extends UnitTestCase
     {
         $manager = new DalManager($this->adapters);
 
-        $adapter = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
+        $adapter = Mockery::mock('Graze\Dal\Adapter\AdapterInterface')->shouldReceive('setDalManager')->getMock();
         $manager->set('foo', $adapter);
 
         $this->assertSame($adapter, $manager->get('foo'));
