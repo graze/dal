@@ -89,5 +89,8 @@
         "ocramius/generated-hydrator": "Required when using ActiveRecordAdapter (EloquentOrm)",
         "ocramius/proxy-manager": "Required when using ActiveRecordAdapter (EloquentOrm)",
         "zendframework/zend-stdlib": "Required when using ActiveRecordAdapter (EloquentOrm)"
-    }
+    },
+    "bin": [
+        "bin/dal"
+    ]
 }
