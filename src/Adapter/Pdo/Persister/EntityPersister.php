@@ -138,6 +138,7 @@ class EntityPersister extends AbstractPersister
     protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $where = $this->buildWhereClause($criteria);
+        $where = $where ? ' WHERE ' . $where : '';
 
         $stmt = "SELECT * FROM `{$this->getRecordName()}` WHERE {$where}";
 
