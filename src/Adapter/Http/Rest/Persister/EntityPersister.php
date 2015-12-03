@@ -104,7 +104,7 @@ class EntityPersister extends AbstractPersister
         $port = array_key_exists('port', $mapping) ? $mapping['port'] : 80;
         $resource = $mapping['resource'];
         $url = $host . ':' . $port . '/' . $resource . '/' . $id;
-        $options = $mapping['options'];
+        $options = array_key_exists('options', $mapping) ? $mapping['options'] : [];
 
         $response = $this->client->request('GET', $url, $options);
 
