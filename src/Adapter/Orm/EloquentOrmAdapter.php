@@ -98,6 +98,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
         $col = [];
 
         foreach ($result as $row) {
+            $row = (array) $row;
             $col[] = array_values($row)[0];
         }
 
