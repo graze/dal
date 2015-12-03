@@ -19,14 +19,13 @@ class Configuration extends AbstractConfiguration
     private $client;
 
     /**
-     * @param DalManagerInterface $dalManager
      * @param ClientInterface $client
      * @param array $mapping
      * @param $trackingPolicy
      */
-    public function __construct(DalManagerInterface $dalManager, ClientInterface $client, array $mapping, $trackingPolicy = UnitOfWork::POLICY_EXPLICIT)
+    public function __construct(ClientInterface $client, array $mapping, $trackingPolicy = UnitOfWork::POLICY_EXPLICIT)
     {
-        parent::__construct($dalManager, $mapping, $trackingPolicy);
+        parent::__construct($mapping, $trackingPolicy);
         $this->client = $client;
     }
 
