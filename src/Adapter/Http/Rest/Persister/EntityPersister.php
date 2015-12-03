@@ -73,7 +73,7 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
-        // TODO: Implement loadRecord() method.
+        throw new NotSupportedException('Loading a single record by criteria is not supported', $this->unitOfWork->getAdapter());
     }
 
     /**
@@ -86,14 +86,14 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        // TODO: Implement loadAllRecords() method.
+        throw new NotSupportedException('Loading multiple records by criteria is not supported', $this->unitOfWork->getAdapter());
     }
 
     /**
      * @param int $id
      * @param object $entity
      *
-     * @return object
+     * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function loadRecordById($id, $entity = null)
