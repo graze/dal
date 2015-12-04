@@ -140,7 +140,7 @@ class EntityPersister extends AbstractPersister
         $where = $this->buildWhereClause($criteria);
         $where = $where ? ' WHERE ' . $where : '';
 
-        $stmt = "SELECT * FROM `{$this->getRecordName()}` WHERE {$where}";
+        $stmt = "SELECT * FROM `{$this->getRecordName()}`{$where}";
 
         if ($offset) {
             $stmt .= " OFFSET {$offset}";

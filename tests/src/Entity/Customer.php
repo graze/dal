@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Dev;
+namespace Graze\Dal\Test\Entity;
 
 class Customer implements \Graze\Dal\Entity\EntityInterface
 {
@@ -81,9 +81,9 @@ class Customer implements \Graze\Dal\Entity\EntityInterface
     }
 
     /**
-     * @param \Graze\Dal\Dev\Order $orders
+     * @param \Graze\Dal\Test\Entity\Order $orders
      */
-    public function addOrder(\Graze\Dal\Dev\Order $orders)
+    public function addOrder(\Graze\Dal\Test\Entity\Order $orders)
     {
         $this->orders->add($orders);
     }

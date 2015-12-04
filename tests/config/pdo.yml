@@ -1,32 +1,41 @@
 ---
-Graze\Dal\Dev\Order:
-    record: Graze\Dal\Dev\EloquentOrm\Order
+Graze\Dal\Test\Entity\Customer:
+    table: customer
+    fields:
+        id:
+            mapsTo: id
+        firstName:
+            mapsTo: first_name
+        lastName:
+            mapsTo: last_name
+    related:
+        orders:
+            type: oneToMany
+            entity: Graze\Dal\Test\Entity\Order
+            foreignKey: customer_id
+            collection: true
+
+Graze\Dal\Test\Entity\Order:
     table: order
-    timestamps: false
     fields:
         id:
             mapsTo: id
             type: int
-        price:
-            mapsTo: price
-            type: float
     related:
         customer:
             type: manyToOne
-            entity: Graze\Dal\Dev\Customer
+            entity: Graze\Dal\Test\Entity\Customer
             localKey: customer_id
         products:
             type: manyToMany
-            entity: Graze\Dal\Dev\Product
+            entity: Graze\Dal\Test\Entity\Product
             pivot: order_item
             localKey: order_id
             foreignKey: product_id
             collection: true
 
-Graze\Dal\Dev\Product:
-    record: Graze\Dal\Dev\EloquentOrm\Product
+Graze\Dal\Test\Entity\Product:
     table: product
-    timestamps: false
     fields:
         id:
             mapsTo: id

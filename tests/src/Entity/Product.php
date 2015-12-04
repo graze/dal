@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Dev;
+namespace Graze\Dal\Test\Entity;
 
 class Product implements \Graze\Dal\Entity\EntityInterface
 {

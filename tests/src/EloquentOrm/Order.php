@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Dev\EloquentOrm;
+namespace Graze\Dal\Test\EloquentOrm;
 
 class Order extends \Illuminate\Database\Eloquent\Model
 {
