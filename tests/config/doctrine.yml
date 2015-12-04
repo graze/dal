@@ -1,6 +1,6 @@
 ---
-Graze\Dal\Dev\Customer:
-    record: Graze\Dal\Dev\DoctrineOrm\Customer
+Graze\Dal\Test\Entity\Customer:
+    record: Graze\Dal\Test\DoctrineOrm\Customer
     fields:
         id:
             mapsTo: id
@@ -11,6 +11,6 @@ Graze\Dal\Dev\Customer:
     related:
         orders:
             type: oneToMany
-            entity: Graze\Dal\Dev\Order
+            entity: Graze\Dal\Test\Entity\Order
             foreignKey: customer_id
             collection: true

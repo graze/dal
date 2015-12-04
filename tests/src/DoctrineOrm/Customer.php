@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Dev\DoctrineOrm;
+namespace Graze\Dal\Test\DoctrineOrm;
 
 class Customer
 {

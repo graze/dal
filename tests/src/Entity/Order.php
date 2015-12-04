@@ -1,25 +1,21 @@
 <?php
 
-namespace Graze\Dal\Dev;
+namespace Graze\Dal\Test\Entity;
 
 class Order implements \Graze\Dal\Entity\EntityInterface
 {
 
     private $id = null;
 
-    private $price = null;
-
     private $customer = null;
 
     private $products = null;
 
     /**
-     * @param float $price
-     * @param \Graze\Dal\Dev\Customer $customer
+     * @param \Graze\Dal\Test\Entity\Customer $customer
      */
-    public function __construct($price, \Graze\Dal\Dev\Customer $customer)
+    public function __construct(\Graze\Dal\Test\Entity\Customer $customer)
     {
-        $this->price = (float) $price;
         $this->customer = $customer;
         $this->products = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -33,23 +29,7 @@ class Order implements \Graze\Dal\Entity\EntityInterface
     }
 
     /**
-     * @param float $price
-     */
-    public function setPrice($price)
-    {
-        $this->price = (float) $price;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPrice()
-    {
-        return (float) $this->price;
-    }
-
-    /**
-     * @return \Graze\Dal\Dev\Customer
+     * @return \Graze\Dal\Test\Entity\Customer
      */
     public function getCustomer()
     {
@@ -57,9 +37,9 @@ class Order implements \Graze\Dal\Entity\EntityInterface
     }
 
     /**
-     * @param \Graze\Dal\Dev\Customer $customer
+     * @param \Graze\Dal\Test\Entity\Customer $customer
      */
-    public function setCustomer(\Graze\Dal\Dev\Customer $customer)
+    public function setCustomer(\Graze\Dal\Test\Entity\Customer $customer)
     {
         $this->customer = $customer;
     }
@@ -81,9 +61,9 @@ class Order implements \Graze\Dal\Entity\EntityInterface
     }
 
     /**
-     * @param \Graze\Dal\Dev\Product $products
+     * @param \Graze\Dal\Test\Entity\Product $products
      */
-    public function addProduct(\Graze\Dal\Dev\Product $products)
+    public function addProduct(\Graze\Dal\Test\Entity\Product $products)
     {
         $this->products->add($products);
     }
