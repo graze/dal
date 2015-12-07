@@ -83,10 +83,20 @@ class EntityPersister extends AbstractPersister
      * @param int $offset
      *
      * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        throw new NotSupportedException('Loading multiple records by criteria is not supported', $this->unitOfWork->getAdapter());
+        $query = http_build_query($criteria);
+        $url = $this->buildBaseUrl() . '?' . $query;
+
+        $mapping = $this->config->getMapping($this->getEntityName());
+        $options = array_key_exists('options', $mapping) ? $mapping['options'] : [];
+
+        $response = $this->client->request('GET', $url, $options);
+
+        $data = json_decode($response->getBody(), true);
+        return array_key_exists('data', $data) ? $data['data'] : $data;
     }
 
     /**
@@ -100,15 +110,27 @@ class EntityPersister extends AbstractPersister
     {
         $mapping = $this->config->getMapping($this->getEntityName());
 
-        $host = $mapping['host'];
-        $port = array_key_exists('port', $mapping) ? $mapping['port'] : 80;
-        $resource = $mapping['resource'];
-        $url = $host . ':' . $port . '/' . $resource . '/' . $id;
+        $url = $this->buildBaseUrl() . '/' . $id;
         $options = array_key_exists('options', $mapping) ? $mapping['options'] : [];
 
         $response = $this->client->request('GET', $url, $options);
 
         $data = json_decode($response->getBody(), true);
         return array_key_exists('data', $data) ? $data['data'] : $data;
+    }
+
+    /**
+     * @return string
+     */
+    private function buildBaseUrl()
+    {
+        $mapping = $this->config->getMapping($this->getEntityName());
+
+        $host = $mapping['host'];
+        $port = array_key_exists('port', $mapping) ? $mapping['port'] : 80;
+        $resource = $mapping['resource'];
+        $url = $host . ':' . $port . '/' . $resource;
+
+        return $url;
     }
 }
