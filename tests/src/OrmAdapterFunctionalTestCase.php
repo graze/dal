@@ -3,8 +3,6 @@
 namespace Graze\Dal\Test;
 
 use Aura\Sql\ExtendedPdo;
-use Graze\Dal\Adapter\Orm\OrmAdapterInterface;
-use Graze\Dal\DalManager;
 use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Test\Entity\Customer;
 use Graze\Dal\Test\Entity\Order;
@@ -12,11 +10,6 @@ use Graze\Dal\Test\Entity\Product;
 
 abstract class OrmAdapterFunctionalTestCase extends FunctionalTestCase
 {
-    /**
-     * @var DalManagerInterface
-     */
-    protected $dm;
-
     /**
      * @var ExtendedPdo
      */
@@ -28,34 +21,32 @@ abstract class OrmAdapterFunctionalTestCase extends FunctionalTestCase
         $this->pdo = new ExtendedPdo('mysql:host=localhost;dbname=dal', 'root', 'password');
 
         $this->setUpDatabase();
-
-        $this->dm = new DalManager();
-
-        foreach ($this->buildAdapters() as $adapter) {
-            $this->dm->set(uniqid(), $adapter);
-        }
     }
 
     /**
-     * @return OrmAdapterInterface[]
+     * @return DalManagerInterface[]
      */
-    abstract protected function buildAdapters();
+    abstract public function buildDalManagers();
 
-    public function testSimpleManyToMany()
+    /**
+     * @param DalManagerInterface $dm
+     * @dataProvider buildDalManagers
+     */
+    public function testSimpleManyToMany(DalManagerInterface $dm)
     {
         $toy = new Product('Toy', 1.99);
-        $this->dm->persist($toy);
+        $dm->persist($toy);
 
         $customer = new Customer('Will', 'Pillar');
-        $this->dm->persist($customer);
+        $dm->persist($customer);
 
-        $this->dm->flush();
+        $dm->flush();
 
         $order = new Order($customer);
         $order->addProduct($toy);
-        $this->dm->persist($order);
+        $dm->persist($order);
 
-        $this->dm->flush();
+        $dm->flush();
 
         $orders = $customer->getOrders()->toArray();
         $order = $customer->getOrders()->first();
@@ -65,36 +56,40 @@ abstract class OrmAdapterFunctionalTestCase extends FunctionalTestCase
         static::assertEquals($order->getCustomer()->getId(), $customer->getId());
     }
 
-    public function testComplexManyToMany()
+    /**
+     * @param DalManagerInterface $dm
+     * @dataProvider buildDalManagers
+     */
+    public function testComplexManyToMany(DalManagerInterface $dm)
     {
         $game = new Product('Game', 10.99);
-        $this->dm->persist($game);
+        $dm->persist($game);
 
         $playstation = new Product('Playstation', 300);
-        $this->dm->persist($playstation);
+        $dm->persist($playstation);
 
         $customerA = new Customer('Will', 'Pillar');
-        $this->dm->persist($customerA);
+        $dm->persist($customerA);
 
         $customerB = new Customer('Jake', 'Montane');
-        $this->dm->persist($customerB);
+        $dm->persist($customerB);
 
-        $this->dm->flush();
+        $dm->flush();
 
         $order1 = new Order($customerA);
         $order1->addProduct($game);
         $order1->addProduct($playstation);
-        $this->dm->persist($order1);
+        $dm->persist($order1);
 
         $order2 = new Order($customerB);
         $order2->addProduct($playstation);
-        $this->dm->persist($order2);
+        $dm->persist($order2);
 
         $order3 = new Order($customerB);
         $order3->addProduct($game);
-        $this->dm->persist($order3);
+        $dm->persist($order3);
 
-        $this->dm->flush();
+        $dm->flush();
 
         $customerAOrders = $customerA->getOrders()->toArray();
         $customerBOrders = $customerB->getOrders()->toArray();
