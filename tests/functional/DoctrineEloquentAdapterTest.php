@@ -4,6 +4,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Graze\Dal\Adapter\Orm\DoctrineOrmAdapter;
 use Graze\Dal\Adapter\Orm\EloquentOrmAdapter;
+use Graze\Dal\DalManager;
+use Graze\Dal\DalManagerInterface;
 
 class DoctrineEloquentAdapterTest extends \Graze\Dal\Test\OrmAdapterFunctionalTestCase
 {
@@ -44,5 +46,19 @@ class DoctrineEloquentAdapterTest extends \Graze\Dal\Test\OrmAdapterFunctionalTe
             EloquentOrmAdapter::factory($capsule->getConnection('default'), __DIR__ . '/../config/eloquent.yml'),
             DoctrineOrmAdapter::factory($em, __DIR__ . '/../config/doctrine.yml')
         ];
+    }
+
+    /**
+     * @return DalManagerInterface[]
+     */
+    public function buildDalManagers()
+    {
+        $dm = new DalManager();
+
+        foreach ($this->buildAdapters() as $adapter) {
+            $dm->set(uniqid(), $adapter);
+        }
+
+        return [[$dm]];
     }
 }
