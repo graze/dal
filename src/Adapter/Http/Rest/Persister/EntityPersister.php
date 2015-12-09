@@ -2,6 +2,7 @@
 
 namespace Graze\Dal\Adapter\Http\Rest\Persister;
 
+use Graze\Dal\Adapter\Http\Rest\Exception\HttpMethodNotAllowedException;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Persister\AbstractPersister;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -38,6 +39,7 @@ class EntityPersister extends AbstractPersister
      *
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     protected function saveRecord($record)
     {
@@ -54,9 +56,11 @@ class EntityPersister extends AbstractPersister
     /**
      * @param array $record
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     protected function deleteRecord($record)
     {
+        $this->checkHttpMethod('DELETE');
         $url = $this->buildBaseUrl() . '/' . $this->getRecordId($record);
         $this->client->request('DELETE', $url);
     }
@@ -78,6 +82,7 @@ class EntityPersister extends AbstractPersister
      *
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
@@ -92,6 +97,7 @@ class EntityPersister extends AbstractPersister
      *
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
@@ -107,6 +113,7 @@ class EntityPersister extends AbstractPersister
      *
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     protected function loadRecordById($id, $entity = null)
     {
@@ -131,9 +138,11 @@ class EntityPersister extends AbstractPersister
      *
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     private function get($url)
     {
+        $this->checkHttpMethod('GET');
         return $this->request('GET', $url);
     }
 
@@ -143,9 +152,11 @@ class EntityPersister extends AbstractPersister
      *
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     private function post($url, array $body)
     {
+        $this->checkHttpMethod('POST');
         return $this->request('POST', $url, $body);
     }
 
@@ -155,9 +166,11 @@ class EntityPersister extends AbstractPersister
      *
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws HttpMethodNotAllowedException
      */
     private function put($url, array $body)
     {
+        $this->checkHttpMethod('PUT');
         return $this->request('PUT', $url, $body);
     }
 
@@ -195,5 +208,21 @@ class EntityPersister extends AbstractPersister
         $url = $host . ':' . $port . '/' . $resource;
 
         return $url;
+    }
+
+    /**
+     * @param $method
+     * @throws HttpMethodNotAllowedException
+     */
+    private function checkHttpMethod($method)
+    {
+        $mapping = $this->config->getMapping($this->getEntityName());
+
+        if (array_key_exists('allowed_methods', $mapping)) {
+            $methods = $mapping['allowed_methods'];
+            if (! in_array($method, $methods)) {
+                throw new HttpMethodNotAllowedException($method);
+            }
+        }
     }
 }
