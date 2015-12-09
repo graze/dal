@@ -3,11 +3,10 @@
 namespace Graze\Dal\Adapter\Http\Rest\Persister;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\Exception\NotImplementedException;
-use Graze\Dal\Exception\NotSupportedException;
 use Graze\Dal\Persister\AbstractPersister;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 use GuzzleHttp\ClientInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class EntityPersister extends AbstractPersister
 {
@@ -35,23 +34,31 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param object $record
+     * @param array $record
      *
-     * @return object|array
-     * @throws NotImplementedException
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function saveRecord($record)
     {
-        throw new NotSupportedException('Saving is not supported', $this->unitOfWork->getAdapter());
+        if ($this->getRecordId($record)) {
+            // PUT
+            $url = '/' . $this->getRecordId($record);
+            return $this->handleResponse($this->put($url, ['json' => $record]));
+        } else {
+            // POST
+            return $this->handleResponse($this->post('', ['json' => $record]));
+        }
     }
 
     /**
-     * @param object $record
-     * @throws NotImplementedException
+     * @param array $record
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function deleteRecord($record)
     {
-        throw new NotSupportedException('Deleting is not supported', $this->unitOfWork->getAdapter());
+        $url = $this->buildBaseUrl() . '/' . $this->getRecordId($record);
+        $this->client->request('DELETE', $url);
     }
 
     /**
@@ -69,11 +76,12 @@ class EntityPersister extends AbstractPersister
      * @param object $entity
      * @param array $orderBy
      *
-     * @return object
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
-        throw new NotSupportedException('Loading a single record by criteria is not supported', $this->unitOfWork->getAdapter());
+        return reset($this->loadAllRecords($criteria, $orderBy));
     }
 
     /**
@@ -88,15 +96,9 @@ class EntityPersister extends AbstractPersister
     protected function loadAllRecords(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
         $query = http_build_query($criteria);
-        $url = $this->buildBaseUrl() . '?' . $query;
+        $url = '?' . $query;
 
-        $mapping = $this->config->getMapping($this->getEntityName());
-        $options = array_key_exists('options', $mapping) ? $mapping['options'] : [];
-
-        $response = $this->client->request('GET', $url, $options);
-
-        $data = json_decode($response->getBody(), true);
-        return array_key_exists('data', $data) ? $data['data'] : $data;
+        return $this->handleResponse($this->get($url));
     }
 
     /**
@@ -108,15 +110,76 @@ class EntityPersister extends AbstractPersister
      */
     protected function loadRecordById($id, $entity = null)
     {
-        $mapping = $this->config->getMapping($this->getEntityName());
+        $url = '/' . $id;
 
-        $url = $this->buildBaseUrl() . '/' . $id;
-        $options = array_key_exists('options', $mapping) ? $mapping['options'] : [];
+        return $this->handleResponse($this->get($url));
+    }
 
-        $response = $this->client->request('GET', $url, $options);
-
+    /**
+     * @param ResponseInterface $response
+     *
+     * @return mixed
+     */
+    private function handleResponse(ResponseInterface $response)
+    {
         $data = json_decode($response->getBody(), true);
         return array_key_exists('data', $data) ? $data['data'] : $data;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function get($url)
+    {
+        return $this->request('GET', $url);
+    }
+
+    /**
+     * @param string $url
+     * @param array $body
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function post($url, array $body)
+    {
+        return $this->request('POST', $url, $body);
+    }
+
+    /**
+     * @param $url
+     * @param array $body
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function put($url, array $body)
+    {
+        return $this->request('PUT', $url, $body);
+    }
+
+    /**
+     * @param string $method
+     * @param string $url
+     * @param array $body
+     *
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function request($method, $url, array $body = null)
+    {
+        $url = $this->buildBaseUrl() . $url;
+        $mapping = $this->config->getMapping($this->getEntityName());
+        $options = array_key_exists('options', $mapping) ? $mapping['options'] : [];
+
+        if ($body) {
+            $options['json'] = $body;
+        }
+
+        return $this->client->request($method, $url, $options);
     }
 
     /**
