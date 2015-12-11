@@ -13,12 +13,12 @@ class Product implements \Graze\Dal\Entity\EntityInterface
 
     /**
      * @param string $name
-     * @param float $price
+     * @param string $price
      */
     public function __construct($name, $price)
     {
         $this->name = (string) $name;
-        $this->price = (float) $price;
+        $this->price = $price;
     }
 
     /**
@@ -46,19 +46,19 @@ class Product implements \Graze\Dal\Entity\EntityInterface
     }
 
     /**
-     * @param float $price
+     * @param string $price
      */
     public function setPrice($price)
     {
-        $this->price = (float) $price;
+        $this->price = $price;
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getPrice()
     {
-        return (float) $this->price;
+        return $this->price;
     }
 
 }

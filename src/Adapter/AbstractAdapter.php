@@ -36,6 +36,14 @@ abstract class AbstractAdapter implements AdapterInterface, DalManagerAwareInter
     }
 
     /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration()
+    {
+        return $this->config;
+    }
+
+    /**
      * @param DalManagerInterface $dm
      */
     public function setDalManager(DalManagerInterface $dm)

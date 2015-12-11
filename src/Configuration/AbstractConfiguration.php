@@ -72,6 +72,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     private $dm;
 
     /**
+     * @var MapperInterface[]
+     */
+    private $mappers = [];
+
+    /**
      * @param array $mapping
      * @param int $trackingPolicy
      */
@@ -138,7 +143,11 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
      */
     public function buildMapper($name)
     {
-        return $this->buildDefaultMapper($name, $this);
+        if (! array_key_exists($name, $this->mappers)) {
+            $this->mappers[$name] = $this->buildDefaultMapper($name, $this);
+        }
+
+        return $this->mappers[$name];
     }
 
     /**
@@ -203,6 +212,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     }
 
     /**
+     * @return array
+     */
+    public function getEntityNames()
+    {
+        return array_keys($this->mapping);
+    }
+
+    /**
      * @param EntityInterface $entity
      *
      * @return EntityMetadata
@@ -249,7 +266,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
      *
      * @return ProxyFactoryInterface
      */
-    protected function buildProxyFactory(ProxyConfiguration $config)
+    public function buildProxyFactory(ProxyConfiguration $config)
     {
         $resolver = new RelationshipResolver(
             new ManyToManyResolver($this->dm),

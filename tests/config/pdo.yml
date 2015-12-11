@@ -45,4 +45,3 @@ Graze\Dal\Test\Entity\Product:
             type: string
         price:
             mapsTo: price
-            type: float
