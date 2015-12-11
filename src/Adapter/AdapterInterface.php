@@ -12,6 +12,7 @@
 namespace Graze\Dal\Adapter;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
@@ -63,4 +64,9 @@ interface AdapterInterface
      * @return UnitOfWorkInterface
      */
     public function getUnitOfWork();
+
+    /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration();
 }

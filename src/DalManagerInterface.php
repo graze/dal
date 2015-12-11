@@ -39,6 +39,11 @@ interface DalManagerInterface
     public function set($name, AdapterInterface $adapter);
 
     /**
+     * @return AdapterInterface[]
+     */
+    public function all();
+
+    /**
      * @param string $name
      *
      * @return ObjectRepository

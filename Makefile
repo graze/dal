@@ -1,7 +1,6 @@
 .PHONY: test test-coverage test-unit test-unit-coverage test-functional test-functional-coverage install
 
-test:
-	@./vendor/bin/phpunit
+test: test-unit test-functional
 
 test-coverage:
 	@./vendor/bin/phpunit --coverage-text --coverage-html ./tests/report

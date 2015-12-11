@@ -162,4 +162,12 @@ class DalManager implements DalManagerInterface
 
         throw new UndefinedAdapterException($name, __METHOD__);
     }
+
+    /**
+     * @return AdapterInterface[]
+     */
+    public function all()
+    {
+        return $this->adapters;
+    }
 }

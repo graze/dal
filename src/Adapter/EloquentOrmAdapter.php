@@ -12,6 +12,7 @@
 namespace Graze\Dal\Adapter;
 
 use Graze\Dal\Adapter\EloquentOrm\Configuration;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Illuminate\Database\ConnectionInterface;
 
 class EloquentOrmAdapter extends ActiveRecordAdapter
@@ -98,5 +99,13 @@ class EloquentOrmAdapter extends ActiveRecordAdapter
         }
 
         return $col;
+    }
+
+    /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration()
+    {
+        return $this->config;
     }
 }

@@ -51,11 +51,11 @@ abstract class AbstractHydratorFactory implements HydratorFactoryInterface
     {
         $defaultHydrator = $this->buildDefaultEntityHydrator($entity);
 
-        return new RelationshipProxyHydrator(
+        return new RuntimeCacheHydrator(new RelationshipProxyHydrator(
             $this->config,
             $this->proxyFactory,
             new EntityFieldMappingHydrator($this->config, $defaultHydrator)
-        );
+        ));
     }
 
     /**
@@ -66,6 +66,6 @@ abstract class AbstractHydratorFactory implements HydratorFactoryInterface
     public function buildRecordHydrator($record)
     {
         $defaultHydrator = $this->buildDefaultRecordHydrator($record);
-        return new RecordFieldMappingHydrator($this->config, $defaultHydrator);
+        return new RuntimeCacheHydrator(new RecordFieldMappingHydrator($this->config, $defaultHydrator));
     }
 }

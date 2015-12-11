@@ -59,7 +59,11 @@
         "psr-4": {
             "Graze\\Dal\\Test\\": "tests/src/",
             "Graze\\Dal\\Test\\Unit\\": "tests/src/unit"
-        }
+        },
+        "classmap": [
+            "tests/src/Hydrators",
+            "tests/src/Proxies"
+        ]
     },
     "require": {
         "php": ">=5.5.0",

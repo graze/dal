@@ -18,6 +18,7 @@ use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
+use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 interface ConfigurationInterface
@@ -60,6 +61,11 @@ interface ConfigurationInterface
     public function getEntityName($entity);
 
     /**
+     * @return array
+     */
+    public function getEntityNames();
+
+    /**
      * @param string $name
      *
      * @return array
@@ -77,4 +83,11 @@ interface ConfigurationInterface
      * @return GeneratorInterface
      */
     public function getIdentityGenerator();
+
+    /**
+     * @param \ProxyManager\Configuration $config
+     *
+     * @return ProxyFactoryInterface
+     */
+    public function buildProxyFactory(\ProxyManager\Configuration $config);
 }
