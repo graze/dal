@@ -120,6 +120,56 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
     }
 
     /**
+     * @param ConnectionInterface $connection
+     * @param array $yamlPaths
+     * @param string $cacheFile
+     *
+     * @return ConnectionInterface
+     */
+    public static function createFromYaml(ConnectionInterface $connection, array $yamlPaths, $cacheFile = null)
+    {
+        if ($cacheFile && file_exists($cacheFile)) {
+            return static::createFromCache($connection, $cacheFile);
+        }
+
+        $config = [];
+        $parser = new Parser();
+
+        foreach ($yamlPaths as $yamlPath) {
+            $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
+        }
+
+        if ($cacheFile) {
+            file_put_contents($cacheFile, json_encode($config));
+        }
+
+        return static::createFromArray($connection, $config);
+    }
+
+    /**
+     * @param ConnectionInterface $connection
+     * @param array $config
+     *
+     * @return ConnectionInterface
+     */
+    public static function createFromArray(ConnectionInterface $connection, array $config)
+    {
+        return new static($connection, new Configuration($config));
+    }
+
+    /**
+     * @param ConnectionInterface $connection
+     * @param string $cacheFile
+     *
+     * @return ConnectionInterface
+     */
+    private static function createFromCache(ConnectionInterface $connection, $cacheFile)
+    {
+        $config = json_decode(file_get_contents($cacheFile), true);
+        return static::createFromArray($connection, $config);
+    }
+
+    /**
      * @param array $config
      *
      * @return GeneratorInterface
