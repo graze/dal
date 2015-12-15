@@ -57,7 +57,9 @@ class DalManager implements DalManagerInterface
      */
     public function set($name, AdapterInterface $adapter)
     {
-        $adapter->setDalManager($this);
+        if ($adapter instanceof DalManagerAwareInterface) {
+            $adapter->setDalManager($this);
+        }
         $this->adapters[$name] = $adapter;
     }
 
