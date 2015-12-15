@@ -33,6 +33,14 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration()
+    {
+        return $this->config;
+    }
+
+    /**
      * @param object $entity
      *
      * @return string
