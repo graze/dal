@@ -16,7 +16,7 @@ class PdoAdapterTest extends OrmAdapterFunctionalTestCase
     {
         $pdo = new ExtendedPdo('mysql:host=localhost;dbname=dal', 'root', 'password');
         return [
-            PdoAdapter::factory($pdo, __DIR__ . '/../config/pdo.yml')
+            PdoAdapter::createFromYaml($pdo, [__DIR__ . '/../config/pdo.yml'])
         ];
     }
 

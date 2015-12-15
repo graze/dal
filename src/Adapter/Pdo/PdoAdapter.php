@@ -53,15 +53,51 @@ class PdoAdapter extends AbstractAdapter implements AdapterInterface, ManyToMany
 
     /**
      * @param ExtendedPdo $db
-     * @param string $configPath
+     * @param array $yamlPaths
+     * @param string $cacheFile
      *
-     * @return static
-     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     * @return PdoAdapter
      */
-    public static function factory(ExtendedPdo $db, $configPath)
+    public static function createFromYaml(ExtendedPdo $db, array $yamlPaths, $cacheFile = null)
     {
+        if ($cacheFile && file_exists($cacheFile)) {
+            return static::createFromCache($db, $cacheFile);
+        }
+
+        $config = [];
         $parser = new Parser();
-        $config = $parser->parse(file_get_contents($configPath));
+
+        foreach ($yamlPaths as $yamlPath) {
+            $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
+        }
+
+        if ($cacheFile) {
+            file_put_contents($cacheFile, json_encode($config));
+        }
+
+        return static::createFromArray($db, $config);
+    }
+
+    /**
+     * @param ExtendedPdo $db
+     * @param array $config
+     *
+     * @return PdoAdapter
+     */
+    public static function createFromArray(ExtendedPdo $db, array $config)
+    {
         return new static($db, new Configuration($db, $config));
+    }
+
+    /**
+     * @param ExtendedPdo $db
+     * @param string $cacheFile
+     *
+     * @return PdoAdapter
+     */
+    private static function createFromCache(ExtendedPdo $db, $cacheFile)
+    {
+        $config = json_decode(file_get_contents($cacheFile), true);
+        return static::createFromArray($db, $config);
     }
 }
