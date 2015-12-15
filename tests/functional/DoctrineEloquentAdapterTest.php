@@ -44,7 +44,7 @@ class DoctrineEloquentAdapterTest extends \Graze\Dal\Test\OrmAdapterFunctionalTe
 
         return [
             EloquentOrmAdapter::factory($capsule->getConnection('default'), __DIR__ . '/../config/eloquent.yml'),
-            DoctrineOrmAdapter::factory($em, __DIR__ . '/../config/doctrine.yml')
+            DoctrineOrmAdapter::createFromYaml($em, [__DIR__ . '/../config/doctrine.yml'])
         ];
     }
 

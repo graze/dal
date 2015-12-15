@@ -144,16 +144,52 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
 
     /**
      * @param EntityManagerInterface $em
-     * @param string $configPath
+     * @param array $yamlPaths
+     * @param string $cacheFile
      *
-     * @return static
-     * @throws \Symfony\Component\Yaml\Exception\ParseException
+     * @return EntityManagerInterface
      */
-    public static function factory(EntityManagerInterface $em, $configPath)
+    public static function createFromYaml(EntityManagerInterface $em, array $yamlPaths, $cacheFile = null)
     {
+        if ($cacheFile && file_exists($cacheFile)) {
+            return static::createFromCache($em, $cacheFile);
+        }
+
+        $config = [];
         $parser = new Parser();
-        $config = $parser->parse(file_get_contents($configPath));
+
+        foreach ($yamlPaths as $yamlPath) {
+            $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
+        }
+
+        if ($cacheFile) {
+            file_put_contents($cacheFile, json_encode($config));
+        }
+
+        return static::createFromArray($em, $config);
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param array $config
+     *
+     * @return EntityManagerInterface
+     */
+    public static function createFromArray(EntityManagerInterface $em, array $config)
+    {
         return new static($em, new Configuration($em, $config));
+    }
+
+    /**
+     * @param EntityManagerInterface $em
+     * @param string $cacheFile
+     *
+     * @return EntityManagerInterface
+     */
+    private static function createFromCache(EntityManagerInterface $em, $cacheFile)
+    {
+        $config = json_decode(file_get_contents($cacheFile), true);
+        return static::createFromArray($em, $config);
     }
 
     /**
