@@ -272,8 +272,8 @@ abstract class AbstractPersister implements PersisterInterface
 
             if ('manyToMany' === $relationship['type']) {
                 $table = $relationship['pivot'];
-                // assume $value is a collection for manyToMany
-                foreach ($value as $relatedEntity) {
+                $entities = array_key_exists('collection', $relationship) && $relationship['collection'] ? $value : [$value];
+                foreach ($entities as $relatedEntity) {
                     // insert into $relationship['pivot'] ($relationship['localKey'], $relationship['foreignKey']) values ($entity->getId(), $relatedEntity->getId())
                     $data = [
                         $relationship['localKey'] => $recordId,
