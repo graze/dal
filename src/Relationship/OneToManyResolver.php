@@ -2,23 +2,8 @@
 
 namespace Graze\Dal\Relationship;
 
-use Graze\Dal\DalManagerInterface;
-
-class OneToManyResolver implements ResolverInterface
+class OneToManyResolver extends AbstractResolver implements ResolverInterface
 {
-    /**
-     * @var DalManagerInterface
-     */
-    private $dm;
-
-    /**
-     * @param DalManagerInterface $dm
-     */
-    public function __construct(DalManagerInterface $dm)
-    {
-        $this->dm = $dm;
-    }
-
     /**
      * @param string $localEntityName
      * @param string $foreignEntityName
