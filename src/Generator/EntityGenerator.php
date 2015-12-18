@@ -48,6 +48,9 @@ class EntityGenerator
         $entities = [];
 
         foreach ($this->config as $name => $config) {
+            if (array_key_exists('generate', $config) && ! $config['generate']) {
+                continue;
+            }
             $entity = $this->getClassGenerator($name);
 
             $this->addConstructor($entity, $config);
