@@ -31,6 +31,7 @@ use Graze\Dal\Relationship\ManyToManyResolver;
 use Graze\Dal\Relationship\ManyToOneResolver;
 use Graze\Dal\Relationship\OneToManyResolver;
 use Graze\Dal\Relationship\RelationshipResolver;
+use Graze\Dal\Relationship\ResolverInterface;
 use Graze\Dal\Repository\EntityRepository;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -95,6 +96,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     public function setDalManager(DalManagerInterface $dm)
     {
         $this->dm = $dm;
+    }
+
+    /**
+     * @return DalManagerInterface
+     */
+    protected function getDalManager()
+    {
+        return $this->dm;
     }
 
     /**
@@ -262,18 +271,24 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     }
 
     /**
+     * @return ResolverInterface
+     */
+    protected function buildRelationshipResolver()
+    {
+        return new RelationshipResolver(
+            new ManyToManyResolver($this->dm),
+            new ManyToOneResolver($this->dm),
+            new OneToManyResolver($this->dm)
+        );
+    }
+
+    /**
      * @param ProxyConfiguration $config
      *
      * @return ProxyFactoryInterface
      */
     public function buildProxyFactory(ProxyConfiguration $config)
     {
-        $resolver = new RelationshipResolver(
-            new ManyToManyResolver($this->dm),
-            new ManyToOneResolver($this->dm),
-            new OneToManyResolver($this->dm)
-        );
-
-        return new ProxyFactory($this->dm, $resolver, new LazyLoadingGhostFactory($config));
+        return new ProxyFactory($this->dm, $this->buildRelationshipResolver(), new LazyLoadingGhostFactory($config));
     }
 }
