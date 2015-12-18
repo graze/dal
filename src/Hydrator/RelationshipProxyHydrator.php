@@ -43,8 +43,10 @@ class RelationshipProxyHydrator implements HydratorInterface
         foreach ($out as $field => $value) {
             if (is_object($value) && $value instanceof EntityInterface) {
                 $map = $mapping[$field];
-                unset($out[$field]);
-                $out[$map['localKey']] = $value->getId();
+                if ($map['type'] !== 'manyToMany') {
+                    unset($out[$field]);
+                    $out[$map['localKey']] = $value->getId();
+                }
             }
         }
 
@@ -70,7 +72,7 @@ class RelationshipProxyHydrator implements HydratorInterface
                 return $this->proxyFactory->buildCollectionProxy($entityName, $foreignEntity, $id, $map, $collectionClass);
             } else {
                 $id = function () use ($data, $map) {
-                    return (int) $data[$map['localKey']];
+                    return $map['type'] === 'manyToMany' ? (int) $data['id'] : (int) $data[$map['localKey']];
                 };
                 return $this->proxyFactory->buildEntityProxy($entityName, $foreignEntity, $id, $map);
             }
