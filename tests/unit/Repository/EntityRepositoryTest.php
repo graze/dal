@@ -5,10 +5,13 @@ namespace Graze\Dal\Test\Unit\Repository;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\Repository\EntityRepository;
 use Graze\Dal\Test\Entity;
+use Graze\Dal\Test\MockTrait;
 use Mockery;
 
 class EntityRepositoryTest extends \PHPUnit_Framework_TestCase
 {
+    use MockTrait;
+
     public function testCanBeConstructed()
     {
         $adapter = $this->getMockAdapter();
@@ -156,23 +159,4 @@ class EntityRepositoryTest extends \PHPUnit_Framework_TestCase
         return $adapter;
     }
 
-    private function getMockAdapter()
-    {
-        return Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
-    }
-
-    private function getMockUnitOfWork()
-    {
-        return Mockery::mock('Graze\Dal\UnitOfWork\UnitOfWorkInterface');
-    }
-
-    private function getMockPersister()
-    {
-        return Mockery::mock('Graze\Dal\Persister\PersisterInterface');
-    }
-
-    private function getMockEntity()
-    {
-        return Mockery::mock('Graze\Dal\Entity\EntityInterface');
-    }
 }
