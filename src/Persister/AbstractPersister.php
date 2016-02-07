@@ -169,8 +169,8 @@ abstract class AbstractPersister implements PersisterInterface
     {
         $record = $this->loadRecordById($id, $entity);
 
-        if (is_null($record)) {
-            return $record;
+        if (! $record) {
+            return null;
         }
 
         $mapper = $this->unitOfWork->getMapper($this->getEntityName());
