@@ -41,12 +41,9 @@ class RelationshipProxyHydrator implements HydratorInterface
         $mapping = $this->formatMapping($this->config->getMapping($this->config->getEntityName($object)));
 
         foreach ($out as $field => $value) {
-            if (is_object($value)) {
+            if (is_object($value) && $value instanceof EntityInterface) {
                 $map = $mapping[$field];
                 if ($map['type'] !== 'manyToMany') {
-                    if (! $value instanceof EntityInterface) {
-                        throw new \InvalidArgumentException('Entity ' . get_class($relatedEntity) . ' must implement Graze\Dal\Entity\EntityInterface');
-                    }
                     unset($out[$field]);
                     $out[$map['localKey']] = $value->getId();
                 }
