@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\Exception\InvalidMappingException;
+use Graze\Dal\Exception\MissingConfigException;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -48,15 +48,14 @@ class Configuration extends AbstractConfiguration
      * @param UnitOfWorkInterface $unitOfWork
      *
      * @return PersisterInterface
-     * @throws InvalidMappingException
+     * @throws MissingConfigException
      */
     protected function buildDefaultPersister($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)
     {
         $mapping = $config->getMapping($entityName);
 
         if (! array_key_exists('record', $mapping)) {
-            $message = sprintf('Invalid or missing value for "record" for "%s"', $entityName);
-            throw new InvalidMappingException($message, __METHOD__);
+            throw new MissingConfigException($entityName, 'record');
         }
 
         return new EntityPersister($entityName, $mapping['record'], $unitOfWork, $this, $this->em);

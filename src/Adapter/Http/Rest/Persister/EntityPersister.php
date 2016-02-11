@@ -4,6 +4,7 @@ namespace Graze\Dal\Adapter\Http\Rest\Persister;
 
 use Graze\Dal\Adapter\Http\Rest\Exception\HttpMethodNotAllowedException;
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Exception\MissingConfigException;
 use Graze\Dal\Persister\AbstractPersister;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 use GuzzleHttp\ClientInterface;
@@ -197,10 +198,20 @@ class EntityPersister extends AbstractPersister
 
     /**
      * @return string
+     * @throws MissingConfigException
      */
     private function buildBaseUrl()
     {
-        $mapping = $this->config->getMapping($this->getEntityName());
+        $entityName = $this->getEntityName();
+        $mapping = $this->config->getMapping($entityName);
+
+        if (! array_key_exists('host', $mapping)) {
+            throw new MissingConfigException($entityName, 'host');
+        }
+
+        if (! array_key_exists('resource', $mapping)) {
+            throw new MissingConfigException($entityName, 'resource');
+        }
 
         $host = $mapping['host'];
         $port = array_key_exists('port', $mapping) ? $mapping['port'] : 80;
