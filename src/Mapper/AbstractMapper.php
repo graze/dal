@@ -3,7 +3,7 @@
 namespace Graze\Dal\Mapper;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\Hydrator\HydratorFactoryInterface;
+use Graze\Dal\Hydrator\Factory\HydratorFactoryInterface;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 

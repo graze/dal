@@ -16,7 +16,7 @@ use Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\Orm\EloquentOrm\Persister\EntityPersister;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\MissingConfigException;
-use Graze\Dal\Hydrator\HydratorFactoryInterface;
+use Graze\Dal\Hydrator\Factory\HydratorFactoryInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 class Configuration extends AbstractConfiguration

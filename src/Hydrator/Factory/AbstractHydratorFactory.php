@@ -1,8 +1,12 @@
 <?php
 
-namespace Graze\Dal\Hydrator;
+namespace Graze\Dal\Hydrator\Factory;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Hydrator\EntityFieldMappingHydrator;
+use Graze\Dal\Hydrator\RecordFieldMappingHydrator;
+use Graze\Dal\Hydrator\RelationshipProxyHydrator;
+use Graze\Dal\Hydrator\RuntimeCacheHydrator;
 use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
