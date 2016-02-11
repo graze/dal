@@ -14,8 +14,8 @@ namespace Graze\Dal\Adapter\Orm\EloquentOrm\Hydrator;
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
 use Graze\Dal\Adapter\Orm\Hydrator\AttributeHydrator;
-use Graze\Dal\Hydrator\AbstractHydratorFactory;
-use Graze\Dal\Hydrator\HydratorFactoryInterface;
+use Graze\Dal\Hydrator\Factory\AbstractHydratorFactory;
+use Graze\Dal\Hydrator\Factory\HydratorFactoryInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class HydratorFactory extends AbstractHydratorFactory implements HydratorFactoryInterface

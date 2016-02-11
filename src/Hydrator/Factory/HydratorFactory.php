@@ -1,9 +1,10 @@
 <?php
 
-namespace Graze\Dal\Hydrator;
+namespace Graze\Dal\Hydrator\Factory;
 
 use CodeGenerationUtils\GeneratorStrategy\EvaluatingGeneratorStrategy;
 use GeneratedHydrator\Configuration;
+use Graze\Dal\Hydrator\ArrayHydrator;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class HydratorFactory extends AbstractHydratorFactory implements HydratorFactoryInterface

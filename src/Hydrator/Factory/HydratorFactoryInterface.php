@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Hydrator;
+namespace Graze\Dal\Hydrator\Factory;
 
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
