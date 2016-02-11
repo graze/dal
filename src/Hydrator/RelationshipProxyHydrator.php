@@ -4,6 +4,7 @@ namespace Graze\Dal\Hydrator;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Exception\InvalidMappingException;
+use Graze\Dal\Exception\MissingConfigException;
 use Graze\Dal\Proxy\ProxyFactoryInterface;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
@@ -30,6 +31,7 @@ class RelationshipProxyHydrator implements HydratorInterface
 
     /**
      * {@inheritdoc}
+     * @throws MissingConfigException
      */
     public function extract($object)
     {
@@ -38,12 +40,28 @@ class RelationshipProxyHydrator implements HydratorInterface
             $out += $this->next->extract($object);
         }
 
-        $mapping = $this->formatMapping($this->config->getMapping($this->config->getEntityName($object)));
+        $entityName = $this->config->getEntityName($object);
+        $mapping = $this->formatMapping($this->config->getMapping($entityName));
 
         foreach ($out as $field => $value) {
             if (is_object($value) && $value instanceof EntityInterface) {
+
+                if (! array_key_exists($field, $mapping)) {
+                    throw new MissingConfigException($entityName, 'related.' . $field);
+                }
+
                 $map = $mapping[$field];
+
+                if (! array_key_exists('type', $map)) {
+                    throw new MissingConfigException($entityName, 'related.' . $field . '.type');
+                }
+
                 if ($map['type'] !== 'manyToMany') {
+
+                    if (! array_key_exists('localKey', $map)) {
+                        throw new MissingConfigException($entityName, 'related.' . $field . '.localKey');
+                    }
+
                     unset($out[$field]);
                     $out[$map['localKey']] = $value->getId();
                 }
@@ -55,6 +73,7 @@ class RelationshipProxyHydrator implements HydratorInterface
 
     /**
      * {@inheritdoc}
+     * @throws MissingConfigException
      */
     public function hydrate(array $data, $object)
     {
@@ -62,6 +81,14 @@ class RelationshipProxyHydrator implements HydratorInterface
         $mapping = $this->formatMapping($this->config->getMapping($entityName) ?: []);
 
         $out = array_map(function ($map) use ($data, $object, $entityName) {
+            if (! array_key_exists('entity', $map)) {
+                throw new MissingConfigException($entityName, 'related.entity');
+            }
+
+            if (! array_key_exists('type', $map)) {
+                throw new MissingConfigException($entityName, 'related.type');
+            }
+
             $foreignEntity = $map['entity'];
 
             if ($map['collection']) {
@@ -71,6 +98,10 @@ class RelationshipProxyHydrator implements HydratorInterface
                 };
                 return $this->proxyFactory->buildCollectionProxy($entityName, $foreignEntity, $id, $map, $collectionClass);
             } else {
+                if (! array_key_exists('localKey', $map)) {
+                    throw new MissingConfigException($entityName, 'related.localKey');
+                }
+
                 $id = function () use ($data, $map) {
                     return $map['type'] === 'manyToMany' ? (int) $data['id'] : (int) $data[$map['localKey']];
                 };

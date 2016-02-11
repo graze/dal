@@ -3,6 +3,7 @@
 namespace Graze\Dal\Generator;
 
 use Graze\Dal\DalManagerInterface;
+use Graze\Dal\Exception\MissingConfigException;
 use ProxyManager\Configuration;
 
 class ProxyGenerator implements GeneratorInterface
@@ -29,6 +30,7 @@ class ProxyGenerator implements GeneratorInterface
 
     /**
      * @return mixed
+     * @throws MissingConfigException
      */
     public function generate()
     {
@@ -47,6 +49,11 @@ class ProxyGenerator implements GeneratorInterface
                     $related = $mapping['related'];
 
                     foreach ($related as $relationName => $relationConfig) {
+
+                        if (! array_key_exists('entity', $relationConfig)) {
+                            throw new MissingConfigException($entityName, 'related.entity');
+                        }
+
                         $foreignEntityName = $relationConfig['entity'];
                         if (array_key_exists('collection', $relationConfig) && $relationConfig['collection']) {
                             $collectionClass = is_string($relationConfig['collection']) ? $relationConfig['collection'] : null;

@@ -3,6 +3,7 @@
 namespace Graze\Dal\Hydrator;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Exception\MissingConfigException;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class EntityFieldMappingHydrator implements HydratorInterface
@@ -108,10 +109,12 @@ class EntityFieldMappingHydrator implements HydratorInterface
      * @param object $object
      *
      * @return array
+     * @throws MissingConfigException
      */
     protected function getHydrationFieldMappings($object)
     {
-        $mapping = $this->config->getMapping($this->config->getEntityName($object));
+        $entityName = $this->config->getEntityName($object);
+        $mapping = $this->config->getMapping($entityName);
         $mappings = [];
 
         if (! $mapping) {
@@ -123,6 +126,11 @@ class EntityFieldMappingHydrator implements HydratorInterface
         }
 
         foreach ($mapping['fields'] as $field => $config) {
+
+            if (! array_key_exists('mapsTo', $config)) {
+                throw new MissingConfigException($entityName, 'fields.' . $field . '.mapsTo');
+            }
+
             $mappings[$config['mapsTo']] = $field;
         }
 
@@ -133,10 +141,12 @@ class EntityFieldMappingHydrator implements HydratorInterface
      * @param mixed $object
      *
      * @return array
+     * @throws MissingConfigException
      */
     protected function getExtractionFieldMappings($object)
     {
-        $mapping = $this->config->getMapping($this->config->getEntityName($object));
+        $entityName = $this->config->getEntityName($object);
+        $mapping = $this->config->getMapping($entityName);
         $mappings = [];
 
         if (! $mapping) {
@@ -148,6 +158,11 @@ class EntityFieldMappingHydrator implements HydratorInterface
         }
 
         foreach ($mapping['fields'] as $field => $config) {
+
+            if (! array_key_exists('mapsTo', $config)) {
+                throw new MissingConfigException($entityName, 'fields.' . $field . '.mapsTo');
+            }
+
             $mappings[$field] = $config['mapsTo'];
         }
 
