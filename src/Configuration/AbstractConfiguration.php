@@ -201,7 +201,8 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
      */
     public function getEntityName($entity)
     {
-        return get_class($entity);
+        $inflector = $this->proxyConfiguration->getClassNameInflector();
+        return $inflector->getUserClassName(get_class($entity));
     }
 
     /**
