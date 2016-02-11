@@ -6,6 +6,7 @@ use Graze\Dal\Adapter\Http\Rest\Persister\EntityPersister;
 use Graze\Dal\Configuration\AbstractConfiguration;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\DalManagerInterface;
+use Graze\Dal\Exception\MissingConfigException;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -34,10 +35,16 @@ class Configuration extends AbstractConfiguration
      * @param ConfigurationInterface $config
      *
      * @return string
+     * @throws MissingConfigException
      */
     protected function getRecordName($entityName, ConfigurationInterface $config)
     {
         $mapping = $config->getMapping($entityName);
+
+        if (! array_key_exists('resource', $mapping)) {
+            throw new MissingConfigException($entityName, 'resource');
+        }
+
         return $mapping['resource'];
     }
 

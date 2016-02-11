@@ -6,7 +6,7 @@ use Aura\Sql\ExtendedPdo;
 use Graze\Dal\Adapter\Pdo\Persister\EntityPersister;
 use Graze\Dal\Configuration\AbstractConfiguration;
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\Exception\InvalidMappingException;
+use Graze\Dal\Exception\MissingConfigException;
 use Graze\Dal\Persister\PersisterInterface;
 use Graze\Dal\UnitOfWork\UnitOfWork;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -49,15 +49,14 @@ class Configuration extends AbstractConfiguration implements ConfigurationInterf
      * @param ConfigurationInterface $config
      *
      * @return string
-     * @throws InvalidMappingException
+     * @throws MissingConfigException
      */
     protected function getRecordName($entityName, ConfigurationInterface $config)
     {
         $mapping = $config->getMapping($entityName);
 
         if (! array_key_exists('table', $mapping)) {
-            $message = sprintf('Invalid or missing value for "record" for "%s"', $entityName);
-            throw new InvalidMappingException($message, __METHOD__);
+            throw new MissingConfigException($entityName, 'table');
         }
 
         return $mapping['table'];
