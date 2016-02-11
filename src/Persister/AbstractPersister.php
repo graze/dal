@@ -12,6 +12,7 @@
 namespace Graze\Dal\Persister;
 
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Relationship\ManyToManyInterface;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
@@ -275,6 +276,9 @@ abstract class AbstractPersister implements PersisterInterface
                 $entities = array_key_exists('collection', $relationship) && $relationship['collection'] ? $value : [$value];
                 foreach ($entities as $relatedEntity) {
                     // insert into $relationship['pivot'] ($relationship['localKey'], $relationship['foreignKey']) values ($entity->getId(), $relatedEntity->getId())
+                    if (! $relatedEntity instanceof EntityInterface) {
+                        throw new \InvalidArgumentException('Entity ' . get_class($relatedEntity) . ' must implement Graze\Dal\Entity\EntityInterface');
+                    }
                     $data = [
                         $relationship['localKey'] => $recordId,
                         $relationship['foreignKey'] => $relatedEntity->getId(),
