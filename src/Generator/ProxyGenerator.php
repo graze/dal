@@ -2,6 +2,7 @@
 
 namespace Graze\Dal\Generator;
 
+use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Exception\MissingConfigException;
 use ProxyManager\Configuration;
@@ -16,7 +17,7 @@ class ProxyGenerator implements GeneratorInterface
     /**
      * @var string
      */
-    private $targetDir;
+    protected $targetDir;
 
     /**
      * @param DalManagerInterface $dm
@@ -37,31 +38,39 @@ class ProxyGenerator implements GeneratorInterface
         $adapters = $this->dm->all();
 
         foreach ($adapters as $adapter) {
-            $entityNames = $adapter->getConfiguration()->getEntityNames();
-            $proxyConfig = new Configuration();
-            $proxyConfig->setProxiesTargetDir($this->targetDir);
-            $proxyConfig->setProxiesNamespace('Graze\\Dal');
-            $proxyFactory = $adapter->getConfiguration()->buildProxyFactory($proxyConfig);
+            $this->generateForAdapter($adapter);
+        }
+    }
 
-            foreach ($entityNames as $entityName) {
-                $mapping = $adapter->getConfiguration()->getMapping($entityName);
-                if (array_key_exists('related', $mapping)) {
-                    $related = $mapping['related'];
+    /**
+     * @param \Graze\Dal\Adapter\AdapterInterface $adapter
+     */
+    protected function generateForAdapter(AdapterInterface $adapter)
+    {
+        $entityNames = $adapter->getConfiguration()->getEntityNames();
+        $proxyConfig = new Configuration();
+        $proxyConfig->setProxiesTargetDir($this->targetDir);
+        $proxyConfig->setProxiesNamespace('Graze\\Dal');
+        $proxyFactory = $adapter->getConfiguration()->buildProxyFactory($proxyConfig);
 
-                    foreach ($related as $relationName => $relationConfig) {
+        foreach ($entityNames as $entityName) {
+            $mapping = $adapter->getConfiguration()->getMapping($entityName);
+            if (array_key_exists('related', $mapping)) {
+                $related = $mapping['related'];
 
-                        if (! array_key_exists('entity', $relationConfig)) {
-                            throw new MissingConfigException($entityName, 'related.entity');
-                        }
+                foreach ($related as $relationName => $relationConfig) {
 
-                        $foreignEntityName = $relationConfig['entity'];
-                        if (array_key_exists('collection', $relationConfig) && $relationConfig['collection']) {
-                            $collectionClass = is_string($relationConfig['collection']) ? $relationConfig['collection'] : null;
-                            $proxyFactory->buildCollectionProxy($entityName, $foreignEntityName, function () {}, $relationConfig, $collectionClass);
-                        } else {
-                            $proxyFactory->buildEntityProxy($entityName, $foreignEntityName, function () {
-                            }, $relationConfig);
-                        }
+                    if (! array_key_exists('entity', $relationConfig)) {
+                        throw new MissingConfigException($entityName, 'related.entity');
+                    }
+
+                    $foreignEntityName = $relationConfig['entity'];
+                    if (array_key_exists('collection', $relationConfig) && $relationConfig['collection']) {
+                        $collectionClass = is_string($relationConfig['collection']) ? $relationConfig['collection'] : null;
+                        $proxyFactory->buildCollectionProxy($entityName, $foreignEntityName, function () {}, $relationConfig, $collectionClass);
+                    } else {
+                        $proxyFactory->buildEntityProxy($entityName, $foreignEntityName, function () {
+                        }, $relationConfig);
                     }
                 }
             }
