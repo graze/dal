@@ -203,7 +203,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      *
      * @return ProxyFactory
      */
-    protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
+    public function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
     {
         return new ProxyFactory($this, $unitOfWork, new LazyLoadingGhostFactory($config));
     }
