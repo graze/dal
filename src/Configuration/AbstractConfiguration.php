@@ -65,7 +65,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     /**
      * @var HydratorFactoryInterface
      */
-    private $hydratorFactory;
+    protected $hydratorFactory;
 
     /**
      * @var DalManagerInterface
