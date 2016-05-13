@@ -19,7 +19,7 @@ support for patterns other than data mapper (e.g.
 We're using this in-house to move our application towards a more manageable data
 mapper layer rather than our current active record implementation. This will be
 our interface into persistence across our PHP applications for the foreseeable
-future. Wel will continue to use our active record implementation underneith DAL
+future. We will continue to use our active record implementation underneath DAL
 until we decide to remove it completely, at which point DAL will stay put.
 
 The main interface of DAL mimics the API of Doctrine ORM, with similarly named
