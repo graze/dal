@@ -31,14 +31,14 @@ class CombinationAdapterTest extends \Graze\Dal\Test\OrmAdapterFunctionalTestCas
     {
         switch ($name) {
             case 'PDO':
-                $pdo = new ExtendedPdo('mysql:host=localhost;dbname=dal', 'root', 'password');
+                $pdo = new ExtendedPdo('mysql:host=192.168.99.100;dbname=dal', 'root', 'password');
                 $config = new \Graze\Dal\Adapter\Pdo\Configuration\Configuration($pdo, $this->buildConfig($entity, $name));
                 return new \Graze\Dal\Adapter\Pdo\PdoAdapter($pdo, $config);
             case 'Doctrine':
                 $config = Setup::createYAMLMetadataConfiguration(array(__DIR__.'/../config/'), true);
                 $conn = [
                     'driver' => 'pdo_mysql',
-                    'host' => 'localhost',
+                    'host' => '192.168.99.100',
                     'port' => 3306,
                     'user' => 'root',
                     'password' => 'password',
@@ -52,7 +52,7 @@ class CombinationAdapterTest extends \Graze\Dal\Test\OrmAdapterFunctionalTestCas
                 $capsule = new \Illuminate\Database\Capsule\Manager();
                 $capsule->addConnection([
                     'driver' => 'mysql',
-                    'host' => 'localhost',
+                    'host' => '192.168.99.100',
                     'port' => 3306,
                     'username' => 'root',
                     'password' => 'password',
