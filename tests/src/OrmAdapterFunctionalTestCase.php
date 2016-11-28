@@ -18,7 +18,7 @@ abstract class OrmAdapterFunctionalTestCase extends FunctionalTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->pdo = new ExtendedPdo('mysql:host=localhost;dbname=dal', 'root', 'password');
+        $this->pdo = new ExtendedPdo('mysql:host=192.168.99.100;dbname=dal', 'root', 'password');
 
         $this->setUpDatabase();
     }
