@@ -13,6 +13,9 @@ namespace Graze\Dal\Adapter\EloquentOrm\Persister;
 
 use Graze\Dal\Adapter\ActiveRecord\Persister\AbstractPersister;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class EntityPersister extends AbstractPersister
 {
     /**

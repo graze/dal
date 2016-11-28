@@ -25,6 +25,9 @@ use ProxyManager\Configuration as ProxyConfiguration;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
     const PROXY_NAMESPACE = 'Graze\Dal';

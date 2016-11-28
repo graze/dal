@@ -13,6 +13,9 @@ namespace Graze\Dal\Adapter\ActiveRecord\Persister;
 
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 abstract class AbstractPersister implements PersisterInterface
 {
     protected $entityName;

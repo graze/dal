@@ -15,6 +15,9 @@ use Graze\Dal\Adapter\EloquentOrm\Configuration;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Illuminate\Database\ConnectionInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class EloquentOrmAdapter extends ActiveRecordAdapter
 {
     /**

@@ -7,6 +7,9 @@ use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use LogicException;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class MethodProxyHydrator implements HydratorInterface
 {
     protected $config;

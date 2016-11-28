@@ -11,6 +11,9 @@
  */
 namespace Graze\Dal\Adapter\ActiveRecord\Identity;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class ObjectHashGenerator implements GeneratorInterface
 {
     /**

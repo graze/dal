@@ -9,6 +9,9 @@ use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class ProxyFactory
 {
     protected $config;
