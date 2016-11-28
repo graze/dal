@@ -17,3 +17,10 @@ services:
             - MYSQL_PASSWORD=dev
         volumes:
             - ./tests/sql:/docker-entrypoint-initdb.d
+
+    composer:
+        image: graze/composer
+        volumes:
+            - .:/usr/src/app
+            - ~/.composer:/home/composer/.composer
+            - ~/.ssh/id_rsa:/home/composer/.ssh/id_rsa:ro

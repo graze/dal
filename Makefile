@@ -21,11 +21,7 @@ docs:
 	@php sami.phar update sami.php
 
 install:
-	@composer install
-
-.PHONY: db
-db:
-	@mysql -uroot -ppassword
+	@docker-compose run --rm dal composer install
 
 .PHONYL: db-install
 db-install:
