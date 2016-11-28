@@ -19,7 +19,7 @@ class GenerateEntitiesCommand extends Command
         $this->setName('generate:entities')
             ->setDescription('Use provided config to generate entities.')
             ->addArgument('config', InputArgument::REQUIRED, 'The YAML config file to generate from.')
-            ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the entities (e.g. Acme\Entity).')
+            ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the entities (e.g. Acme\\\\Entity).')
             ->addArgument('directory', InputArgument::REQUIRED, 'The source directory for the generated entities')
             ->addOption('no-getters', null, InputOption::VALUE_NONE, 'Do not generate getter methods.')
             ->addOption('no-setters', null, InputOption::VALUE_NONE, 'Do not generate setter methods.');
