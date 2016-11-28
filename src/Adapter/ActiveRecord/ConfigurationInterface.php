@@ -17,6 +17,9 @@ use Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
 use Graze\Dal\NamingStrategy\NamingStrategyInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 interface ConfigurationInterface
 {
     /**

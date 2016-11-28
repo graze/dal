@@ -20,6 +20,9 @@ use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 use Zend\Stdlib\Hydrator\NamingStrategyEnabledInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class HydratorFactory
 {
     protected $config;

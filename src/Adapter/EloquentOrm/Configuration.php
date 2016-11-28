@@ -17,6 +17,9 @@ use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use Graze\Dal\Adapter\EloquentOrm\Mapper\EntityMapper;
 use Graze\Dal\Adapter\EloquentOrm\Persister\EntityPersister;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class Configuration extends AbstractConfiguration
 {
     protected $hydratorFactory;

@@ -5,6 +5,9 @@ use Graze\Dal\Exception\InvalidEntityException;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\ArraySerializable;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class AttributeHydrator extends ArraySerializable
 {
     protected $fromData;

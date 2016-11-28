@@ -17,6 +17,9 @@ use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
 use Graze\Dal\Adapter\Orm\OrmAdapterInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 abstract class ActiveRecordAdapter implements OrmAdapterInterface
 {
     protected $config;

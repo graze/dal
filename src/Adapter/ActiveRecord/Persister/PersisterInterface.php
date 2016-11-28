@@ -11,6 +11,9 @@
  */
 namespace Graze\Dal\Adapter\ActiveRecord\Persister;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 interface PersisterInterface
 {
     /**

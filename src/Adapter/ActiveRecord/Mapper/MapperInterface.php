@@ -11,6 +11,9 @@
  */
 namespace Graze\Dal\Adapter\ActiveRecord\Mapper;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 interface MapperInterface
 {
     /**

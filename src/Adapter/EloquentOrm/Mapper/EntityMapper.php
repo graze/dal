@@ -16,6 +16,9 @@ use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class EntityMapper extends AbstractMapper
 {
     protected $factory;

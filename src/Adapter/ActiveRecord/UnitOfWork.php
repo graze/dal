@@ -14,6 +14,9 @@ namespace Graze\Dal\Adapter\ActiveRecord;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
 use SplObjectStorage;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class UnitOfWork
 {
     const POLICY_IMPLICIT = 0;
