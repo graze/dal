@@ -3,28 +3,19 @@
 test: test-unit test-functional
 
 test-coverage:
-	@./vendor/bin/phpunit --coverage-text --coverage-html ./tests/report
+	@docker-compose run --rm dal vendor/bin/phpunit --coverage-text --coverage-html ./tests/report
 
 test-unit:
-	@./vendor/bin/phpunit --testsuite unit
+	@docker-compose run --rm dal vendor/bin/phpunit --testsuite unit
 
 test-unit-coverage:
-	@./vendor/bin/phpunit --testsuite unit --coverage-text --coverage-html ./tests/report
+	@docker-compose run --rm dal vendor/bin/phpunit --testsuite unit --coverage-text --coverage-html ./tests/report
 
 test-functional:
-	@./vendor/bin/phpunit --testsuite functional
+	@docker-compose run --rm dal vendor/bin/phpunit --testsuite functional
 
 test-functional-coverage:
-	@./vendor/bin/phpunit --testsuite functional --coverage-text --coverage-html ./tests/report
-
-docs:
-	@php sami.phar update sami.php
+	@docker-compose run --rm dal vendor/bin/phpunit --testsuite functional --coverage-text --coverage-html ./tests/report
 
 install:
 	@docker-compose run --rm dal composer install
-
-.PHONYL: db-install
-db-install:
-	@MYSQL_PWD=password mysql -uroot -e "DROP DATABASE IF EXISTS dal"
-	@MYSQL_PWD=password mysql -uroot -e "CREATE DATABASE dal"
-	@cat dev/sql/*.sql | MYSQL_PWD=password mysql -uroot dal
