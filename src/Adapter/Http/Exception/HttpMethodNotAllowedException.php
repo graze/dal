@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\Dal\Adapter\Http\Rest\Exception;
+namespace Graze\Dal\Adapter\Http\Exception;
 
 use Exception;
 
