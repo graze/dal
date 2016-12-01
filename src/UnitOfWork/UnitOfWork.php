@@ -25,7 +25,7 @@ class UnitOfWork implements UnitOfWorkInterface
     protected $adapter;
     protected $config;
     protected $mappers = [];
-    protected $persisted;
+    protected $persisted = [];
     protected $persisters = [];
     protected $records = [];
     protected $trackingPolicy;
@@ -43,8 +43,6 @@ class UnitOfWork implements UnitOfWorkInterface
         $this->adapter = $adapter;
         $this->config = $config;
         $this->trackingPolicy = (integer) $trackingPolicy;
-
-        $this->persisted = new SplObjectStorage();
     }
 
     /**
@@ -57,13 +55,14 @@ class UnitOfWork implements UnitOfWorkInterface
                 $this->getPersisterByEntity($persisted)->save($persisted);
 
                 if ($entity) {
-                    $this->persisted->detach($persisted);
+                    $oid = spl_object_hash($entity);
+                    unset($this->persisted[$oid]);
                     return;
                 }
             }
         }
 
-        $this->persisted->removeAll($this->persisted);
+        $this->persisted = [];
     }
 
     /**
@@ -71,7 +70,8 @@ class UnitOfWork implements UnitOfWorkInterface
      */
     public function persist($entity)
     {
-        $this->persisted->attach($entity);
+        $oid = spl_object_hash($entity);
+        $this->persisted[$oid] = $entity;
     }
 
     /**
