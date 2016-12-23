@@ -14,9 +14,11 @@ foreach ($autoloadFiles as $autoloadFile) {
 
 use Graze\Dal\Console\Command\GenerateEntitiesCommand;
 use Graze\Dal\Console\Command\GenerateRecordsCommand;
+use Graze\Dal\Console\Command\GenerateRepositoriesCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 $application->add(new GenerateEntitiesCommand());
 $application->add(new GenerateRecordsCommand());
+$application->add(new GenerateRepositoriesCommand());
 $application->run();
