@@ -39,6 +39,6 @@ class GenerateRepositoriesCommand extends Command
         $directory = $input->getArgument('directory');
         $directory = rtrim($directory, '/');
 
-        $this->persistClasses($repositories, $rootNamespace, $directory, $output);
+        $this->persistClasses($repositories, $rootNamespace, $directory, $output, false);
     }
 }

@@ -11,10 +11,14 @@ trait ClassPersisterTrait
      * @param string $rootNamespace
      * @param string $directory
      * @param OutputInterface $output
+     * @param bool $overwrite
      */
-    public function persistClasses(array $classes, $rootNamespace, $directory, OutputInterface $output)
+    public function persistClasses(array $classes, $rootNamespace, $directory, OutputInterface $output, $overwrite = true)
     {
         foreach ($classes as $name => $class) {
+            if (! $overwrite && class_exists($name)) {
+                continue;
+            }
             $prefix = '<info>Generated</info>';
             if (class_exists($name)) {
                 $prefix = '<fg=yellow>Updated</>';
