@@ -2,11 +2,7 @@
 
 namespace Graze\Dal\Generator;
 
-use Zend\Code\Generator\ClassGenerator;
-use Zend\Code\Generator\FileGenerator;
-use Zend\Code\Generator\InterfaceGenerator;
-
-class RepositoryGenerator implements GeneratorInterface
+class RepositoryGenerator extends AbstractClassGenerator implements GeneratorInterface
 {
     /**
      * @var array
@@ -29,9 +25,9 @@ class RepositoryGenerator implements GeneratorInterface
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function generate()
+    protected function buildClassGenerators()
     {
         $repositories = [];
 
@@ -40,23 +36,15 @@ class RepositoryGenerator implements GeneratorInterface
                 continue;
             }
 
-            $repository = new ClassGenerator();
-            $repository->setName($config['repository']);
+            $repository = $this->getClassGenerator($config['repository']);
             $repository->setExtendedClass('\\Graze\Dal\Repository\EntityRepository');
 
             if ($this->generateInterfaces) {
-                $interfaceName = $config['repository'] . 'Interface';
-                $repositoryInterface = new InterfaceGenerator();
-                $repositoryInterface->setName($interfaceName);
-
-                $file = FileGenerator::fromArray(['classes' => [$repositoryInterface]]);
-                $repositories[$interfaceName] = rtrim(preg_replace('/\n(\s*\n){2,}/', "\n\n", $file->generate()), "\n") . "\n";
-
-                $repository->setImplementedInterfaces(['\\' . $interfaceName]);
+                $interfaceGenerator = $this->buildInterfaceGeneratorFromClassGenerator($repository);
+                $repositories[$interfaceGenerator->getName()] = $interfaceGenerator;
             }
 
-            $file = FileGenerator::fromArray(['classes' => [$repository]]);
-            $repositories[$config['repository']] = rtrim(preg_replace('/\n(\s*\n){2,}/', "\n\n", $file->generate()), "\n") . "\n";
+            $repositories[$config['repository']] = $repository;
         }
 
         return $repositories;
