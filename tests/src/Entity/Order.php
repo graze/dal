@@ -2,7 +2,7 @@
 
 namespace Graze\Dal\Test\Entity;
 
-class Order implements \Graze\Dal\Entity\EntityInterface
+class Order implements \Graze\Dal\Test\Entity\OrderInterface
 {
 
     private $id = null;

@@ -8,6 +8,7 @@ use Zend\Code\Generator\DocBlock\Tag\ParamTag;
 use Zend\Code\Generator\DocBlock\Tag\ReturnTag;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\FileGenerator;
+use Zend\Code\Generator\InterfaceGenerator;
 use Zend\Code\Generator\MethodGenerator;
 use Zend\Code\Generator\PropertyGenerator;
 
@@ -29,15 +30,22 @@ class EntityGenerator
     private $setters;
 
     /**
+     * @var bool
+     */
+    private $interfaces;
+
+    /**
      * @param array $config
      * @param bool $getters
      * @param bool $setters
+     * @param bool $interfaces
      */
-    public function __construct(array $config, $getters = true, $setters = true)
+    public function __construct(array $config, $getters = true, $setters = true, $interfaces = false)
     {
         $this->config = $config;
         $this->getters = $getters;
         $this->setters = $setters;
+        $this->interfaces = $interfaces;
     }
 
     /**
@@ -109,6 +117,21 @@ class EntityGenerator
                         );
                     }
                 }
+            }
+
+            if ($this->interfaces) {
+                $interfaceName = $name . 'Interface';
+                $entityInterface = new InterfaceGenerator();
+                $entityInterface->setName($interfaceName);
+
+                foreach ($entity->getMethods() as $method) {
+                    $entityInterface->addMethodFromGenerator(clone $method);
+                }
+
+                $file = FileGenerator::fromArray(['classes' => [$entityInterface]]);
+                $entities[$interfaceName] = rtrim(preg_replace('/\n(\s*\n){2,}/', "\n\n", $file->generate()), "\n") . "\n";
+
+                $entity->setImplementedInterfaces(['\\' . $interfaceName]);
             }
 
             $file = FileGenerator::fromArray(['classes' => [$entity]]);

@@ -22,7 +22,8 @@ class GenerateEntitiesCommand extends Command
             ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the entities (e.g. Acme\\\\Entity).')
             ->addArgument('directory', InputArgument::REQUIRED, 'The source directory for the generated entities')
             ->addOption('no-getters', null, InputOption::VALUE_NONE, 'Do not generate getter methods.')
-            ->addOption('no-setters', null, InputOption::VALUE_NONE, 'Do not generate setter methods.');
+            ->addOption('no-setters', null, InputOption::VALUE_NONE, 'Do not generate setter methods.')
+            ->addOption('interfaces', null, InputOption::VALUE_NONE, 'Generate an interface for each entity.');
     }
 
     /**
@@ -35,8 +36,9 @@ class GenerateEntitiesCommand extends Command
         $config = (new Parser())->parse(file_get_contents($configPath));
         $getters = ! $input->getOption('no-getters');
         $setters = ! $input->getOption('no-setters');
+        $interfaces = $input->getOption('interfaces');
 
-        $generator = new EntityGenerator($config, $getters, $setters);
+        $generator = new EntityGenerator($config, $getters, $setters, $interfaces);
         $entities = $generator->generate();
 
         $rootNamespace = $input->getArgument('root-namespace');
