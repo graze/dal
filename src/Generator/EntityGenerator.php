@@ -68,7 +68,10 @@ class EntityGenerator
                     $this->addProperty($entity, $property);
 
                     if ($this->setters && $property !== 'id') {
-                        $this->addSetter($entity, $property, $type, $cast);
+                        $readonly = array_key_exists('readonly', $fieldConfig) ? $fieldConfig['readonly'] : false;
+                        if (! $readonly) {
+                            $this->addSetter($entity, $property, $type, $cast);
+                        }
                     }
 
                     if ($this->getters) {
