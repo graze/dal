@@ -131,7 +131,8 @@ class EntityGenerator
                 $file = FileGenerator::fromArray(['classes' => [$entityInterface]]);
                 $entities[$interfaceName] = rtrim(preg_replace('/\n(\s*\n){2,}/', "\n\n", $file->generate()), "\n") . "\n";
 
-                $entity->setImplementedInterfaces(['\\' . $interfaceName]);
+                $implementedInterfaces = $entity->getImplementedInterfaces();
+                $entity->setImplementedInterfaces(array_merge($implementedInterfaces, ['\\' . $interfaceName]));
             }
 
             $file = FileGenerator::fromArray(['classes' => [$entity]]);

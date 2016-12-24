@@ -2,7 +2,7 @@
 
 namespace Graze\Dal\Test\Entity;
 
-class Product implements \Graze\Dal\Test\Entity\ProductInterface
+class Product implements \Graze\Dal\Entity\EntityInterface, \Graze\Dal\Test\Entity\ProductInterface
 {
 
     private $id = null;
