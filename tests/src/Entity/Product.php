@@ -2,7 +2,7 @@
 
 namespace Graze\Dal\Test\Entity;
 
-class Product implements \Graze\Dal\Entity\EntityInterface
+class Product implements \Graze\Dal\Test\Entity\ProductInterface
 {
 
     private $id = null;
@@ -13,12 +13,12 @@ class Product implements \Graze\Dal\Entity\EntityInterface
 
     /**
      * @param string $name
-     * @param string $price
+     * @param float $price
      */
     public function __construct($name, $price)
     {
         $this->name = (string) $name;
-        $this->price = $price;
+        $this->price = (float) $price;
     }
 
     /**
@@ -46,19 +46,19 @@ class Product implements \Graze\Dal\Entity\EntityInterface
     }
 
     /**
-     * @param string $price
+     * @param float $price
      */
     public function setPrice($price)
     {
-        $this->price = $price;
+        $this->price = (float) $price;
     }
 
     /**
-     * @return string
+     * @return float
      */
     public function getPrice()
     {
-        return $this->price;
+        return (float) $this->price;
     }
 
 }
