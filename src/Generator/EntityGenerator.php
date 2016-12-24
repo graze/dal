@@ -5,14 +5,11 @@ namespace Graze\Dal\Generator;
 use Doctrine\Common\Util\Inflector;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlock\Tag\ParamTag;
-use Zend\Code\Generator\DocBlock\Tag\ReturnTag;
 use Zend\Code\Generator\DocBlockGenerator;
-use Zend\Code\Generator\FileGenerator;
-use Zend\Code\Generator\InterfaceGenerator;
 use Zend\Code\Generator\MethodGenerator;
 use Zend\Code\Generator\PropertyGenerator;
 
-class EntityGenerator
+class EntityGenerator extends AbstractClassGenerator implements GeneratorInterface
 {
     /**
      * @var array
@@ -46,146 +43,6 @@ class EntityGenerator
         $this->getters = $getters;
         $this->setters = $setters;
         $this->interfaces = $interfaces;
-    }
-
-    /**
-     * @return array
-     */
-    public function generate()
-    {
-        $entities = [];
-
-        foreach ($this->config as $name => $config) {
-            if (array_key_exists('generate', $config) && ! $config['generate']) {
-                continue;
-            }
-            $entity = $this->getClassGenerator($name);
-
-            $this->addConstructor($entity, $config);
-
-            if (array_key_exists('fields', $config)) {
-                foreach ($config['fields'] as $property => $fieldConfig) {
-                    $cast = ' ';
-                    $type = 'string';
-
-                    if (array_key_exists('type', $fieldConfig)) {
-                        $type = $fieldConfig['type'];
-                        $cast = ' ('. $type . ') ';
-                    }
-
-                    $this->addProperty($entity, $property);
-
-                    if ($this->setters && $property !== 'id') {
-                        $readonly = array_key_exists('readonly', $fieldConfig) ? $fieldConfig['readonly'] : false;
-                        if (! $readonly) {
-                            $this->addSetter($entity, $property, $type, $cast);
-                        }
-                    }
-
-                    if ($this->getters) {
-                        $this->addGetter($entity, $property, $type, $cast);
-                    }
-                }
-            }
-
-            if (array_key_exists('related', $config)) {
-                foreach ($config['related'] as $relation => $relationConfig) {
-                    $this->addProperty($entity, $relation);
-                    $type = $this->getRelationType($relationConfig);
-
-                    if ($this->getters) {
-                        $this->addGetter($entity, $relation, $type);
-                    }
-
-                    if ($this->setters) {
-                        $this->addSetter($entity, $relation, $type);
-                    }
-
-                    if (array_key_exists('collection', $relationConfig) && $relationConfig['collection']) {
-                        $type = '\\' . $relationConfig['entity'];
-                        $addMethodName = 'add' . ucfirst(Inflector::singularize($relation));
-                        $entity->addMethod(
-                            $addMethodName,
-                            [['name' => $relation, 'type' => $type]],
-                            MethodGenerator::FLAG_PUBLIC,
-                            '$this->' . $relation . '->add($' . $relation . ');',
-                            DocBlockGenerator::fromArray([
-                                'tags' => [
-                                    new ParamTag($relation, $type)
-                                ]
-                            ])
-                        );
-                    }
-                }
-            }
-
-            if ($this->interfaces) {
-                $interfaceName = $name . 'Interface';
-                $entityInterface = new InterfaceGenerator();
-                $entityInterface->setName($interfaceName);
-
-                foreach ($entity->getMethods() as $method) {
-                    $entityInterface->addMethodFromGenerator(clone $method);
-                }
-
-                $file = FileGenerator::fromArray(['classes' => [$entityInterface]]);
-                $entities[$interfaceName] = rtrim(preg_replace('/\n(\s*\n){2,}/', "\n\n", $file->generate()), "\n") . "\n";
-
-                $implementedInterfaces = $entity->getImplementedInterfaces();
-                $entity->setImplementedInterfaces(array_merge($implementedInterfaces, ['\\' . $interfaceName]));
-            }
-
-            $file = FileGenerator::fromArray(['classes' => [$entity]]);
-            $entities[$name] = rtrim(preg_replace('/\n(\s*\n){2,}/', "\n\n", $file->generate()), "\n") . "\n";
-        }
-
-        return $entities;
-    }
-
-    /**
-     * @param ClassGenerator $entity
-     * @param string $property
-     * @param string $type
-     * @param string $cast
-     * @throws \Zend\Code\Generator\Exception\InvalidArgumentException
-     */
-    private function addGetter(ClassGenerator $entity, $property, $type, $cast = ' ')
-    {
-        $methodName = 'get' . ucfirst($property);
-        $entity->addMethod(
-            $methodName,
-            [],
-            MethodGenerator::FLAG_PUBLIC,
-            'return' . $cast . '$this->' . $property . ';',
-            DocBlockGenerator::fromArray([
-                'tags' => [
-                    new ReturnTag(['datatype' => $type])
-                ]
-            ])
-        );
-    }
-
-    /**
-     * @param ClassGenerator $entity
-     * @param string $property
-     * @param string $type
-     * @param string $cast
-     * @throws \Zend\Code\Generator\Exception\InvalidArgumentException
-     */
-    private function addSetter(ClassGenerator $entity, $property, $type, $cast = ' ')
-    {
-        $methodName = 'set' . ucfirst($property);
-        $entity->addMethod(
-            $methodName,
-            [['name' => $property, 'type' => $type]],
-            MethodGenerator::FLAG_PUBLIC,
-            '$this->' . $property . ' =' . $cast . '$' . $property . ';',
-            DocBlockGenerator::fromArray([
-                'tags' => [
-                    new ParamTag($property, $type)
-                ]
-            ])
-        );
     }
 
     /**
@@ -336,16 +193,85 @@ class EntityGenerator
     }
 
     /**
-     * @param string $name
-     *
-     * @return ClassGenerator
+     * @return array
      */
-    private function getClassGenerator($name)
+    protected function buildClassGenerators()
     {
-        $generator = new ClassGenerator();
-        $generator->setName($name);
-        $generator->setImplementedInterfaces(['\\Graze\Dal\Entity\EntityInterface']);
+        $entities = [];
 
-        return $generator;
+        foreach ($this->config as $name => $config) {
+            if (array_key_exists('generate', $config) && ! $config['generate']) {
+                continue;
+            }
+            $entity = $this->getClassGenerator($name);
+            $entity->setImplementedInterfaces(['\\Graze\Dal\Entity\EntityInterface']);
+
+            $this->addConstructor($entity, $config);
+
+            if (array_key_exists('fields', $config)) {
+                foreach ($config['fields'] as $property => $fieldConfig) {
+                    $cast = ' ';
+                    $type = 'string';
+
+                    if (array_key_exists('type', $fieldConfig)) {
+                        $type = $fieldConfig['type'];
+                        $cast = ' ('. $type . ') ';
+                    }
+
+                    $this->addProperty($entity, $property);
+
+                    if ($this->setters && $property !== 'id') {
+                        $readonly = array_key_exists('readonly', $fieldConfig) ? $fieldConfig['readonly'] : false;
+                        if (! $readonly) {
+                            $this->addSetter($entity, $property, $type, $cast);
+                        }
+                    }
+
+                    if ($this->getters) {
+                        $this->addGetter($entity, $property, $type, $cast);
+                    }
+                }
+            }
+
+            if (array_key_exists('related', $config)) {
+                foreach ($config['related'] as $relation => $relationConfig) {
+                    $this->addProperty($entity, $relation);
+                    $type = $this->getRelationType($relationConfig);
+
+                    if ($this->getters) {
+                        $this->addGetter($entity, $relation, $type);
+                    }
+
+                    if ($this->setters) {
+                        $this->addSetter($entity, $relation, $type);
+                    }
+
+                    if (array_key_exists('collection', $relationConfig) && $relationConfig['collection']) {
+                        $type = '\\' . $relationConfig['entity'];
+                        $addMethodName = 'add' . ucfirst(Inflector::singularize($relation));
+                        $entity->addMethod(
+                            $addMethodName,
+                            [['name' => $relation, 'type' => $type]],
+                            MethodGenerator::FLAG_PUBLIC,
+                            '$this->' . $relation . '->add($' . $relation . ');',
+                            DocBlockGenerator::fromArray([
+                                'tags' => [
+                                    new ParamTag($relation, $type)
+                                ]
+                            ])
+                        );
+                    }
+                }
+            }
+
+            if ($this->interfaces) {
+                $interfaceGenerator = $this->buildInterfaceGeneratorFromClassGenerator($entity);
+                $entities[$interfaceGenerator->getNamespaceName() . '\\' . $interfaceGenerator->getName()] = $interfaceGenerator;
+            }
+
+            $entities[$name] = $entity;
+        }
+
+        return $entities;
     }
 }
