@@ -16,11 +16,12 @@ use Graze\Dal\Console\Command\GenerateCommand;
 use Graze\Dal\Console\Command\GenerateEntitiesCommand;
 use Graze\Dal\Console\Command\GenerateRecordsCommand;
 use Graze\Dal\Console\Command\GenerateRepositoriesCommand;
+use Graze\Dal\Console\Persister\ClassPersister;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 $application->add(new GenerateCommand());
-$application->add(new GenerateEntitiesCommand());
-$application->add(new GenerateRecordsCommand());
-$application->add(new GenerateRepositoriesCommand());
+$application->add(new GenerateEntitiesCommand(new ClassPersister()));
+$application->add(new GenerateRecordsCommand(new ClassPersister()));
+$application->add(new GenerateRepositoriesCommand(new ClassPersister()));
 $application->run();

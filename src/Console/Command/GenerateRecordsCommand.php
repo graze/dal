@@ -3,6 +3,7 @@
 namespace Graze\Dal\Console\Command;
 
 use Graze\Dal\Adapter\GeneratableInterface;
+use Graze\Dal\Console\Persister\ClassPersister;
 use Graze\Dal\Generator\GeneratorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -13,7 +14,20 @@ use Symfony\Component\Yaml\Parser;
 
 class GenerateRecordsCommand extends Command
 {
-    use ClassPersisterTrait;
+    /**
+     * @var ClassPersister
+     */
+    private $classPersister;
+
+    /**
+     * @param ClassPersister $classPersister
+     * @param string $name
+     */
+    public function __construct(ClassPersister $classPersister, $name = null)
+    {
+        parent::__construct($name);
+        $this->classPersister = $classPersister;
+    }
 
     protected function configure()
     {
@@ -30,6 +44,8 @@ class GenerateRecordsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->classPersister->setOutput($output);
+
         $configPath = $input->getArgument('config');
         $config = (new Parser())->parse(file_get_contents($configPath));
 
@@ -60,6 +76,6 @@ class GenerateRecordsCommand extends Command
         $directory = $input->getArgument('directory');
         $directory = rtrim($directory, '/');
 
-        $this->persistClasses($records, $rootNamespace, $directory, $output);
+        $this->classPersister->persist($records, $rootNamespace, $directory);
     }
 }
