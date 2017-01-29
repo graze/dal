@@ -17,7 +17,7 @@ class DoctrineEloquentAdapterTest extends \Graze\Dal\Test\OrmAdapterFunctionalTe
         $capsule = new \Illuminate\Database\Capsule\Manager();
         $capsule->addConnection([
             'driver' => 'mysql',
-            'host' => '192.168.99.100',
+            'host' => 'db',
             'port' => 3306,
             'username' => 'root',
             'password' => 'password',
@@ -31,7 +31,7 @@ class DoctrineEloquentAdapterTest extends \Graze\Dal\Test\OrmAdapterFunctionalTe
 
         $conn = [
             'driver' => 'pdo_mysql',
-            'host' => '192.168.99.100',
+            'host' => 'db',
             'port' => 3306,
             'user' => 'root',
             'password' => 'password',
