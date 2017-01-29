@@ -13,7 +13,7 @@ test-unit-coverage:
 
 test-functional:
 	docker-compose up -d db
-	docker-compose run --rm dal build/db.sh db 3306
+	docker-compose run --rm dal build/db.sh dal_db 3306
 	@docker-compose run --rm dal vendor/bin/phpunit --testsuite functional
 
 test-functional-coverage:
