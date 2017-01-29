@@ -76,7 +76,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
         $config = new Configuration(['foo' => [
             'record' => 'Foo',
-            'repository' => 'Graze\Dal\Test\Repository'
+            'repository' => 'Graze\Dal\Test\Repository\ActiveRecordRepository'
         ]]);
 
         $repository = $config->buildRepository('foo', $adapter);
