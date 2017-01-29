@@ -20,7 +20,7 @@ class GenerateRecordsCommand extends Command
         $this->setName('generate:records')
             ->setDescription('Use provided config to generate records.')
             ->addArgument('config', InputArgument::REQUIRED, 'The YAML config file to generate from.')
-            ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the entities (e.g. Acme\\\\Entity).')
+            ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the entities (e.g. Acme\\\\Dal).')
             ->addArgument('directory', InputArgument::REQUIRED, 'The source directory for the generated entities');
     }
 

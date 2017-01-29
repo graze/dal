@@ -19,7 +19,7 @@ class GenerateRepositoriesCommand extends Command
         $this->setName('generate:repositories')
             ->setDescription('Use provided config to generate repositories.')
             ->addArgument('config', InputArgument::REQUIRED, 'The YAML config file to generate from.')
-            ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the repositories (e.g. Acme\\\\Entity).')
+            ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the repositories (e.g. Acme\\\\Dal).')
             ->addArgument('directory', InputArgument::REQUIRED, 'The source directory for the generated repositories')
             ->addOption('interfaces', null, InputOption::VALUE_NONE, 'Generate an interface for each repository.');
     }
