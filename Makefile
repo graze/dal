@@ -12,9 +12,13 @@ test-unit-coverage:
 	@docker-compose run --rm dal vendor/bin/phpunit --testsuite unit --coverage-text --coverage-html ./tests/report
 
 test-functional:
+	docker-compose up -d db
+	docker-compose run --rm dal build/db.sh db 3306
 	@docker-compose run --rm dal vendor/bin/phpunit --testsuite functional
 
 test-functional-coverage:
+	docker-compose up -d db
+	docker-compose run --rm dal build/db.sh dal_db 3306
 	@docker-compose run --rm dal vendor/bin/phpunit --testsuite functional --coverage-text --coverage-html ./tests/report
 
 install:
