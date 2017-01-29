@@ -2,6 +2,8 @@
 
 namespace Graze\Dal\Console\Command;
 
+use Graze\Dal\Adapter\GeneratableInterface;
+use Graze\Dal\Generator\GeneratorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,7 +20,6 @@ class GenerateRecordsCommand extends Command
         $this->setName('generate:records')
             ->setDescription('Use provided config to generate records.')
             ->addArgument('config', InputArgument::REQUIRED, 'The YAML config file to generate from.')
-            ->addArgument('adapter', InputArgument::REQUIRED, 'The name of the adapter to generate for (DoctrineOrm, EloquentOrm).')
             ->addArgument('root-namespace', InputArgument::REQUIRED, 'The root namespace for the entities (e.g. Acme\\\\Entity).')
             ->addArgument('directory', InputArgument::REQUIRED, 'The source directory for the generated entities');
     }
@@ -32,15 +33,27 @@ class GenerateRecordsCommand extends Command
         $configPath = $input->getArgument('config');
         $config = (new Parser())->parse(file_get_contents($configPath));
 
-        $adapter = $input->getArgument('adapter');
+        $records = [];
 
-        $reflectionClass = new \ReflectionClass($adapter);
-        if (! $reflectionClass->implementsInterface('\Graze\Dal\Adapter\GeneratableInterface')) {
-            throw new InvalidArgumentException('Adapter must implement \Graze\Dal\Adapter\GeneratableInterface.');
+        foreach ($config as $entityName => $entityConfig) {
+            if (! array_key_exists('adapter', $entityConfig)) {
+                throw new \InvalidArgumentException(
+                    $entityName . " Missing config field 'adapter' required for record generation"
+                );
+            }
+
+            /** @var GeneratableInterface $adapterName */
+            $adapterName = $entityConfig['adapter'];
+            $reflectionClass = new \ReflectionClass($adapterName);
+
+            if (! $reflectionClass->implementsInterface('\Graze\Dal\Adapter\GeneratableInterface')) {
+                throw new InvalidArgumentException('Adapter must implement \Graze\Dal\Adapter\GeneratableInterface.');
+            }
+
+            /** @var GeneratorInterface $generator */
+            $generator = $adapterName::buildRecordGenerator([$entityName => $entityConfig]);
+            $records += $generator->generate();
         }
-
-        $generator = $adapter::buildRecordGenerator($config);
-        $records = $generator->generate();
 
         $rootNamespace = $input->getArgument('root-namespace');
         $rootNamespace = rtrim($rootNamespace, '\\') . '\\';

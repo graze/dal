@@ -1,6 +1,7 @@
 ---
 Graze\Dal\Test\Entity\Order:
     record: Graze\Dal\Test\EloquentOrm\Order
+    adapter: Graze\Dal\Adapter\Orm\EloquentOrmAdapter
     table: order
     timestamps: false
     fields:
@@ -22,6 +23,7 @@ Graze\Dal\Test\Entity\Order:
 
 Graze\Dal\Test\Entity\Product:
     record: Graze\Dal\Test\EloquentOrm\Product
+    adapter: Graze\Dal\Adapter\Orm\EloquentOrmAdapter
     table: product
     timestamps: false
     fields:
