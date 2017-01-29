@@ -24,7 +24,7 @@ class Configuration extends AbstractConfiguration
     /**
      * @var HydratorFactoryInterface
      */
-    private $hydratorFactory;
+    protected $hydratorFactory;
 
     /**
      * {@inheritdoc}
