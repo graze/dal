@@ -204,6 +204,9 @@ class EntityGenerator extends AbstractClassGenerator implements GeneratorInterfa
                 continue;
             }
             $entity = $this->getClassGenerator($name);
+            $entity->setDocBlock(DocBlockGenerator::fromArray([
+                'longdescription' => 'This is a generated entity that is managed by DAL, manual changes to this entity will be lost if the generate command is ran again. Changes should be made to the config that is managing this entity and the generate command ran.'
+            ]));
             $entity->setImplementedInterfaces(['\\Graze\Dal\Entity\EntityInterface']);
 
             $this->addConstructor($entity, $config);

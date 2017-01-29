@@ -4,6 +4,7 @@ namespace Graze\Dal\Adapter\Orm\EloquentOrm\Generator;
 
 use Graze\Dal\Generator\GeneratorInterface;
 use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Code\Generator\PropertyGenerator;
 
@@ -30,6 +31,9 @@ class RecordGenerator implements GeneratorInterface
             $recordName = $config['record'];
 
             $record = new ClassGenerator($recordName);
+            $record->setDocBlock(DocBlockGenerator::fromArray([
+                'longdescription' => 'This is a generated record that is managed by DAL, manual changes to this record will be lost if the generate command is ran again. Changes should be made to the config that is managing this record and the generate command ran.'
+            ]));
             $record->setExtendedClass('\\Illuminate\\Database\\Eloquent\\Model');
 
             $record->addProperty('table', $config['table']);
