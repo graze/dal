@@ -18,4 +18,4 @@ test-functional-coverage:
 	@docker-compose run --rm dal vendor/bin/phpunit --testsuite functional --coverage-text --coverage-html ./tests/report
 
 install:
-	@docker-compose run --rm dal composer install
+	@docker-compose run --rm composer install
