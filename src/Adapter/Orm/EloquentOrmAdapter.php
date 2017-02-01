@@ -112,7 +112,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
 
     /**
      * @param ConnectionInterface $connection
-     * @param $configPath
+     * @param string $configPath
      *
      * @return static
      * @throws \Symfony\Component\Yaml\Exception\ParseException
