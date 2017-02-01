@@ -53,6 +53,11 @@ abstract class AbstractMapper implements MapperInterface
     private $entityName;
 
     /**
+     * @var ConfigurationInterface
+     */
+    protected $config;
+
+    /**
      * @param string $entityName
      * @param string $recordName
      * @param HydratorFactoryInterface $factory
