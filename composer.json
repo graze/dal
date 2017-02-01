@@ -67,6 +67,7 @@
     },
     "require": {
         "php": ">=5.5.0",
+        "graze/standards": "dev-master",
         "doctrine/common": "^2.5",
         "doctrine/inflector": "^1.1",
         "ocramius/generated-hydrator": "^1.2",
@@ -80,7 +81,7 @@
         "mockery/mockery": "^0.9.4",
         "phpunit/phpunit": "~4.0",
         "doctrine/orm": "^2.5",
-        "illuminate/database": "5.2",
+        "illuminate/database": "5.2.*",
         "symfony/var-dumper": "^2.6",
         "aura/sql": "^2.4",
         "guzzlehttp/guzzle": "^6.1",
