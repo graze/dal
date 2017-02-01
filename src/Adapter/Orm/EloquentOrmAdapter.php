@@ -133,7 +133,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
      */
     public static function createFromYaml(ConnectionInterface $connection, array $yamlPaths, $cacheFile = null)
     {
-        if ($cacheFile && file_exists($cacheFile)) {
+        if ($cacheFile !== null && file_exists($cacheFile)) {
             return static::createFromCache($connection, $cacheFile);
         }
 
@@ -144,7 +144,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
             $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
         }
 
-        if ($cacheFile) {
+        if ($cacheFile !== null) {
             file_put_contents($cacheFile, json_encode($config));
         }
 
