@@ -19,10 +19,13 @@ use Zend\Code\Generator\PropertyGenerator;
 
 class RecordGenerator implements GeneratorInterface
 {
+    /**
+     * @var array
+     */
     private $config;
 
     /**
-     * @param $config
+     * @param array $config
      */
     public function __construct(array $config)
     {

@@ -22,11 +22,21 @@ use Graze\Dal\Adapter\EloquentOrm\Persister\EntityPersister;
  */
 class Configuration extends AbstractConfiguration
 {
+    /**
+     * @var HydratorFactory
+     */
     protected $hydratorFactory;
+
+    /**
+     * @var \ProxyManager\Configuration
+     */
     protected $proxyConfiguration;
 
     /**
-     * {@inheritdoc}
+     * Configuration constructor.
+     *
+     * @param array $mapping
+     * @param int $trackingPolicy
      */
     public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {
@@ -36,7 +46,9 @@ class Configuration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
+     *
+     * @return string
      */
     public function getEntityName($entity)
     {
@@ -46,7 +58,11 @@ class Configuration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $entityName
+     * @param string $recordName
+     * @param \Graze\Dal\Adapter\ActiveRecord\UnitOfWork $unitOfWork
+     *
+     * @return \Graze\Dal\Adapter\EloquentOrm\Mapper\EntityMapper
      */
     protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork)
     {
@@ -54,7 +70,11 @@ class Configuration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $entityName
+     * @param string $recordName
+     * @param \Graze\Dal\Adapter\ActiveRecord\UnitOfWork $unitOfWork
+     *
+     * @return \Graze\Dal\Adapter\EloquentOrm\Persister\EntityPersister
      */
     protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork)
     {

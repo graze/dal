@@ -19,7 +19,11 @@ use Graze\Dal\Adapter\ActiveRecord\Persister\AbstractPersister;
 class EntityPersister extends AbstractPersister
 {
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param object $entity
+     * @param array|null $orderBy
+     *
+     * @return null|object
      */
     public function load(array $criteria, $entity = null, array $orderBy = null)
     {
@@ -53,7 +57,12 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return array
      */
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
@@ -88,7 +97,10 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $id
+     * @param object $entity
+     *
+     * @return null|object
      */
     public function loadById($id, $entity = null)
     {
@@ -108,7 +120,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function delete($entity)
     {
@@ -122,7 +134,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function refresh($entity)
     {
@@ -138,7 +150,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function save($entity)
     {

@@ -15,19 +15,45 @@ use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Mapper\MapperInterface;
 use Graze\Dal\Persister\PersisterInterface;
-use SplObjectStorage;
 
 class UnitOfWork implements UnitOfWorkInterface
 {
     const POLICY_IMPLICIT = 0;
     const POLICY_EXPLICIT = 1;
 
+    /**
+     * @var AdapterInterface
+     */
     protected $adapter;
+
+    /**
+     * @var ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var array
+     */
     protected $mappers = [];
+
+    /**
+     * @var array
+     */
     protected $persisted = [];
+
+    /**
+     * @var array
+     */
     protected $persisters = [];
+
+    /**
+     * @var array
+     */
     protected $records = [];
+
+    /**
+     * @var int
+     */
     protected $trackingPolicy;
 
     /**

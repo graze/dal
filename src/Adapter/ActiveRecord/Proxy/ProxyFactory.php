@@ -24,13 +24,30 @@ use ProxyManager\Proxy\GhostObjectInterface;
  */
 class ProxyFactory
 {
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var \ProxyManager\Factory\LazyLoadingGhostFactory
+     */
     protected $factory;
+
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecord\UnitOfWork
+     */
     protected $unitOfWork;
+
+    /**
+     * @var string
+     */
     protected $collectionClass = 'Doctrine\Common\Collections\ArrayCollection';
 
     /**
+     * @param \Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface $config
      * @param UnitOfWork $unitOfWork
+     * @param \ProxyManager\Factory\LazyLoadingGhostFactory $factory
      */
     public function __construct(
         ConfigurationInterface $config,
@@ -109,7 +126,7 @@ class ProxyFactory
     }
 
     /**
-     * @param object $record
+     * @param array $records
      * @param Collection $collection
      * @param MapperInterface $mapper
      *

@@ -32,8 +32,19 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 {
     const PROXY_NAMESPACE = 'Graze\Dal';
 
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecord\Identity\GeneratorInterface
+     */
     protected $identityGenerator;
+
+    /**
+     * @var array
+     */
     protected $mapping;
+
+    /**
+     * @var int
+     */
     protected $trackingPolicy;
 
     /**
@@ -67,7 +78,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork);
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     * @param \Graze\Dal\Adapter\ActiveRecord\UnitOfWork $unitOfWork
+     *
+     * @return \Graze\Dal\Adapter\ActiveRecord\Mapper\MapperInterface
      */
     public function buildMapper($name, UnitOfWork $unitOfWork)
     {
@@ -82,7 +96,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     * @param \Graze\Dal\Adapter\ActiveRecord\UnitOfWork $unitOfWork
+     *
+     * @return \Graze\Dal\Adapter\ActiveRecord\Persister\PersisterInterface
      */
     public function buildPersister($name, UnitOfWork $unitOfWork)
     {
@@ -97,7 +114,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     * @param \Graze\Dal\Adapter\ActiveRecordAdapter $adapter
+     *
+     * @return \Graze\Dal\Adapter\ActiveRecord\EntityRepository
      */
     public function buildRepository($name, ActiveRecordAdapter $adapter)
     {
@@ -118,7 +138,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param \Graze\Dal\Adapter\ActiveRecordAdapter $adapter
+     *
+     * @return \Graze\Dal\Adapter\ActiveRecord\UnitOfWork
      */
     public function buildUnitOfWork(ActiveRecordAdapter $adapter)
     {
@@ -126,7 +148,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
+     *
+     * @return string
      */
     public function getEntityName($entity)
     {
@@ -158,7 +182,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return mixed|null
      */
     public function getMapping($name)
     {

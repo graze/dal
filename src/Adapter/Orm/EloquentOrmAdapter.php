@@ -18,7 +18,7 @@ use Graze\Dal\Generator\GeneratorInterface;
 use Illuminate\Database\ConnectionInterface;
 use Symfony\Component\Yaml\Parser;
 
-class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
+class EloquentOrmAdapter extends AbstractOrmAdapter implements GeneratableInterface
 {
     /**
      * @var \Illuminate\Database\ConnectionInterface

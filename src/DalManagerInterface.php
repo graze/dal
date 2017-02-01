@@ -34,6 +34,7 @@ interface DalManagerInterface
     public function has($name);
 
     /**
+     * @param string $name
      * @param AdapterInterface $adapter
      */
     public function set($name, AdapterInterface $adapter);

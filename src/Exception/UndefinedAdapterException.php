@@ -16,6 +16,9 @@ use OutOfRangeException;
 
 class UndefinedAdapterException extends OutOfRangeException implements ExceptionInterface
 {
+    /**
+     * @var string
+     */
     protected $name;
 
     /**

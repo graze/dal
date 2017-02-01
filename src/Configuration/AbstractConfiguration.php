@@ -148,7 +148,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     abstract protected function buildDefaultPersister($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork);
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return MapperInterface
      */
     public function buildMapper($name)
     {
@@ -160,7 +162,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     * @param UnitOfWorkInterface $unitOfWork
+     *
+     * @return PersisterInterface
      */
     public function buildPersister($name, UnitOfWorkInterface $unitOfWork)
     {
@@ -168,7 +173,10 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     * @param AdapterInterface $adapter
+     *
+     * @return ObjectRepository
      */
     public function buildRepository($name, AdapterInterface $adapter)
     {
@@ -189,7 +197,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     }
 
     /**
-     * {@inheritdoc}
+     * @param AdapterInterface $adapter
+     *
+     * @return UnitOfWork
      */
     public function buildUnitOfWork(AdapterInterface $adapter)
     {
@@ -197,7 +207,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
+     *
+     * @return string
      */
     public function getEntityName($entity)
     {
@@ -214,7 +226,9 @@ abstract class AbstractConfiguration implements ConfigurationInterface, DalManag
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return mixed|null
      */
     public function getMapping($name)
     {

@@ -16,7 +16,14 @@ use Graze\Dal\Adapter\AdapterInterface;
 
 class EntityRepository implements ObjectRepository
 {
+    /**
+     * @var AdapterInterface
+     */
     protected $adapter;
+
+    /**
+     * @var string
+     */
     protected $entityName;
 
     /**
@@ -30,7 +37,9 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param int $id
+     *
+     * @return object
      */
     public function find($id)
     {
@@ -40,7 +49,7 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @return array|\object[]
      */
     public function findAll()
     {
@@ -48,7 +57,12 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return \object[]
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
@@ -58,7 +72,10 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $orderBy
+     *
+     * @return object
      */
     public function findOneBy(array $criteria, array $orderBy = null)
     {
@@ -68,7 +85,7 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getClassName()
     {

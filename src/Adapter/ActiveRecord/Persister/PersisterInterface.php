@@ -46,7 +46,7 @@ interface PersisterInterface
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param array $criteria
+     * @param int $id
      * @param object $entity
      *
      * @return object

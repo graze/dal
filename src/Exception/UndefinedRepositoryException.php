@@ -16,6 +16,9 @@ use OutOfRangeException;
 
 class UndefinedRepositoryException extends OutOfRangeException implements ExceptionInterface
 {
+    /**
+     * @var string
+     */
     protected $name;
 
     /**

@@ -44,7 +44,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return array
      */
@@ -59,7 +59,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return array
      */
@@ -76,7 +76,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return array
      */
@@ -100,7 +100,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      */
     protected function deleteRecord($record)
     {
@@ -111,7 +111,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return int
      */

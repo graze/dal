@@ -27,7 +27,11 @@ class Configuration extends AbstractConfiguration
     protected $hydratorFactory;
 
     /**
-     * {@inheritdoc}
+     * @param string $entityName
+     * @param ConfigurationInterface $config
+     * @param UnitOfWorkInterface $unitOfWork
+     *
+     * @return EntityPersister
      * @throws MissingConfigException
      */
     protected function buildDefaultPersister($entityName, ConfigurationInterface $config, UnitOfWorkInterface $unitOfWork)

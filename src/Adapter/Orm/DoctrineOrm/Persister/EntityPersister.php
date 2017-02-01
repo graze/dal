@@ -63,6 +63,8 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
+     * @param object $record
+     *
      * @return int
      */
     protected function getRecordId($record)

@@ -16,6 +16,9 @@ use InvalidArgumentException;
 
 class InvalidEntityException extends InvalidArgumentException implements ExceptionInterface
 {
+    /**
+     * @var object|string
+     */
     protected $entity;
 
     /**

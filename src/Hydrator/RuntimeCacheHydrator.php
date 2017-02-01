@@ -20,6 +20,9 @@ class RuntimeCacheHydrator implements HydratorInterface
      */
     private $next;
 
+    /**
+     * @var array
+     */
     private $hydrated = [];
 
     /**
@@ -63,7 +66,7 @@ class RuntimeCacheHydrator implements HydratorInterface
 
     /**
      * @param array $data
-     * @param $object
+     * @param object $object
      *
      * @return string
      */

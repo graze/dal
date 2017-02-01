@@ -89,7 +89,8 @@ class CombinedNamingStrategy implements NamingStrategyInterface
      */
     public function removeNamingStrategy(NamingStrategyInterface $strategy)
     {
-        if (($index = $this->getIndex($strategy)) != -1) {
+        $index = $this->getIndex($strategy);
+        if ($index != -1) {
             unset($this->strategies[$index]);
             return true;
         }

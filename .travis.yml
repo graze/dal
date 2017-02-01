@@ -11,7 +11,7 @@ before_script:
   - travis_retry composer update --no-interaction
 
 script:
-  - vendor/bin/phpcs -p --warning-severity=0 src/ tests/
+  - vendor/bin/phpcs -p --warning-severity=0 src/
   - vendor/bin/phpunit --testsuite unit --coverage-clover=./tests/report/coverage.clover
 
 after_script:

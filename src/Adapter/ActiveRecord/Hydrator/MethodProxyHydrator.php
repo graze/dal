@@ -14,7 +14,6 @@ namespace Graze\Dal\Adapter\ActiveRecord\Hydrator;
 use Graze\Dal\Exception\InvalidMappingException;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory;
-use LogicException;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 /**
@@ -22,8 +21,19 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
  */
 class MethodProxyHydrator implements HydratorInterface
 {
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var \Zend\Stdlib\Hydrator\HydratorInterface
+     */
     protected $next;
+
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecord\Proxy\ProxyFactory
+     */
     protected $proxyFactory;
 
     /**
@@ -42,7 +52,9 @@ class MethodProxyHydrator implements HydratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $object
+     *
+     * @return array
      */
     public function extract($object)
     {
@@ -70,7 +82,10 @@ class MethodProxyHydrator implements HydratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $data
+     * @param object $object
+     *
+     * @return object
      */
     public function hydrate(array $data, $object)
     {

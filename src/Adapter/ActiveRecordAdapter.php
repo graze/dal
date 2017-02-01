@@ -22,8 +22,19 @@ use Graze\Dal\Exception\UndefinedRepositoryException;
  */
 abstract class ActiveRecordAdapter implements OrmAdapterInterface
 {
+    /**
+     * @var ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var array
+     */
     protected $repos = [];
+
+    /**
+     * @var UnitOfWork
+     */
     protected $unitOfWork;
 
     /**
@@ -54,7 +65,9 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return mixed
      */
     public function getRepository($name)
     {
@@ -76,7 +89,9 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return bool
      */
     public function hasRepository($name)
     {
@@ -84,7 +99,7 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object|null $entity
      */
     public function flush($entity = null)
     {
@@ -96,7 +111,7 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function persist($entity)
     {
@@ -104,7 +119,7 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function refresh($entity)
     {
@@ -112,7 +127,7 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function remove($entity)
     {
@@ -120,7 +135,9 @@ abstract class ActiveRecordAdapter implements OrmAdapterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param callable $fn
+     *
+     * @throws \Exception
      */
     public function transaction(callable $fn)
     {

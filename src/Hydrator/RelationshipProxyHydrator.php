@@ -20,8 +20,19 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class RelationshipProxyHydrator implements HydratorInterface
 {
+    /**
+     * @var ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var HydratorInterface
+     */
     protected $next;
+
+    /**
+     * @var ProxyFactoryInterface
+     */
     protected $proxyFactory;
 
     /**
@@ -40,7 +51,9 @@ class RelationshipProxyHydrator implements HydratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $object
+     *
+     * @return array
      * @throws MissingConfigException
      */
     public function extract($object)
@@ -80,7 +93,10 @@ class RelationshipProxyHydrator implements HydratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $data
+     * @param object $object
+     *
+     * @return object
      * @throws MissingConfigException
      */
     public function hydrate(array $data, $object)

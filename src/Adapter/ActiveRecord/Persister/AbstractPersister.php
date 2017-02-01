@@ -18,8 +18,19 @@ use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
  */
 abstract class AbstractPersister implements PersisterInterface
 {
+    /**
+     * @var string
+     */
     protected $entityName;
+
+    /**
+     * @var string
+     */
     protected $recordName;
+
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecord\UnitOfWork
+     */
     protected $unitOfWork;
 
     /**
@@ -35,7 +46,7 @@ abstract class AbstractPersister implements PersisterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getEntityName()
     {
@@ -43,7 +54,7 @@ abstract class AbstractPersister implements PersisterInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getRecordName()
     {

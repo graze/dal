@@ -18,7 +18,14 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
  */
 abstract class AbstractMapper implements MapperInterface
 {
+    /**
+     * @var string
+     */
     protected $entityName;
+
+    /**
+     * @var string
+     */
     protected $recordName;
 
     /**

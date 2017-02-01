@@ -27,7 +27,7 @@ install:
 	@docker-compose run --rm composer install
 
 lint:
-	docker-compose run --rm dal vendor/bin/phpcs -p --warning-severity=0 src/ tests/
+	@docker-compose run --rm dal vendor/bin/phpcs -p -s --warning-severity=0 src/
 
 lint-fix:
-	docker-compose run --rm dal vendor/bin/phpcbf -p --no-patch src/
+	@docker-compose run --rm dal vendor/bin/phpcbf -p --no-patch src/

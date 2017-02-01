@@ -12,12 +12,18 @@
 namespace Graze\Dal\Adapter\Orm\Hydrator;
 
 use Graze\Dal\Exception\InvalidEntityException;
-use ReflectionClass;
 use Zend\Stdlib\Hydrator\ArraySerializable;
 
 class AttributeHydrator extends ArraySerializable
 {
+    /**
+     * @var string
+     */
     protected $fromData;
+
+    /**
+     * @var string
+     */
     protected $toData;
 
     /**
@@ -33,7 +39,9 @@ class AttributeHydrator extends ArraySerializable
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $object
+     *
+     * @return mixed
      */
     public function extract($object)
     {
@@ -64,7 +72,10 @@ class AttributeHydrator extends ArraySerializable
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $data
+     * @param object $object
+     *
+     * @return object
      */
     public function hydrate(array $data, $object)
     {
