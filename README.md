@@ -2,7 +2,11 @@
 
 <img src="diagram.png" alt="Graze.com" align="right" width=240/>
 
-**Master build:** [![Build status](https://badge.buildkite.com/c2664f326d7f300e426b4a3b36406fee1bf9594ad274ed5bb3.svg?branch=master)](https://buildkite.com/graze/dal)<br/>
+[![Travis branch](https://img.shields.io/travis/graze/dal/master.svg?style=flat-square)]()
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/graze/dal.svg?style=flat-square)]()
+[![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/graze/dal.svg?style=flat-square)]()
+[![PHP Version](https://img.shields.io/badge/php-5.5-blue.svg?style=flat-square)]()
+<br/>
 **Requires:** `PHP >= 5.5`
 
 **DAL** is a data access layer for PHP, built to add an additional layer of
