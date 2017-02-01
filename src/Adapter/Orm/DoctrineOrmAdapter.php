@@ -26,8 +26,8 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
     protected $em;
 
     /**
-     * @param ConfigurationInterface $config
      * @param EntityManagerInterface $em
+     * @param ConfigurationInterface $config
      */
     public function __construct(EntityManagerInterface $em, ConfigurationInterface $config)
     {
