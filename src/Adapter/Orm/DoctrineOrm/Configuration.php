@@ -28,8 +28,8 @@ class Configuration extends AbstractConfiguration
     private $em;
 
     /**
-     * @param array $mapping
      * @param EntityManagerInterface $em
+     * @param array $mapping
      * @param int $trackingPolicy
      */
     public function __construct(
