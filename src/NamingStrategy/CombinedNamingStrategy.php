@@ -11,6 +11,9 @@
  */
 namespace Graze\Dal\NamingStrategy;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class CombinedNamingStrategy implements NamingStrategyInterface
 {
     /**

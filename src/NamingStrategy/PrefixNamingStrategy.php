@@ -14,6 +14,8 @@ namespace Graze\Dal\NamingStrategy;
 /**
  * Naming Strategy used when hydrating/exteracting fields.
  * This will add the prefix when dealing with the model
+ *
+ * @deprecated - DAL 0.x
  */
 class PrefixNamingStrategy implements NamingStrategyInterface
 {

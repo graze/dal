@@ -13,6 +13,8 @@ namespace Graze\Dal\NamingStrategy;
 
 /**
  * Naming Strategy use to replace underscore_case in Models with camelCase in Entities.
+ *
+ * @deprecated - DAL 0.x
  */
 class CamelCaseNamingStrategy implements NamingStrategyInterface
 {

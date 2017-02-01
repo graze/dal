@@ -13,6 +13,8 @@ namespace Graze\Dal\NamingStrategy;
 
 /**
  * Enable column prefix on a Model
+ *
+ * @deprecated - DAL 0.x
  */
 interface ColumnPrefixInterface
 {
