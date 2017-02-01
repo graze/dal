@@ -151,8 +151,8 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
      */
     public static function createFromYaml(EntityManagerInterface $em, array $yamlPaths, $cacheFile = null)
     {
-        if ($cacheFile && file_exists($cacheFile)) {
-            return static::createFromCache($em, $cacheFile);
+        if ($cacheFile !== null && file_exists($cacheFile)) {
+            return self::createFromCache($em, $cacheFile);
         }
 
         $config = [];
@@ -162,7 +162,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
             $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
         }
 
-        if ($cacheFile) {
+        if ($cacheFile !== null) {
             file_put_contents($cacheFile, json_encode($config));
         }
 
