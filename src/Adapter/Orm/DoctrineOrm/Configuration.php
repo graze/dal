@@ -11,7 +11,6 @@
  */
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Graze\Dal\Adapter\Orm\Configuration\AbstractConfiguration;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Persister\EntityPersister;
@@ -24,7 +23,7 @@ use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 class Configuration extends AbstractConfiguration
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
