@@ -19,4 +19,8 @@
         <!-- Excluded because fixing would be a bc break in a deprecated class, not worth it -->
         <exclude-pattern>*/src/Adapter/ActiveRecordAdapter.php</exclude-pattern>
     </rule>
+
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing" />
+    </rule>
 </ruleset>
