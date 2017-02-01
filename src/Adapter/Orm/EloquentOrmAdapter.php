@@ -21,6 +21,11 @@ use Symfony\Component\Yaml\Parser;
 class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
 {
     /**
+     * @var \Illuminate\Database\ConnectionInterface
+     */
+    private $conn;
+
+    /**
      * @param ConnectionInterface $conn
      * @param Configuration $config
      */
