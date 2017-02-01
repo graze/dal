@@ -110,7 +110,6 @@ abstract class AbstractFieldMappingHydrator implements HydratorInterface
         }
 
         foreach ($mapping['fields'] as $field => $config) {
-
             if (! array_key_exists('mapsTo', $config)) {
                 throw new MissingConfigException($entityName, 'fields.' . $field . '.mapsTo');
             }
@@ -142,7 +141,6 @@ abstract class AbstractFieldMappingHydrator implements HydratorInterface
         }
 
         foreach ($mapping['fields'] as $field => $config) {
-
             if (! array_key_exists('mapsTo', $config)) {
                 throw new MissingConfigException($entityName, 'fields.' . $field . '.mapsTo');
             }

@@ -38,7 +38,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param array $mapping
-     * @param integer $trackingPolicy
+     * @param int $trackingPolicy
      */
     public function __construct(array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {

@@ -25,3 +25,9 @@ install:
 	docker-compose build dal
 	docker-compose up -d --force-recreate dal db
 	@docker-compose run --rm composer install
+
+lint:
+	docker-compose run --rm dal vendor/bin/phpcs -p --warning-severity=0 src/ tests/
+
+lint-fix:
+	docker-compose run --rm dal vendor/bin/phpcbf -p --no-patch src/

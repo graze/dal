@@ -37,7 +37,7 @@ class AttributeHydrator extends ArraySerializable
      */
     public function extract($object)
     {
-        if (! is_callable(array($object, $this->toData))) {
+        if (! is_callable([$object, $this->toData])) {
             throw new InvalidEntityException($object, __METHOD__);
         }
 
@@ -68,13 +68,13 @@ class AttributeHydrator extends ArraySerializable
      */
     public function hydrate(array $data, $object)
     {
-        $replacement = array();
+        $replacement = [];
         foreach ($data as $key => $value) {
             $name = $this->hydrateName($key, $data);
             $replacement[$name] = $this->hydrateValue($name, $value, $data);
         }
 
-        if (is_callable(array($object, $this->fromData))) {
+        if (is_callable([$object, $this->fromData])) {
             call_user_func([$object, $this->fromData], $replacement);
         } else {
             throw new InvalidEntityException($object, __METHOD__);

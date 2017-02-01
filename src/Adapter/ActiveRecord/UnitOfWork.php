@@ -33,7 +33,7 @@ class UnitOfWork
     /**
      * @param ActiveRecordAdapter $adapter
      * @param ConfigurationInterface $config
-     * @param integer $trackingPolicy
+     * @param int $trackingPolicy
      */
     public function __construct(
         ActiveRecordAdapter $adapter,

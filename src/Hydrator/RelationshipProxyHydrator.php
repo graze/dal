@@ -55,7 +55,6 @@ class RelationshipProxyHydrator implements HydratorInterface
 
         foreach ($out as $field => $value) {
             if (is_object($value) && $value instanceof EntityInterface) {
-
                 if (! array_key_exists($field, $mapping)) {
                     throw new MissingConfigException($entityName, 'related.' . $field);
                 }
@@ -67,7 +66,6 @@ class RelationshipProxyHydrator implements HydratorInterface
                 }
 
                 if ($map['type'] !== 'manyToMany') {
-
                     if (! array_key_exists('localKey', $map)) {
                         throw new MissingConfigException($entityName, 'related.' . $field . '.localKey');
                     }

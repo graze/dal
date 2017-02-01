@@ -33,7 +33,7 @@ class UnitOfWork implements UnitOfWorkInterface
     /**
      * @param AdapterInterface $adapter
      * @param ConfigurationInterface $config
-     * @param integer $trackingPolicy
+     * @param int $trackingPolicy
      */
     public function __construct(
         AdapterInterface $adapter,
