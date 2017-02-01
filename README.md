@@ -5,9 +5,8 @@
 [![Travis branch](https://img.shields.io/travis/graze/dal/master.svg?style=flat-square)]()
 [![Scrutinizer](https://img.shields.io/scrutinizer/g/graze/dal.svg?style=flat-square)]()
 [![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/graze/dal.svg?style=flat-square)]()
-[![PHP Version](https://img.shields.io/badge/php-5.5-blue.svg?style=flat-square)]()
+[![PHP Version](https://img.shields.io/badge/php->=5.5-blue.svg?style=flat-square)]()
 <br/>
-**Requires:** `PHP >= 5.5`
 
 **DAL** is a data access layer for PHP, built to add an additional layer of
 abstraction between your application and persistence layers. The main goal of
