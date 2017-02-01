@@ -85,7 +85,8 @@
         "symfony/var-dumper": "^2.6",
         "aura/sql": "^2.4",
         "guzzlehttp/guzzle": "^6.1",
-        "symfony/yaml": "^2.8"
+        "symfony/yaml": "^2.8",
+        "squizlabs/php_codesniffer": "^2.7"
     },
     "suggest": {
         "doctrine/orm": "Required when using the DoctrineOrmAdapter",
