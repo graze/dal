@@ -1,0 +1,18 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - hhvm
+
+before_script:
+  - travis_retry composer update --no-interaction
+
+script:
+  - vendor/bin/phpcs -p --warning-severity=0 src/ tests/
+  - vendor/bin/phpunit --testsuite unit --coverage-clover=./tests/report/coverage.clover
+
+after_script:
+  - ./build/coverage_to_scrutinizer.sh
