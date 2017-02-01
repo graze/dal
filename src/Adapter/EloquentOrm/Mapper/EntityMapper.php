@@ -21,10 +21,29 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
  */
 class EntityMapper extends AbstractMapper
 {
+    /**
+     * @var HydratorFactory
+     */
     protected $factory;
+
+    /**
+     * @var HydratorInterface
+     */
     protected $entityHydrator;
+
+    /**
+     * @var HydratorInterface
+     */
     protected $recordHydrator;
+
+    /**
+     * @var ReflectionClass
+     */
     protected $entityReflectionClass;
+
+    /**
+     * @var ReflectionClass
+     */
     protected $recordReflectionClass;
 
     /**
@@ -40,7 +59,10 @@ class EntityMapper extends AbstractMapper
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
+     * @param object $record
+     *
+     * @return null|object
      */
     public function fromEntity($entity, $record = null)
     {
@@ -53,7 +75,10 @@ class EntityMapper extends AbstractMapper
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $record
+     * @param object $entity
+     *
+     * @return null|object
      */
     public function toEntity($record, $entity = null)
     {

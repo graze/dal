@@ -25,7 +25,14 @@ use Zend\Stdlib\Hydrator\NamingStrategyEnabledInterface;
  */
 class HydratorFactory
 {
+    /**
+     * @var ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var ProxyFactory
+     */
     protected $proxyFactory;
 
     /**

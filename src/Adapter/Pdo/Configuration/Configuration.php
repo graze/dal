@@ -30,7 +30,7 @@ class Configuration extends AbstractConfiguration implements ConfigurationInterf
     /**
      * @param ExtendedPdo $db
      * @param array $mapping
-     * @param $trackingPolicy
+     * @param int $trackingPolicy
      */
     public function __construct(ExtendedPdo $db, array $mapping, $trackingPolicy = UnitOfWork::POLICY_IMPLICIT)
     {

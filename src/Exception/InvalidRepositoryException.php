@@ -16,6 +16,9 @@ use InvalidArgumentException;
 
 class InvalidRepositoryException extends InvalidArgumentException implements ExceptionInterface
 {
+    /**
+     * @var string
+     */
     protected $repo;
 
     /**

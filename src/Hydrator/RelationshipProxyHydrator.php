@@ -20,8 +20,19 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
 
 class RelationshipProxyHydrator implements HydratorInterface
 {
+    /**
+     * @var ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var HydratorInterface
+     */
     protected $next;
+
+    /**
+     * @var ProxyFactoryInterface
+     */
     protected $proxyFactory;
 
     /**
@@ -40,7 +51,9 @@ class RelationshipProxyHydrator implements HydratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $object
+     *
+     * @return array
      * @throws MissingConfigException
      */
     public function extract($object)
@@ -55,7 +68,6 @@ class RelationshipProxyHydrator implements HydratorInterface
 
         foreach ($out as $field => $value) {
             if (is_object($value) && $value instanceof EntityInterface) {
-
                 if (! array_key_exists($field, $mapping)) {
                     throw new MissingConfigException($entityName, 'related.' . $field);
                 }
@@ -67,7 +79,6 @@ class RelationshipProxyHydrator implements HydratorInterface
                 }
 
                 if ($map['type'] !== 'manyToMany') {
-
                     if (! array_key_exists('localKey', $map)) {
                         throw new MissingConfigException($entityName, 'related.' . $field . '.localKey');
                     }
@@ -82,7 +93,10 @@ class RelationshipProxyHydrator implements HydratorInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $data
+     * @param object $object
+     *
+     * @return object
      * @throws MissingConfigException
      */
     public function hydrate(array $data, $object)

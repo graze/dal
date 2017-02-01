@@ -53,6 +53,11 @@ abstract class AbstractMapper implements MapperInterface
     private $entityName;
 
     /**
+     * @var ConfigurationInterface
+     */
+    protected $config;
+
+    /**
      * @param string $entityName
      * @param string $recordName
      * @param HydratorFactoryInterface $factory
@@ -71,6 +76,8 @@ abstract class AbstractMapper implements MapperInterface
     }
 
     /**
+     * @param object $entity
+     *
      * @return HydratorInterface
      */
     protected function getEntityHydrator($entity)
@@ -83,6 +90,8 @@ abstract class AbstractMapper implements MapperInterface
     }
 
     /**
+     * @param object $record
+     *
      * @return HydratorInterface
      */
     protected function getRecordHydrator($record)

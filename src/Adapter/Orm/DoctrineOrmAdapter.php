@@ -14,20 +14,21 @@ namespace Graze\Dal\Adapter\Orm;
 use Closure;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Graze\Dal\Adapter\GeneratableInterface;
 use Graze\Dal\Adapter\Orm\DoctrineOrm\Configuration;
 use Graze\Dal\Configuration\ConfigurationInterface;
-use Graze\Dal\Generator\GeneratorInterface;
 use PDO;
 use Symfony\Component\Yaml\Parser;
 
-class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
+class DoctrineOrmAdapter extends AbstractOrmAdapter
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $em;
 
     /**
-     * @param ConfigurationInterface $config
      * @param EntityManagerInterface $em
+     * @param ConfigurationInterface $config
      */
     public function __construct(EntityManagerInterface $em, ConfigurationInterface $config)
     {
@@ -60,7 +61,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
     }
 
     /**
-     * @{inheritdoc}
+     * @param callable $fn
      */
     public function transaction(callable $fn)
     {
@@ -147,12 +148,12 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param array $yamlPaths
      * @param string $cacheFile
      *
-     * @return EntityManagerInterface
+     * @return DoctrineOrmAdapter
      */
     public static function createFromYaml(EntityManagerInterface $em, array $yamlPaths, $cacheFile = null)
     {
-        if ($cacheFile && file_exists($cacheFile)) {
-            return static::createFromCache($em, $cacheFile);
+        if ($cacheFile !== null && file_exists($cacheFile)) {
+            return self::createFromCache($em, $cacheFile);
         }
 
         $config = [];
@@ -162,7 +163,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
             $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
         }
 
-        if ($cacheFile) {
+        if ($cacheFile !== null) {
             file_put_contents($cacheFile, json_encode($config));
         }
 
@@ -173,7 +174,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param EntityManagerInterface $em
      * @param array $config
      *
-     * @return EntityManagerInterface
+     * @return DoctrineOrmAdapter
      */
     public static function createFromArray(EntityManagerInterface $em, array $config)
     {
@@ -184,20 +185,11 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param EntityManagerInterface $em
      * @param string $cacheFile
      *
-     * @return EntityManagerInterface
+     * @return DoctrineOrmAdapter
      */
     private static function createFromCache(EntityManagerInterface $em, $cacheFile)
     {
         $config = json_decode(file_get_contents($cacheFile), true);
         return static::createFromArray($em, $config);
-    }
-
-    /**
-     * @param array $config
-     *
-     * @return GeneratorInterface
-     */
-    public static function buildRecordGenerator(array $config)
-    {
     }
 }

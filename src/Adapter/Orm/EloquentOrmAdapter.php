@@ -18,8 +18,13 @@ use Graze\Dal\Generator\GeneratorInterface;
 use Illuminate\Database\ConnectionInterface;
 use Symfony\Component\Yaml\Parser;
 
-class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
+class EloquentOrmAdapter extends AbstractOrmAdapter implements GeneratableInterface
 {
+    /**
+     * @var \Illuminate\Database\ConnectionInterface
+     */
+    private $conn;
+
     /**
      * @param ConnectionInterface $conn
      * @param Configuration $config
@@ -107,7 +112,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
 
     /**
      * @param ConnectionInterface $connection
-     * @param $configPath
+     * @param string $configPath
      *
      * @return static
      * @throws \Symfony\Component\Yaml\Exception\ParseException
@@ -124,11 +129,11 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param array $yamlPaths
      * @param string $cacheFile
      *
-     * @return ConnectionInterface
+     * @return EloquentOrmAdapter
      */
     public static function createFromYaml(ConnectionInterface $connection, array $yamlPaths, $cacheFile = null)
     {
-        if ($cacheFile && file_exists($cacheFile)) {
+        if ($cacheFile !== null && file_exists($cacheFile)) {
             return static::createFromCache($connection, $cacheFile);
         }
 
@@ -139,7 +144,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
             $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
         }
 
-        if ($cacheFile) {
+        if ($cacheFile !== null) {
             file_put_contents($cacheFile, json_encode($config));
         }
 
@@ -150,7 +155,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param ConnectionInterface $connection
      * @param array $config
      *
-     * @return ConnectionInterface
+     * @return EloquentOrmAdapter
      */
     public static function createFromArray(ConnectionInterface $connection, array $config)
     {
@@ -161,7 +166,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param ConnectionInterface $connection
      * @param string $cacheFile
      *
-     * @return ConnectionInterface
+     * @return EloquentOrmAdapter
      */
     private static function createFromCache(ConnectionInterface $connection, $cacheFile)
     {

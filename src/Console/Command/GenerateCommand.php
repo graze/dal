@@ -32,6 +32,10 @@ class GenerateCommand extends Command
             ->addOption('no-setters', null, InputOption::VALUE_NONE, 'Do not generate setter methods for entities.');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $entitiesCommand = $this->getApplication()->find('generate:entities');

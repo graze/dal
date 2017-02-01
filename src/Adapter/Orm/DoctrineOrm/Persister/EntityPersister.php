@@ -11,7 +11,7 @@
  */
 namespace Graze\Dal\Adapter\Orm\DoctrineOrm\Persister;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Persister\AbstractPersister;
 use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
@@ -19,7 +19,7 @@ use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 class EntityPersister extends AbstractPersister
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
@@ -28,14 +28,14 @@ class EntityPersister extends AbstractPersister
      * @param string $recordName
      * @param UnitOfWorkInterface $unitOfWork
      * @param ConfigurationInterface $config
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
     public function __construct(
         $entityName,
         $recordName,
         UnitOfWorkInterface $unitOfWork,
         ConfigurationInterface $config,
-        EntityManager $em
+        EntityManagerInterface $em
     ) {
         parent::__construct($entityName, $recordName, $unitOfWork, $config);
         $this->em = $em;
@@ -63,6 +63,8 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
+     * @param object $record
+     *
      * @return int
      */
     protected function getRecordId($record)

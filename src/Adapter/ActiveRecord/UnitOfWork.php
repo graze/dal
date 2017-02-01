@@ -22,18 +22,45 @@ class UnitOfWork
     const POLICY_IMPLICIT = 0;
     const POLICY_EXPLICIT = 1;
 
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecordAdapter
+     */
     protected $adapter;
+
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface
+     */
     protected $config;
+
+    /**
+     * @var array
+     */
     protected $mappers = [];
+
+    /**
+     * @var \SplObjectStorage
+     */
     protected $persisted;
+
+    /**
+     * @var array
+     */
     protected $persisters = [];
+
+    /**
+     * @var array
+     */
     protected $records = [];
+
+    /**
+     * @var int
+     */
     protected $trackingPolicy;
 
     /**
      * @param ActiveRecordAdapter $adapter
      * @param ConfigurationInterface $config
-     * @param integer $trackingPolicy
+     * @param int $trackingPolicy
      */
     public function __construct(
         ActiveRecordAdapter $adapter,
@@ -131,7 +158,9 @@ class UnitOfWork
     }
 
     /**
-     * @return MapperInterface
+     * @param string $name
+     *
+     * @return \Graze\Dal\Adapter\ActiveRecord\MapperInterface
      */
     public function getMapper($name)
     {
@@ -143,7 +172,9 @@ class UnitOfWork
     }
 
     /**
-     * @return PersisterInterface
+     * @param string $name
+     *
+     * @return \Graze\Dal\Adapter\ActiveRecord\PersisterInterface
      */
     public function getPersister($name)
     {
@@ -155,7 +186,7 @@ class UnitOfWork
     }
 
     /**
-     * @param $entityName
+     * @param string $entityName
      *
      * @return \Graze\Dal\NamingStrategy\NamingStrategyInterface
      */
@@ -165,7 +196,7 @@ class UnitOfWork
     }
 
     /**
-     * @param $recordName
+     * @param string $recordName
      *
      * @return \Graze\Dal\NamingStrategy\NamingStrategyInterface
      */

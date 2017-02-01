@@ -69,8 +69,8 @@ class PdoAdapter extends AbstractAdapter implements AdapterInterface, ManyToMany
      */
     public static function createFromYaml(ExtendedPdo $db, array $yamlPaths, $cacheFile = null)
     {
-        if ($cacheFile && file_exists($cacheFile)) {
-            return static::createFromCache($db, $cacheFile);
+        if ($cacheFile !== null && file_exists($cacheFile)) {
+            return self::createFromCache($db, $cacheFile);
         }
 
         $config = [];
@@ -80,7 +80,7 @@ class PdoAdapter extends AbstractAdapter implements AdapterInterface, ManyToMany
             $config = array_merge($config, $parser->parse(file_get_contents($yamlPath)));
         }
 
-        if ($cacheFile) {
+        if ($cacheFile !== null) {
             file_put_contents($cacheFile, json_encode($config));
         }
 

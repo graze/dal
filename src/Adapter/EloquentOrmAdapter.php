@@ -79,7 +79,7 @@ class EloquentOrmAdapter extends ActiveRecordAdapter
 
     /**
      * @param string $table
-     * @param array $data
+     * @param array|null $data
      */
     public function insert($table, $data)
     {

@@ -15,10 +15,10 @@ use Closure;
 use Graze\Dal\Adapter\AbstractAdapter;
 use Graze\Dal\Relationship\ManyToManyInterface;
 
-abstract class OrmAdapter extends AbstractAdapter implements OrmAdapterInterface, ManyToManyInterface
+abstract class AbstractOrmAdapter extends AbstractAdapter implements OrmAdapterInterface, ManyToManyInterface
 {
     /**
-     * {@inheritdoc}
+     * @param callable $fn
      */
     public function transaction(callable $fn)
     {

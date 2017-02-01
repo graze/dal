@@ -33,7 +33,9 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return AdapterInterface
      */
     public function get($name)
     {
@@ -45,7 +47,9 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return bool
      */
     public function has($name)
     {
@@ -53,7 +57,8 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     * @param AdapterInterface $adapter
      */
     public function set($name, AdapterInterface $adapter)
     {
@@ -64,7 +69,9 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $name
+     *
+     * @return \Doctrine\Common\Persistence\ObjectRepository
      */
     public function getRepository($name)
     {
@@ -78,7 +85,7 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object|null $entity
      */
     public function flush($entity = null)
     {
@@ -94,7 +101,7 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function persist($entity)
     {
@@ -103,7 +110,7 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function refresh($entity)
     {
@@ -112,7 +119,7 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param object $entity
      */
     public function remove($entity)
     {
@@ -121,7 +128,8 @@ class DalManager implements DalManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $adapterName
+     * @param callable $fn
      */
     public function transaction($adapterName, callable $fn)
     {

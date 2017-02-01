@@ -44,7 +44,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return array
      */
@@ -59,7 +59,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return array
      */
@@ -76,7 +76,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return array
      */
@@ -100,7 +100,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      */
     protected function deleteRecord($record)
     {
@@ -111,7 +111,7 @@ class EntityPersister extends AbstractPersister
     }
 
     /**
-     * @param array $record
+     * @param array|object $record
      *
      * @return int
      */
@@ -125,7 +125,7 @@ class EntityPersister extends AbstractPersister
      * @param object $entity
      * @param array $orderBy
      *
-     * @return object
+     * @return object|array
      */
     protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
@@ -151,11 +151,11 @@ class EntityPersister extends AbstractPersister
 
         $stmt = "SELECT * FROM `{$this->getRecordName()}`{$where}";
 
-        if ($offset) {
+        if ($offset !== null) {
             $stmt .= " OFFSET {$offset}";
         }
 
-        if ($limit) {
+        if ($limit !== null) {
             $stmt .= " LIMIT {$limit}";
         }
 
@@ -166,7 +166,7 @@ class EntityPersister extends AbstractPersister
      * @param int $id
      * @param object $entity
      *
-     * @return object
+     * @return object|array
      */
     protected function loadRecordById($id, $entity = null)
     {

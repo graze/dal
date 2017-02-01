@@ -20,8 +20,14 @@ use ProxyManager\Proxy\GhostObjectInterface;
 
 class ProxyFactory implements ProxyFactoryInterface
 {
+    /**
+     * @var LazyLoadingGhostFactory
+     */
     protected $factory;
-    protected $unitOfWork;
+
+    /**
+     * @var string
+     */
     protected $collectionClass = 'Doctrine\Common\Collections\ArrayCollection';
 
     /**

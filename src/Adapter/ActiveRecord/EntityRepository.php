@@ -19,7 +19,14 @@ use Graze\Dal\Adapter\ActiveRecordAdapter;
  */
 class EntityRepository implements ObjectRepository
 {
+    /**
+     * @var \Graze\Dal\Adapter\ActiveRecordAdapter
+     */
     protected $adapter;
+
+    /**
+     * @var string
+     */
     protected $entityName;
 
     /**
@@ -33,7 +40,9 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $id
+     *
+     * @return mixed
      */
     public function find($id)
     {
@@ -43,7 +52,7 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @return array
      */
     public function findAll()
     {
@@ -51,7 +60,12 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $orderBy
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return mixed
      */
     public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
     {
@@ -61,7 +75,10 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $orderBy
+     *
+     * @return mixed
      */
     public function findOneBy(array $criteria, array $orderBy = null)
     {
@@ -71,7 +88,7 @@ class EntityRepository implements ObjectRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getClassName()
     {

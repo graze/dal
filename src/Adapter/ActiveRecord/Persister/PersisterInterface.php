@@ -38,15 +38,15 @@ interface PersisterInterface
     /**
      * @param array $criteria
      * @param array $orderBy
-     * @param integer $limit
-     * @param integer $offset
+     * @param int $limit
+     * @param int $offset
      *
      * @return object[]
      */
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null);
 
     /**
-     * @param array $criteria
+     * @param int $id
      * @param object $entity
      *
      * @return object

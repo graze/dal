@@ -17,7 +17,9 @@ namespace Graze\Dal\Adapter\ActiveRecord\Identity;
 class ObjectHashGenerator implements GeneratorInterface
 {
     /**
-     * {@inheritdoc}
+     * @param object $entity
+     *
+     * @return string
      */
     public function generate($entity)
     {

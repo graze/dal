@@ -68,7 +68,6 @@ class ProxyGenerator implements GeneratorInterface
                 $related = $mapping['related'];
 
                 foreach ($related as $relationName => $relationConfig) {
-
                     if (! array_key_exists('entity', $relationConfig)) {
                         throw new MissingConfigException($entityName, 'related.entity');
                     }
@@ -76,7 +75,8 @@ class ProxyGenerator implements GeneratorInterface
                     $foreignEntityName = $relationConfig['entity'];
                     if (array_key_exists('collection', $relationConfig) && $relationConfig['collection']) {
                         $collectionClass = is_string($relationConfig['collection']) ? $relationConfig['collection'] : null;
-                        $proxyFactory->buildCollectionProxy($entityName, $foreignEntityName, function () {}, $relationConfig, $collectionClass);
+                        $proxyFactory->buildCollectionProxy($entityName, $foreignEntityName, function () {
+                        }, $relationConfig, $collectionClass);
                     } else {
                         $proxyFactory->buildEntityProxy($entityName, $foreignEntityName, function () {
                         }, $relationConfig);

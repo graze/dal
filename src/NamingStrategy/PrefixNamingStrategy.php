@@ -19,6 +19,9 @@ namespace Graze\Dal\NamingStrategy;
  */
 class PrefixNamingStrategy implements NamingStrategyInterface
 {
+    /**
+     * @var string
+     */
     protected $prefix = '';
 
     /**
@@ -48,7 +51,7 @@ class PrefixNamingStrategy implements NamingStrategyInterface
      * Remove any prefixes if applicable
      *
      * @param  string $name The original name
-     * @param  array $data (optional) The original data for context
+     * @param  array|null $data (optional) The original data for context
      *
      * @return string       The extracted name
      */
