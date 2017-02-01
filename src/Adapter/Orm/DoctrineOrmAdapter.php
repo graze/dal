@@ -147,7 +147,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param array $yamlPaths
      * @param string $cacheFile
      *
-     * @return EntityManagerInterface
+     * @return DoctrineOrmAdapter
      */
     public static function createFromYaml(EntityManagerInterface $em, array $yamlPaths, $cacheFile = null)
     {
@@ -173,7 +173,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param EntityManagerInterface $em
      * @param array $config
      *
-     * @return EntityManagerInterface
+     * @return DoctrineOrmAdapter
      */
     public static function createFromArray(EntityManagerInterface $em, array $config)
     {
@@ -184,7 +184,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param EntityManagerInterface $em
      * @param string $cacheFile
      *
-     * @return EntityManagerInterface
+     * @return DoctrineOrmAdapter
      */
     private static function createFromCache(EntityManagerInterface $em, $cacheFile)
     {
