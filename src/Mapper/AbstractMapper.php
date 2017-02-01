@@ -76,6 +76,8 @@ abstract class AbstractMapper implements MapperInterface
     }
 
     /**
+     * @param object $entity
+     *
      * @return HydratorInterface
      */
     protected function getEntityHydrator($entity)
@@ -88,6 +90,8 @@ abstract class AbstractMapper implements MapperInterface
     }
 
     /**
+     * @param object $record
+     *
      * @return HydratorInterface
      */
     protected function getRecordHydrator($record)
