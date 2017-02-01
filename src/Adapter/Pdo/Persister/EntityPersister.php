@@ -151,11 +151,11 @@ class EntityPersister extends AbstractPersister
 
         $stmt = "SELECT * FROM `{$this->getRecordName()}`{$where}";
 
-        if ($offset) {
+        if ($offset !== null) {
             $stmt .= " OFFSET {$offset}";
         }
 
-        if ($limit) {
+        if ($limit !== null) {
             $stmt .= " LIMIT {$limit}";
         }
 
