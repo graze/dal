@@ -129,7 +129,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param array $yamlPaths
      * @param string $cacheFile
      *
-     * @return ConnectionInterface
+     * @return EloquentOrmAdapter
      */
     public static function createFromYaml(ConnectionInterface $connection, array $yamlPaths, $cacheFile = null)
     {
@@ -155,7 +155,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param ConnectionInterface $connection
      * @param array $config
      *
-     * @return ConnectionInterface
+     * @return EloquentOrmAdapter
      */
     public static function createFromArray(ConnectionInterface $connection, array $config)
     {
@@ -166,7 +166,7 @@ class EloquentOrmAdapter extends OrmAdapter implements GeneratableInterface
      * @param ConnectionInterface $connection
      * @param string $cacheFile
      *
-     * @return ConnectionInterface
+     * @return EloquentOrmAdapter
      */
     private static function createFromCache(ConnectionInterface $connection, $cacheFile)
     {
