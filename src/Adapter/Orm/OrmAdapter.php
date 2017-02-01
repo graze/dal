@@ -18,7 +18,7 @@ use Graze\Dal\Relationship\ManyToManyInterface;
 abstract class OrmAdapter extends AbstractAdapter implements OrmAdapterInterface, ManyToManyInterface
 {
     /**
-     * {@inheritdoc}
+     * @param callable $fn
      */
     public function transaction(callable $fn)
     {

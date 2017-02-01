@@ -60,7 +60,7 @@ class DoctrineOrmAdapter extends OrmAdapter implements GeneratableInterface
     }
 
     /**
-     * @{inheritdoc}
+     * @param callable $fn
      */
     public function transaction(callable $fn)
     {
