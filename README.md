@@ -6,6 +6,8 @@
 [![Scrutinizer](https://img.shields.io/scrutinizer/g/graze/dal.svg?style=flat-square)]()
 [![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/graze/dal.svg?style=flat-square)]()
 [![PHP Version](https://img.shields.io/badge/php->=5.5-blue.svg?style=flat-square)]()
+[![Packagist](https://img.shields.io/packagist/l/graze/dal.svg?style=flat-square)]()
+[![Packagist](https://img.shields.io/packagist/v/graze/dal.svg?style=flat-square)]()
 <br/>
 
 **DAL** is a data access layer for PHP, built to add an additional layer of
