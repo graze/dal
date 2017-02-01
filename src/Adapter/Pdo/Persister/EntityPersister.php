@@ -125,7 +125,7 @@ class EntityPersister extends AbstractPersister
      * @param object $entity
      * @param array $orderBy
      *
-     * @return object
+     * @return object|array
      */
     protected function loadRecord(array $criteria, $entity = null, array $orderBy = null)
     {
@@ -166,7 +166,7 @@ class EntityPersister extends AbstractPersister
      * @param int $id
      * @param object $entity
      *
-     * @return object
+     * @return object|array
      */
     protected function loadRecordById($id, $entity = null)
     {
