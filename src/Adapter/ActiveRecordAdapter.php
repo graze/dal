@@ -14,9 +14,13 @@ namespace Graze\Dal\Adapter;
 use Closure;
 use Graze\Dal\Adapter\ActiveRecord\ConfigurationInterface;
 use Graze\Dal\Adapter\ActiveRecord\UnitOfWork;
+use Graze\Dal\Adapter\Orm\OrmAdapterInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 
-abstract class ActiveRecordAdapter implements AdapterInterface
+/**
+ * @deprecated - DAL 0.x
+ */
+abstract class ActiveRecordAdapter implements OrmAdapterInterface
 {
     protected $config;
     protected $repos = [];
@@ -32,7 +36,16 @@ abstract class ActiveRecordAdapter implements AdapterInterface
     }
 
     /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration()
+    {
+        return $this->config;
+    }
+
+    /**
      * @param object $entity
+     *
      * @return string
      */
     public function getEntityName($entity)
@@ -45,9 +58,9 @@ abstract class ActiveRecordAdapter implements AdapterInterface
      */
     public function getRepository($name)
     {
-        if (!$this->hasRepository($name)) {
+        if (! $this->hasRepository($name)) {
             throw new UndefinedRepositoryException($name, __METHOD__);
-        } elseif (!isset($this->repos[$name])) {
+        } elseif (! isset($this->repos[$name])) {
             $this->repos[$name] = $this->config->buildRepository($name, $this);
         }
 
@@ -111,8 +124,10 @@ abstract class ActiveRecordAdapter implements AdapterInterface
      */
     public function transaction(callable $fn)
     {
-        if (!$fn instanceof Closure) {
-            $fn = function ($adapter) use ($fn) { call_user_func($fn, $adapter); };
+        if (! $fn instanceof Closure) {
+            $fn = function ($adapter) use ($fn) {
+                call_user_func($fn, $adapter);
+            };
         }
 
         $this->beginTransaction();

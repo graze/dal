@@ -14,6 +14,9 @@ namespace Graze\Dal\Adapter\ActiveRecord;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\ActiveRecordAdapter;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class EntityRepository implements ObjectRepository
 {
     protected $adapter;

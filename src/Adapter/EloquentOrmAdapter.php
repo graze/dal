@@ -12,8 +12,12 @@
 namespace Graze\Dal\Adapter;
 
 use Graze\Dal\Adapter\EloquentOrm\Configuration;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Illuminate\Database\ConnectionInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class EloquentOrmAdapter extends ActiveRecordAdapter
 {
     /**
@@ -71,5 +75,40 @@ class EloquentOrmAdapter extends ActiveRecordAdapter
     public function fetchOne($sql, array $bindings = [])
     {
         return $this->conn->selectOne($sql, $bindings);
+    }
+
+    /**
+     * @param string $table
+     * @param array $data
+     */
+    public function insert($table, $data)
+    {
+        $this->conn->table($table)->insert($data);
+    }
+
+    /**
+     * @param string $sql
+     * @param array $bindings
+     *
+     * @return array
+     */
+    public function fetchCol($sql, array $bindings = [])
+    {
+        $result = $this->fetch($sql, $bindings);
+        $col = [];
+
+        foreach ($result as $row) {
+            $col[] = array_values($row)[0];
+        }
+
+        return $col;
+    }
+
+    /**
+     * @return ConfigurationInterface
+     */
+    public function getConfiguration()
+    {
+        return $this->config;
     }
 }

@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+    dal:
+        build: ./
+        volumes:
+            - ./:/opt/project
+        depends_on:
+            - db
+
+    db:
+        container_name: dal_db
+        image: mysql:5.6
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: dal
+            MYSQL_USER: dal
+            MYSQL_PASSWORD: dev
+        volumes:
+            - ./tests/sql:/docker-entrypoint-initdb.d
+
+    composer:
+        image: graze/composer
+        volumes:
+            - .:/usr/src/app
+            - ~/.composer:/home/composer/.composer
+            - ~/.ssh/id_rsa:/home/composer/.ssh/id_rsa:ro

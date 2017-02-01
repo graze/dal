@@ -11,6 +11,9 @@
  */
 namespace Graze\Dal\Adapter\ActiveRecord\Persister;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 interface PersisterInterface
 {
     /**
@@ -27,6 +30,7 @@ interface PersisterInterface
      * @param array $criteria
      * @param object $entity
      * @param array $orderBy
+     *
      * @return object
      */
     public function load(array $criteria, $entity = null, array $orderBy = null);
@@ -36,6 +40,7 @@ interface PersisterInterface
      * @param array $orderBy
      * @param integer $limit
      * @param integer $offset
+     *
      * @return object[]
      */
     public function loadAll(array $criteria, array $orderBy = null, $limit = null, $offset = null);
@@ -43,6 +48,7 @@ interface PersisterInterface
     /**
      * @param array $criteria
      * @param object $entity
+     *
      * @return object
      */
     public function loadById($id, $entity = null);

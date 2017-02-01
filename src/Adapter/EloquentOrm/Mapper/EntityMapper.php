@@ -16,6 +16,9 @@ use Graze\Dal\Adapter\EloquentOrm\Hydrator\HydratorFactory;
 use ReflectionClass;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 class EntityMapper extends AbstractMapper
 {
     protected $factory;
@@ -67,7 +70,7 @@ class EntityMapper extends AbstractMapper
      */
     protected function getEntityHydrator()
     {
-        if (!$this->entityHydrator) {
+        if (! $this->entityHydrator) {
             $this->entityHydrator = $this->factory->buildEntityHydrator($this->entityName);
         }
 
@@ -79,7 +82,7 @@ class EntityMapper extends AbstractMapper
      */
     protected function getRecordHydrator()
     {
-        if (!$this->recordHydrator) {
+        if (! $this->recordHydrator) {
             $this->recordHydrator = $this->factory->buildRecordHydrator($this->recordName);
         }
 
@@ -91,7 +94,7 @@ class EntityMapper extends AbstractMapper
      */
     protected function instantiateEntity()
     {
-        if (!$this->entityReflectionClass) {
+        if (! $this->entityReflectionClass) {
             $this->entityReflectionClass = new ReflectionClass($this->entityName);
         }
 
@@ -103,7 +106,7 @@ class EntityMapper extends AbstractMapper
      */
     protected function instantiateRecord()
     {
-        if (!$this->recordReflectionClass) {
+        if (! $this->recordReflectionClass) {
             $this->recordReflectionClass = new ReflectionClass($this->recordName);
         }
 

@@ -11,10 +11,14 @@
  */
 namespace Graze\Dal\Adapter\ActiveRecord\Identity;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 interface GeneratorInterface
 {
     /**
      * @param object $entity
+     *
      * @return string
      */
     public function generate($entity);

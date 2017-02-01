@@ -12,18 +12,22 @@
 namespace Graze\Dal\Adapter;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Graze\Dal\Configuration\ConfigurationInterface;
 use Graze\Dal\Exception\UndefinedRepositoryException;
+use Graze\Dal\UnitOfWork\UnitOfWorkInterface;
 
 interface AdapterInterface
 {
     /**
      * @param object $entity
+     *
      * @return string
      */
     public function getEntityName($entity);
 
     /**
      * @param string $name
+     *
      * @return ObjectRepository
      * @throws UndefinedRepositoryException If the repository is not found for name
      */
@@ -31,7 +35,8 @@ interface AdapterInterface
 
     /**
      * @param string $name
-     * @return boolean
+     *
+     * @return bool
      */
     public function hasRepository($name);
 
@@ -56,29 +61,12 @@ interface AdapterInterface
     public function remove($entity);
 
     /**
-     * @param string $sql
-     * @param array $bindings
-     *
-     * @return array
+     * @return UnitOfWorkInterface
      */
-    public function fetch($sql, array $bindings = []);
+    public function getUnitOfWork();
 
     /**
-     * @param string $sql
-     * @param array $bindings
-     *
-     * @return array
+     * @return ConfigurationInterface
      */
-    public function fetchOne($sql, array $bindings = []);
-
-    public function beginTransaction();
-
-    public function commit();
-
-    public function rollback();
-
-    /**
-     * @param callable $fn
-     */
-     public function transaction(callable $fn);
+    public function getConfiguration();
 }

@@ -1,0 +1,40 @@
+---
+Graze\Dal\Test\Entity\Order:
+    record: Graze\Dal\Test\EloquentOrm\Order
+    repository: Graze\Dal\Test\Repository\OrderRepository
+    adapter: Graze\Dal\Adapter\Orm\EloquentOrmAdapter
+    table: order
+    timestamps: false
+    fields:
+        id:
+            mapsTo: id
+            type: int
+    related:
+        customer:
+            type: manyToOne
+            entity: Graze\Dal\Test\Entity\Customer
+            localKey: customer_id
+        products:
+            type: manyToMany
+            entity: Graze\Dal\Test\Entity\Product
+            pivot: order_item
+            localKey: order_id
+            foreignKey: product_id
+            collection: true
+
+Graze\Dal\Test\Entity\Product:
+    record: Graze\Dal\Test\EloquentOrm\Product
+    repository: Graze\Dal\Test\Repository\ProductRepository
+    adapter: Graze\Dal\Adapter\Orm\EloquentOrmAdapter
+    table: product
+    timestamps: false
+    fields:
+        id:
+            mapsTo: id
+            type: int
+        name:
+            mapsTo: name
+            type: string
+        price:
+            mapsTo: price
+            type: float

@@ -59,28 +59,41 @@
         "psr-4": {
             "Graze\\Dal\\Test\\": "tests/src/",
             "Graze\\Dal\\Test\\Unit\\": "tests/src/unit"
-        }
+        },
+        "classmap": [
+            "tests/src/Hydrators",
+            "tests/src/Proxies"
+        ]
     },
     "require": {
-        "php": ">=5.4.0",
-        "doctrine/common": "~2.4",
-        "zendframework/zend-stdlib": "~2.3"
+        "php": ">=5.5.0",
+        "doctrine/common": "^2.5",
+        "doctrine/inflector": "^1.1",
+        "ocramius/generated-hydrator": "^1.2",
+        "ocramius/proxy-manager": "^1.0",
+        "symfony/console": "^2.8",
+        "zendframework/zend-hydrator": "^1.0",
+        "zendframework/zend-code": "^2.5"
     },
     "require-dev": {
         "adlawson/timezone": "~1.0",
-        "mockery/mockery": "~0.9",
+        "mockery/mockery": "^0.9.4",
         "phpunit/phpunit": "~4.0",
-        "doctrine/orm": "~2.4",
-        "illuminate/database": "5.0",
-        "ocramius/generated-hydrator": "~1.0",
-        "ocramius/proxy-manager": "~1.0",
-        "symfony/var-dumper": "^2.6"
+        "doctrine/orm": "^2.5",
+        "illuminate/database": "5.2",
+        "symfony/var-dumper": "^2.6",
+        "aura/sql": "^2.4",
+        "guzzlehttp/guzzle": "^6.1",
+        "symfony/yaml": "^2.8"
     },
     "suggest": {
         "doctrine/orm": "Required when using the DoctrineOrmAdapter",
         "illuminate/database": "Required when using the EloquentOrmAdapter",
-        "ocramius/generated-hydrator": "Required when using ActiveRecordAdapter (EloquentOrm)",
-        "ocramius/proxy-manager": "Required when using ActiveRecordAdapter (EloquentOrm)",
-        "zendframework/zend-stdlib": "Required when using ActiveRecordAdapter (EloquentOrm)"
-    }
+        "aura/sql": "Required when using the PdoAdapter",
+        "guzzlehttp/guzzle": "Required when using the RestAdapter",
+        "symfony/yaml": "Required when using factory methods on adapters"
+    },
+    "bin": [
+        "bin/dal"
+    ]
 }

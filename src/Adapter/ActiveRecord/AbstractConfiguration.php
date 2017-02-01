@@ -25,6 +25,9 @@ use ProxyManager\Configuration as ProxyConfiguration;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use Zend\Stdlib\Hydrator\NamingStrategy\NamingStrategyInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 abstract class AbstractConfiguration implements ConfigurationInterface
 {
     const PROXY_NAMESPACE = 'Graze\Dal';
@@ -49,6 +52,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param string $entityName
      * @param string $recordName
      * @param UnitOfWork $unitOfWork
+     *
      * @return MapperInterface
      */
     abstract protected function buildDefaultMapper($entityName, $recordName, UnitOfWork $unitOfWork);
@@ -57,6 +61,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
      * @param string $entityName
      * @param string $recordName
      * @param UnitOfWork $unitOfWork
+     *
      * @return PersisterInterface
      */
     abstract protected function buildDefaultPersister($entityName, $recordName, UnitOfWork $unitOfWork);
@@ -68,7 +73,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     {
         $mapping = $this->getMapping($name);
 
-        if (!isset($mapping['record'])) {
+        if (! isset($mapping['record'])) {
             $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
             throw new InvalidMappingException($message, __METHOD__);
         }
@@ -83,7 +88,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     {
         $mapping = $this->getMapping($name);
 
-        if (!isset($mapping['record'])) {
+        if (! isset($mapping['record'])) {
             $message = sprintf('Invalid or missing value for "record" for "%s"', $name);
             throw new InvalidMappingException($message, __METHOD__);
         }
@@ -102,7 +107,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
             $class = $mapping['repository'];
             $repo = new $class($name, $adapter);
 
-            if (!$repo instanceof ObjectRepository) {
+            if (! $repo instanceof ObjectRepository) {
                 throw new InvalidRepositoryException($repo, __METHOD__);
             }
         } else {
@@ -130,6 +135,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param object $record
+     *
      * @return string
      */
     public function getEntityNameFromRecord($record)
@@ -170,6 +176,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param string $name
      * @param ActiveRecordAdapter $adapter
+     *
      * @return EntityRepository
      */
     protected function buildDefaultRepository($name, ActiveRecordAdapter $adapter)
@@ -179,6 +186,7 @@ abstract class AbstractConfiguration implements ConfigurationInterface
 
     /**
      * @param string $namespace
+     *
      * @return ProxyConfiguration
      */
     protected function buildProxyConfiguration($namespace = self::PROXY_NAMESPACE)
@@ -192,15 +200,17 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     /**
      * @param ProxyConfiguration $config
      * @param UnitOfWork $unitOfWork
+     *
      * @return ProxyFactory
      */
-    protected function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
+    public function buildProxyFactory(ProxyConfiguration $config, UnitOfWork $unitOfWork)
     {
         return new ProxyFactory($this, $unitOfWork, new LazyLoadingGhostFactory($config));
     }
 
     /**
      * @param string $recordName
+     *
      * @return NamingStrategyInterface
      */
     public function buildRecordNamingStrategy($recordName)

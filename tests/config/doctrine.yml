@@ -1,0 +1,16 @@
+---
+Graze\Dal\Test\Entity\Customer:
+    record: Graze\Dal\Test\DoctrineOrm\Customer
+    fields:
+        id:
+            mapsTo: id
+        firstName:
+            mapsTo: firstName
+        lastName:
+            mapsTo: lastName
+    related:
+        orders:
+            type: oneToMany
+            entity: Graze\Dal\Test\Entity\Order
+            foreignKey: customer_id
+            collection: true

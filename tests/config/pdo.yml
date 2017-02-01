@@ -1,0 +1,47 @@
+---
+Graze\Dal\Test\Entity\Customer:
+    table: customer
+    fields:
+        id:
+            mapsTo: id
+        firstName:
+            mapsTo: first_name
+        lastName:
+            mapsTo: last_name
+    related:
+        orders:
+            type: oneToMany
+            entity: Graze\Dal\Test\Entity\Order
+            foreignKey: customer_id
+            collection: true
+
+Graze\Dal\Test\Entity\Order:
+    table: order
+    fields:
+        id:
+            mapsTo: id
+            type: int
+    related:
+        customer:
+            type: manyToOne
+            entity: Graze\Dal\Test\Entity\Customer
+            localKey: customer_id
+        products:
+            type: manyToMany
+            entity: Graze\Dal\Test\Entity\Product
+            pivot: order_item
+            localKey: order_id
+            foreignKey: product_id
+            collection: true
+
+Graze\Dal\Test\Entity\Product:
+    table: product
+    fields:
+        id:
+            mapsTo: id
+            type: int
+        name:
+            mapsTo: name
+            type: string
+        price:
+            mapsTo: price

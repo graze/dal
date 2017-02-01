@@ -9,11 +9,31 @@ use Mockery;
 
 class DalManagerTest extends UnitTestCase
 {
+    /**
+     * @var Mockery\Mock
+     */
+    private $adapterA;
+
+    /**
+     * @var Mockery\Mock
+     */
+    private $adapterB;
+
+    /**
+     * @var Mockery\Mock
+     */
+    private $adapterC;
+
+    /**
+     * @var Mockery\Mock[]
+     */
+    private $adapters;
+
     public function setUp()
     {
-        $this->adapterA = $a = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
-        $this->adapterB = $b = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
-        $this->adapterC = $c = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
+        $this->adapterA = $a = Mockery::mock('Graze\Dal\Adapter\AdapterInterface', 'Graze\Dal\DalManagerAwareInterface')->shouldReceive('setDalManager')->getMock();
+        $this->adapterB = $b = Mockery::mock('Graze\Dal\Adapter\AdapterInterface', 'Graze\Dal\DalManagerAwareInterface')->shouldReceive('setDalManager')->getMock();
+        $this->adapterC = $c = Mockery::mock('Graze\Dal\Adapter\AdapterInterface', 'Graze\Dal\DalManagerAwareInterface')->shouldReceive('setDalManager')->getMock();
         $this->adapters = ['foo'=>$a, 'bar'=>$b, 'baz'=>$c];
     }
 
@@ -81,7 +101,7 @@ class DalManagerTest extends UnitTestCase
     {
         $manager = new DalManager($this->adapters);
 
-        $adapter = Mockery::mock('Graze\Dal\Adapter\AdapterInterface');
+        $adapter = Mockery::mock('Graze\Dal\Adapter\AdapterInterface')->shouldReceive('setDalManager')->getMock();
         $manager->set('foo', $adapter);
 
         $this->assertSame($adapter, $manager->get('foo'));
@@ -242,5 +262,24 @@ class DalManagerTest extends UnitTestCase
         } catch (Exception $e) {
             $this->assertSame($exception, $e);
         }
+    }
+
+    public function testAll()
+    {
+        $dm = new DalManager($this->adapters);
+        static::assertEquals($dm->all(), $this->adapters);
+    }
+
+    public function testRemove()
+    {
+        $name = 'entityName';
+        $entity = new \stdClass();
+        $manager = new DalManager($this->adapters);
+
+        $this->adapterA->shouldReceive('getEntityName')->once()->with($entity)->andReturn($name);
+        $this->adapterA->shouldReceive('hasRepository')->once()->with($name)->andReturn(true);
+        $this->adapterA->shouldReceive('remove')->with($entity)->once();
+
+        $manager->remove($entity);
     }
 }

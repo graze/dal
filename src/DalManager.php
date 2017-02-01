@@ -11,13 +11,15 @@
  */
 namespace Graze\Dal;
 
-use Exception;
 use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Exception\UndefinedAdapterException;
 use Graze\Dal\Exception\UndefinedRepositoryException;
 
 class DalManager implements DalManagerInterface
 {
+    /**
+     * @var AdapterInterface[]
+     */
     protected $adapters;
 
     /**
@@ -35,7 +37,7 @@ class DalManager implements DalManagerInterface
      */
     public function get($name)
     {
-        if (!$this->has($name)) {
+        if (! $this->has($name)) {
             throw new UndefinedAdapterException($name, __METHOD__);
         }
 
@@ -55,6 +57,9 @@ class DalManager implements DalManagerInterface
      */
     public function set($name, AdapterInterface $adapter)
     {
+        if ($adapter instanceof DalManagerAwareInterface) {
+            $adapter->setDalManager($this);
+        }
         $this->adapters[$name] = $adapter;
     }
 
@@ -82,7 +87,7 @@ class DalManager implements DalManagerInterface
         foreach ($this->adapters as $adapter) {
             if ($adapter === $entityAdapter) {
                 $adapter->flush($entity);
-            } elseif (!$entityAdapter) {
+            } elseif (! $entityAdapter) {
                 $adapter->flush();
             }
         }
@@ -126,10 +131,11 @@ class DalManager implements DalManagerInterface
 
     /**
      * @param object $entity
+     *
      * @return AdapterInterface
      * @throws UndefinedAdapterException If the adapter is not registered with entity
      */
-    protected function findAdapterByEntity($entity)
+    public function findAdapterByEntity($entity)
     {
         foreach ($this->adapters as $adapter) {
             $name = $adapter->getEntityName($entity);
@@ -144,10 +150,11 @@ class DalManager implements DalManagerInterface
 
     /**
      * @param string $name
+     *
      * @return AdapterInterface
      * @throws UndefinedAdapterException If the adapter is not registered with name
      */
-    protected function findAdapterByEntityName($name)
+    public function findAdapterByEntityName($name)
     {
         foreach ($this->adapters as $adapter) {
             if ($adapter->hasRepository($name)) {
@@ -156,5 +163,13 @@ class DalManager implements DalManagerInterface
         }
 
         throw new UndefinedAdapterException($name, __METHOD__);
+    }
+
+    /**
+     * @return AdapterInterface[]
+     */
+    public function all()
+    {
+        return $this->adapters;
     }
 }

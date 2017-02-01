@@ -9,7 +9,7 @@ namespace Graze\Dal\NamingStrategy;
 class PrefixNamingStrategy implements NamingStrategyInterface
 {
     protected $prefix = '';
-    
+
     /**
      * Create the naming strategy
      *
@@ -19,24 +19,26 @@ class PrefixNamingStrategy implements NamingStrategyInterface
     {
         $this->prefix = $prefix;
     }
-    
+
     /**
      * Convert the given name into a prefixed name
      *
-     * @param  string $name   The original name
+     * @param  string $name The original name
      * @param  object $object (optional) The original object for context.
+     *
      * @return string           The name with a prefix attached.
      */
     public function hydrate($name, $object = null)
     {
         return $this->prefix . $name;
     }
-    
+
     /**
      * Remove any prefixes if applicable
      *
      * @param  string $name The original name
-     * @param  array  $data (optional) The original data for context
+     * @param  array $data (optional) The original data for context
+     *
      * @return string       The extracted name
      */
     public function extract($name, $data = null)

@@ -13,12 +13,13 @@ class CombinedNamingStrategy implements NamingStrategyInterface
      * Add a naming strategy to be used
      *
      * @param  NamingStrategyInterface $strategy
-     * @param  int                     $priority Where this strategy should be used
+     * @param  int $priority Where this strategy should be used
+     *
      * @return bool
      */
     public function addNamingStrategy(NamingStrategyInterface $strategy, $priority = 99)
     {
-        if (!$this->hasNamingStrategy($strategy)) {
+        if (! $this->hasNamingStrategy($strategy)) {
             $this->strategies[] = [
                 'strategy' => $strategy,
                 'priority' => $priority
@@ -29,7 +30,7 @@ class CombinedNamingStrategy implements NamingStrategyInterface
                 $this->strategies,
                 function ($a, $b) {
                     return ($a['priority'] == $b['priority']) ? 0
-                    : ($a['priority'] < $b['priority']) ? -1 : 1;
+                        : ($a['priority'] < $b['priority']) ? -1 : 1;
                 }
             );
 
@@ -42,6 +43,7 @@ class CombinedNamingStrategy implements NamingStrategyInterface
      * Determine if a specific strategy has been added
      *
      * @param  NamingStrategyInterface $strategy
+     *
      * @return bool
      */
     public function hasNamingStrategy(NamingStrategyInterface $strategy)
@@ -53,6 +55,7 @@ class CombinedNamingStrategy implements NamingStrategyInterface
      * Return this index of a strategy
      *
      * @param  NamingStrategyInterface $strategy
+     *
      * @return int The index or -1 if not found
      */
     private function getIndex(NamingStrategyInterface $strategy)
@@ -69,6 +72,7 @@ class CombinedNamingStrategy implements NamingStrategyInterface
      * Remove a specified naming strategy from the list
      *
      * @param  NamingStrategyInterface $strategy
+     *
      * @return bool
      */
     public function removeNamingStrategy(NamingStrategyInterface $strategy)
@@ -83,8 +87,9 @@ class CombinedNamingStrategy implements NamingStrategyInterface
     /**
      * Loop through each naming strategy in priority order
      *
-     * @param  string      $name
+     * @param  string $name
      * @param  object|null $object
+     *
      * @return string
      */
     public function hydrate($name, $object = null)
@@ -99,8 +104,9 @@ class CombinedNamingStrategy implements NamingStrategyInterface
     /**
      * Loop through each naming strategy in priority order
      *
-     * @param  string     $name
+     * @param  string $name
      * @param  array|null $data
+     *
      * @return string
      */
     public function extract($name, $data = null)

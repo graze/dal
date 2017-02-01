@@ -6,6 +6,7 @@ interface NamingStrategyInterface extends \Zend\Stdlib\Hydrator\NamingStrategy\N
 {
     /**
      * @param string|object $object
+     *
      * @return bool
      */
     public function supports($object);

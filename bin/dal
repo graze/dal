@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+
+$autoloadFiles = [
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php'
+];
+
+foreach ($autoloadFiles as $autoloadFile) {
+    if (file_exists($autoloadFile)) {
+        require_once $autoloadFile;
+    }
+}
+
+use Graze\Dal\Console\Command\GenerateCommand;
+use Graze\Dal\Console\Command\GenerateEntitiesCommand;
+use Graze\Dal\Console\Command\GenerateRecordsCommand;
+use Graze\Dal\Console\Command\GenerateRepositoriesCommand;
+use Graze\Dal\Console\Persister\ClassPersister;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->add(new GenerateCommand());
+$application->add(new GenerateEntitiesCommand(new ClassPersister()));
+$application->add(new GenerateRecordsCommand(new ClassPersister()));
+$application->add(new GenerateRepositoriesCommand(new ClassPersister()));
+$application->run();

@@ -10,8 +10,9 @@ class CamelCaseNamingStrategy implements NamingStrategyInterface
     /**
      * Convert the given name to underscore_case
      *
-     * @param  string      $name
+     * @param  string $name
      * @param  object|null $object
+     *
      * @return string
      */
     public function hydrate($name, $object = null)
@@ -30,8 +31,9 @@ class CamelCaseNamingStrategy implements NamingStrategyInterface
     /**
      * Convert the given name to camelCase
      *
-     * @param  string     $name
+     * @param  string $name
      * @param  array|null $data
+     *
      * @return string
      */
     public function extract($name, $data = null)

@@ -13,6 +13,9 @@ namespace Graze\Dal\Adapter\ActiveRecord\Mapper;
 
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
+/**
+ * @deprecated - DAL 0.x
+ */
 abstract class AbstractMapper implements MapperInterface
 {
     protected $entityName;
@@ -40,6 +43,7 @@ abstract class AbstractMapper implements MapperInterface
 
     /**
      * @param object $entity
+     *
      * @return array
      */
     public function getEntityData($entity)
@@ -49,6 +53,7 @@ abstract class AbstractMapper implements MapperInterface
 
     /**
      * @param object $record
+     *
      * @return array
      */
     public function getRecordData($record)

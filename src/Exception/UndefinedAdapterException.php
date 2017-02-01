@@ -26,7 +26,7 @@ class UndefinedAdapterException extends OutOfRangeException implements Exception
     public function __construct($name, $method = null, Exception $previous = null)
     {
         $this->name = $name;
-        $message = sprintf('Adapter "%s" is not defined', $name);
+        $message = sprintf('Entity "%s" does not have an Adapter. Check the adapter configuration.', $name);
 
         if ($method) {
             $message .= ' in ' . $method;
