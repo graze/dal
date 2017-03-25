@@ -70,6 +70,11 @@ abstract class AbstractClassGenerator
         $interfaceGenerator = $this->getInterfaceGenerator($interfaceName);
 
         foreach ($classGenerator->getMethods() as $method) {
+            // skip __construct methods which should not be on interfaces
+            if ($method->getName() === '__construct') {
+                continue;
+            }
+
             $interfaceGenerator->addMethodFromGenerator(clone $method);
         }
 
