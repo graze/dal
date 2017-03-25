@@ -50,6 +50,7 @@ class RepositoryGenerator extends AbstractClassGenerator implements GeneratorInt
 
             if ($this->generateInterfaces) {
                 $interfaceGenerator = $this->buildInterfaceGeneratorFromClassGenerator($repository);
+                $interfaceGenerator->setImplementedInterfaces(['\\Doctrine\Common\Persistence\ObjectRepository']);
                 $repositories[$interfaceGenerator->getNamespaceName() . '\\' . $interfaceGenerator->getName()] = $interfaceGenerator;
             }
 
