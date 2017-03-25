@@ -7,8 +7,12 @@ php:
   - 7.1
   - hhvm
 
-before_script:
-  - travis_retry composer update --no-interaction
+env:
+  - 'COMPOSER_FLAGS="--prefer-lowest --prefer-stable"'
+  - 'COMPOSER_FLAGS=""'
+
+install:
+  - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-source
 
 script:
   - vendor/bin/phpcs -p --warning-severity=0 src/
