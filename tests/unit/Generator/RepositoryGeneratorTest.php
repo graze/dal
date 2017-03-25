@@ -7,6 +7,9 @@ use Zend\Code\Generator\InterfaceGenerator;
 
 class RepositoryGeneratorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Reveals https://github.com/graze/dal/issues/34
+     */
     public function testGeneratedInterfaceExtendsObjectRepository()
     {
         $repositoryGenerator = new TestRepositoryGenerator([
