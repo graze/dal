@@ -329,6 +329,77 @@ class AbstractPersisterTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testSaveFailsForInvalidEntity()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+
+        $entity = $this->getMockEntity();
+        $mapper = $this->getMockMapper();
+        $adapter = $this->getMockManyToManyAdapter();
+        $record = new \stdClass();
+
+        $adapter->shouldReceive('insert')->never();
+
+        $metadata = $this->getMockEntityMetadata();
+        $metadata->shouldReceive('hasRelationship')
+            ->with('id')
+            ->andReturn(false);
+        $metadata->shouldReceive('hasRelationship')
+            ->with('foo')
+            ->andReturn(true);
+        $metadata->shouldReceive('getRelationshipMetadata')
+            ->andReturn([
+                'foo' => [
+                    'type' => 'manyToMany',
+                    'pivot' => 'foo_bar',
+                    'localKey' => 'foo_id',
+                    'foreignKey' => 'bar_id',
+                ]
+            ]);
+
+        $config = $this->getMockConfig();
+        $config->shouldReceive('buildEntityMetadata')
+            ->with($entity)
+            ->andReturn($metadata);
+
+        $relatedEntity = new \stdClass(); // invalid entity
+
+        $mapper->shouldReceive('getEntityData')
+            ->with($entity)
+            ->andReturn(['id' => 1, 'foo' => $relatedEntity]);
+
+        $mapper->shouldReceive('fromEntity')
+            ->with($entity, $record)
+            ->once()
+            ->andReturn($record);
+
+        $unitOfWork = $this->getMockUnitOfWorkWithMapper($mapper);
+        $unitOfWork->shouldReceive('getEntityRecord')
+            ->with($entity)
+            ->andReturn($record);
+        $unitOfWork->shouldReceive('setEntityRecord')
+            ->with($entity, $record)
+            ->once();
+        $unitOfWork->shouldReceive('removeEntityRecord')
+            ->with($entity)
+            ->once();
+        $unitOfWork->shouldReceive('getAdapter')
+            ->withNoArgs()
+            ->andReturn($adapter);
+
+        $persister = $this->getMockAbstractPersister($unitOfWork, $config);
+        $persister->shouldReceive('saveRecord')
+            ->with($record)
+            ->once()
+            ->andReturn($record);
+
+        $persister->shouldReceive('getRecordId')
+            ->with($record)
+            ->andReturn(999);
+
+        $persister->save($entity);
+    }
+
     /**
      * @return array
      */
