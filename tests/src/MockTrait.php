@@ -2,8 +2,10 @@
 
 namespace Graze\Dal\Test;
 
+use Doctrine\Common\Persistence\ObjectRepository;
 use Graze\Dal\Adapter\AdapterInterface;
 use Graze\Dal\Configuration\ConfigurationInterface;
+use Graze\Dal\DalManagerInterface;
 use Graze\Dal\Entity\EntityInterface;
 use Graze\Dal\Entity\EntityMetadata;
 use Graze\Dal\Mapper\MapperInterface;
@@ -14,6 +16,14 @@ use Mockery;
 
 trait MockTrait
 {
+    /**
+     * @return \Mockery\MockInterface|DalManagerInterface
+     */
+    protected function getMockDalManager()
+    {
+        return Mockery::mock('Graze\Dal\DalManagerInterface');
+    }
+
     /**
      * @return \Mockery\MockInterface|AdapterInterface
      */
@@ -68,6 +78,14 @@ trait MockTrait
     protected function getMockEntityMetadata()
     {
         return Mockery::mock('Graze\Dal\Entity\EntityMetadata');
+    }
+
+    /**
+     * @return \Mockery\MockInterface|ObjectRepository
+     */
+    protected function getMockRepository()
+    {
+        return Mockery::mock('Doctrine\Common\Persistence\ObjectRepository');
     }
 
     /**
