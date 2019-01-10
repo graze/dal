@@ -1,5 +1,2 @@
-.vagrant
-composer.lock
 vendor
 tests/report
-temp.php
