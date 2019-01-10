@@ -24,10 +24,17 @@ test-functional-coverage:
 install:
 	docker-compose build dal
 	docker-compose up -d --force-recreate dal db
-	@docker-compose run --rm composer install
+	${MAKE} composer-install
 
 lint:
 	@docker-compose run --rm dal vendor/bin/phpcs -p -s --warning-severity=0 src/
 
 lint-fix:
 	@docker-compose run --rm dal vendor/bin/phpcbf -p --no-patch src/
+
+composer-%: ## Run a composer command, `make "composer-<command> [...]"`.
+	docker run -t --rm \
+        -v $$(pwd):/app:delegated \
+        -v ~/.composer:/tmp:delegated \
+        -v ~/.ssh:/root/.ssh:ro \
+        composer --ansi --no-interaction $* $(filter-out $@,$(MAKECMDGOALS))
